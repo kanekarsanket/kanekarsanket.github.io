@@ -9,11 +9,7 @@
 locale                   : "en-US"
 title                    : "Sanket Kanekar"
 title_separator          : "-"
-<<<<<<< HEAD
 name                     : &name "Sanket Kanekar"
-=======
-name                     : &name "Sanket Kanekar"
->>>>>>> origin
 description              : &description "Ph.D Candidate of Economics at Auburn University"
 url                      : https://kanekarsanket.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
