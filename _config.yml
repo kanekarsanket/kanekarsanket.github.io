@@ -7,9 +7,9 @@
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Sanket Kanekar"
+title                    : "Sanket Kanekar123"
 title_separator          : "-"
-name                     : &name "Sanket Kanekar"
+name                     : &name "Sanket Kanekar123"
 description              : &description "Ph.D Candidate of Economics at Auburn University"
 url                      : https://kanekarsanket.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
