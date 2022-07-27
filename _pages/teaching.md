@@ -16,6 +16,7 @@ How you feel about the importance of teaching (text here)
 	- Spring 2020:
 		- ECON 2030: Principles of Macroeconomics 
 		- ECON 2020: Principles of Microeconomics
+		
 	- Fall 2019:
 		- ECON 2030: Principles of Microeconomics
 		- ECON 2020: Principles of Microeconomics
