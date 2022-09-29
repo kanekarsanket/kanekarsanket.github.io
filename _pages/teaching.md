@@ -3,30 +3,17 @@ permalink: /teaching/
 title: "Teaching"
 ---
 
-How you feel about the importance of teaching (text here)
+##Teaching Experience:
+
+Auburn University
+- Instructor, Department of Economics, Auburn University
+	- ECON 2020: Principles of Microeconomics (5 semester, 6 sections) 
+
+- Tutor, Auburn Global, Auburn University
+	- ECON 2020: Principles of Microeconomics 
+
+I have my own teaching philosophy, which you can find [here](https://github.com/kanekarsanket/kanekarsanket.github.io/raw/master/files/Teaching Philosophy.pdf).
+
+I have received a good result from the Auburn University teaching evaluation, which you can check [here](https://github.com/kanekarsanket/kanekarsanket.github.io/raw/master/files/Teaching Evaluation.pdf)
 
 
-## Auburn University
-- Graduate Student Instructor: 
-	- Spring 2022:
-		- ECON 2020: Principles of Microeconomics 
-			- [Syllabus] (location of syllabus)
-
-- Teaching Assistant: 
-	- Spring 2020:
-		- ECON 2030: Principles of Macroeconomics 
-		- ECON 2020: Principles of Microeconomics
-		
-	- Fall 2019:
-		- ECON 2030: Principles of Microeconomics
-		- ECON 2020: Principles of Microeconomics
-
-	- Spring 2019:
-		- ECON 2020: Principles of Microeconomics
-
-	- Fall 2018:
-		- ECON 2030: Principles of Microeconomics
-		- ECON 2020: Principles of Microeconomics 
-
-- Tutor 
-	- ECON 2020: Principles of Microeconomics (Auburn Global) 
