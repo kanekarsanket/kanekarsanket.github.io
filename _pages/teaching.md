@@ -18,5 +18,5 @@ I have learned a lof from teaching and developed my own teaching philosophy, whi
 
 I have received a good result from the Auburn University teaching evaluation, which you can check [here](https://github.com/kanekarsanket/kanekarsanket.github.io/raw/master/files/TeachingEvaluation.pdf).
 
-You can also reach for comments and evaluations from my past students [here](https://github.com/kanekarsanket/kanekarsanket.github.io/raw/master/files/studentcomment.pdf)
+You can also reach the comments and evaluations from my past students [here](https://github.com/kanekarsanket/kanekarsanket.github.io/raw/master/files/studentcomment.pdf).
 
