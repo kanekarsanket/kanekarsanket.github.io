@@ -10,7 +10,7 @@ title: "Teaching"
 - Tutor, Auburn Global, Auburn University
 	- ECON 2020: Principles of Microeconomics 
 
-I have my own teaching philosophy, which you can find [here](https://github.com/kanekarsanket/kanekarsanket.github.io/raw/master/files/TeachingPhilosophy.pdf).
+I have learned a lof from teaching and developed my own teaching philosophy, which you can find [here](https://github.com/kanekarsanket/kanekarsanket.github.io/raw/master/files/TeachingPhilosophy.pdf).
 
 I have received a good result from the Auburn University teaching evaluation, which you can check [here](https://github.com/kanekarsanket/kanekarsanket.github.io/raw/master/files/TeachingEvaluation.pdf).
 
