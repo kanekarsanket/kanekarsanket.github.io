@@ -9,7 +9,7 @@ redirect_from:
 ---
 
 I am a Ph.D. Candidate in Economics at the Auburn University, Auburn AL. 
-     My main concentration is Applied Microeconomics  with research
+Currently, my main concentration is Applied Microeconomics  with research
 interests in Health Economics, Public Health and Public Policy.  
 
 I will be on the academic job market in Winter-2023 
