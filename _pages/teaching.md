@@ -16,7 +16,5 @@ title: "Teaching"
 
 I have learned a lot from teaching and developed my own teaching philosophy, which you can find [here](https://github.com/kanekarsanket/kanekarsanket.github.io/raw/master/files/TeachingPhilosophy.pdf).
 
-I have received a good result from the Auburn University teaching evaluation, which you can check [here](https://github.com/kanekarsanket/kanekarsanket.github.io/raw/master/files/TeachingEvaluation.pdf).
-
 You can also reach the comments and evaluations from my past students [here](https://github.com/kanekarsanket/kanekarsanket.github.io/raw/master/files/studentcomment.pdf).
 
