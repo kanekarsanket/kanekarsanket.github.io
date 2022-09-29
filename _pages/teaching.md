@@ -3,9 +3,7 @@ permalink: /teaching/
 title: "Teaching"
 ---
 
-##Teaching Experience:
-
-Auburn University
+##Auburn University
 - Instructor, Department of Economics, Auburn University
 	- ECON 2020: Principles of Microeconomics (5 semester, 6 sections) 
 
