@@ -8,15 +8,9 @@ redirect_from:
   - /about.html
 ---
 
-I am a Ph.D. Candidate in Economics at the Auburn University, Auburn AL. 
-Currently, my main concentration is Applied Microeconomics  with research
-interests in Health Economics, Public Health and Public Policy.  
+I am a Ph.D. Candidate in Economics at the Auburn University. My primary research interests are in the areas of health economics, public health, and public policy. I am particularly interested in applying empirical econometric methods to answer questions about the efficacy of various policies and programs.
 
-I will be on the academic job market in Winter-2023 
-and I’ll be available for interviews at the AEA 2023. 
-You can reach me at ssk0012@auburn.edu.
-
-
+I will be on the academic job market this year, and I’ll be available for interviews at the AEA 2023. You can reach me at ssk0012@auburn.edu.
 
 
  
