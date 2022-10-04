@@ -85,8 +85,8 @@ author:
   bio              : "Ph.D Candidate of Economics at Auburn University"
   location         : "United States"
   employer         :
-  pubmed           : ""
-  googlescholar    : ""
+  pubmed           : 
+  googlescholar    : 
   email            : "ssk0012@auburn.edu"
   researchgate     :  # example: "https://www.researchgate.net/profile/yourprofile"
   uri              :
