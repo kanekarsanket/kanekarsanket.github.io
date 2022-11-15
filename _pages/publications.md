@@ -17,5 +17,5 @@ The objective is to evaluate the relationship between U.S. cities’ socio-econo
 
 ## Paper in Progress
 
-### [Same Sex Marriage and Racial Health Disparity among LGBT]
-### [The Impact of COVID-19 on Healthcare Utilization, with Tannista Banerjee]
+### Same Sex Marriage and Racial Health Disparity among LGBT
+### The Impact of COVID-19 on Healthcare Utilization, with Tannista Banerjee
