@@ -10,7 +10,7 @@ locale                   : "en-US"
 title                    : "Sanket Kanekar"
 title_separator          : "-"
 name                     : &name "Sanket Kanekar"
-description              : &description "Ph.D Candidate of Economics at Auburn University"
+description              : &description "Assistant Professor in Economics at Alabama State University"
 url                      : https://kanekarsanket.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "kanekarsanket/kanekarsanket.github.io"
@@ -82,12 +82,12 @@ analytics:
 author:
   name             : "Sanket Kanekar"
   avatar           : "profile.png"
-  bio              : "Ph.D Candidate of Economics at Auburn University"
+  bio              : "Assistant Professor in Economics at Alabama State University"
   location         : "United States"
   employer         :
   pubmed           : 
   googlescholar    : 
-  email            : "ssk0012@auburn.edu"
+  email            : "skanekar@alasu.edu"
   researchgate     :  # example: "https://www.researchgate.net/profile/yourprofile"
   uri              :
   bitbucket        :
