@@ -8,9 +8,13 @@ redirect_from:
   - /about.html
 ---
 
-I am a Ph.D. Candidate in Economics at the Auburn University. My primary research interests are in the areas of health economics, public health, and public policy. I am particularly interested in applying empirical econometric methods to answer questions about the efficacy of various policies and programs.
+I am a tenure-track Assistant Professor in Economics at Alabama State University. My primary
+research interests lie in the areas of health economics, public health, and public policy. I am
+particularly interested in applying empirical econometric methods to evaluate the efficacy of
+various policies and programs.
 
-I will be on the academic job market this year, and I’ll be available for interviews at the AEA 2023. You can reach me at ssk0012@auburn.edu.
+If you are interested in my work or would like to collaborate, please feel free to reach out to me.
+If its not updated My email – skanekar@alasu.edu
 
 
  
