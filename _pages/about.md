@@ -1,7 +1,7 @@
 ---
 permalink: /
-title: "About Me"
-excerpt: "About me"
+title: ""
+excerpt: ""
 author_profile: true
 redirect_from: 
   - /about/
@@ -14,7 +14,7 @@ particularly interested in applying empirical econometric methods to evaluate th
 various policies and programs.
 
 If you are interested in my work or would like to collaborate, please feel free to reach out to me.
-If its not updated My email – skanekar@alasu.edu
+My email address is skanekar@alasu.edu.
 
 
  
