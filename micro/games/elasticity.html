@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Price Elasticity Explorer</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #0a0a0a;
+  color: #fff;
+  min-height: 100vh;
+}
+
+header {
+  background: #000;
+  border-bottom: 4px solid #D4A843;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+header h1 {
+  font-size: 1.2rem;
+  color: #D4A843;
+}
+
+header a {
+  color: #D4A843;
+  text-decoration: none;
+  font-size: 0.85rem;
+  border: 1px solid #D4A843;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+header a:hover {
+  background: #D4A843;
+  color: #000;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+.card {
+  background: #151515;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.card h2 {
+  color: #D4A843;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #2a2a2a;
+  padding-bottom: 0.5rem;
+}
+
+.card h3 {
+  color: #D4A843;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+label {
+  display: block;
+  font-size: 0.8rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.4rem;
+}
+
+select, input[type="range"] {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+select {
+  background: #1a1a1a;
+  color: #fff;
+  border: 1px solid #333;
+  padding: 0.6rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: #333;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #D4A843;
+  cursor: pointer;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.stat-box {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 0.75rem;
+  text-align: center;
+}
+
+.stat-box .stat-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #888;
+  margin-bottom: 0.3rem;
+}
+
+.stat-box .stat-value {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #D4A843;
+}
+
+.stat-box .stat-value.green { color: #4caf50; }
+.stat-box .stat-value.red { color: #f44336; }
+.stat-box .stat-value.blue { color: #42a5f5; }
+
+.formula-box {
+  background: #1a1a1a;
+  border-left: 3px solid #D4A843;
+  padding: 0.75rem 1rem;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.formula-box code {
+  color: #D4A843;
+  font-size: 0.9rem;
+}
+
+.chart-wrap {
+  position: relative;
+  width: 100%;
+  max-height: 350px;
+  margin-bottom: 1rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.badge-elastic { background: #1b5e20; color: #a5d6a7; }
+.badge-inelastic { background: #b71c1c; color: #ef9a9a; }
+.badge-unit { background: #e65100; color: #ffcc80; }
+
+.revenue-challenge {
+  background: #1a1a1a;
+  border: 2px dashed #D4A843;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.revenue-challenge h3 {
+  margin-bottom: 0.5rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  background: #D4A843;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn:hover { background: #c49a3a; }
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid #D4A843;
+  color: #D4A843;
+}
+
+.btn-outline:hover {
+  background: #D4A843;
+  color: #000;
+}
+
+.quiz-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.6rem 1rem;
+  margin-bottom: 0.5rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: border-color 0.2s;
+}
+
+.quiz-option:hover { border-color: #D4A843; }
+.quiz-option.correct { border-color: #4caf50; background: #1b3d1b; }
+.quiz-option.wrong { border-color: #f44336; background: #3d1b1b; }
+
+.quiz-feedback {
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+}
+
+.quiz-q { margin-bottom: 1.25rem; }
+.quiz-q p { margin-bottom: 0.6rem; font-size: 0.9rem; }
+
+.info-text {
+  font-size: 0.85rem;
+  color: #ccc;
+  line-height: 1.7;
+}
+
+.info-text p { margin-bottom: 0.75rem; }
+
+.info-text strong { color: #D4A843; }
+
+.info-list {
+  list-style: none;
+  padding: 0;
+}
+
+.info-list li {
+  padding: 0.4rem 0 0.4rem 1.2rem;
+  position: relative;
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+.info-list li::before {
+  content: "\25B8";
+  position: absolute;
+  left: 0;
+  color: #D4A843;
+}
+
+.slider-val {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #D4A843;
+  margin-bottom: 0.5rem;
+}
+
+.collapse-toggle {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: #D4A843;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #2a2a2a;
+  margin-bottom: 0.75rem;
+}
+
+.collapse-toggle::after {
+  content: " +";
+  float: right;
+}
+
+.collapse-toggle.open::after {
+  content: " \2212";
+}
+
+.collapse-body {
+  display: none;
+}
+
+.collapse-body.open {
+  display: block;
+}
+
+.score-bar {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+.best-revenue-msg {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  background: #1b3d1b;
+  color: #a5d6a7;
+}
+
+@media (max-width: 600px) {
+  header h1 { font-size: 1rem; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .stat-box .stat-value { font-size: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Price Elasticity Explorer</h1>
+  <a href="../index.html">Back to Micro Hub</a>
+</header>
+
+<div class="container">
+
+  <!-- Controls -->
+  <div class="card">
+    <h2>Choose a Product & Change the Price</h2>
+
+    <label for="productSelect">Product</label>
+    <select id="productSelect">
+      <option value="gasoline">Gasoline</option>
+      <option value="insulin">Insulin (Life-saving medication)</option>
+      <option value="handbags">Designer Handbags</option>
+      <option value="fastfood">Fast Food</option>
+      <option value="netflix">Netflix Subscription</option>
+      <option value="water">Bottled Water</option>
+    </select>
+
+    <label for="priceSlider">Price Increase</label>
+    <div class="slider-val" id="sliderLabel">+0%</div>
+    <input type="range" id="priceSlider" min="0" max="50" value="0" step="1">
+
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-label">% Price Change</div>
+        <div class="stat-value" id="pctPrice">0%</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">% Qty Change</div>
+        <div class="stat-value" id="pctQty">0%</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Elasticity (|Ed|)</div>
+        <div class="stat-value blue" id="elastVal">--</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Classification</div>
+        <div id="elastBadge"><span class="badge badge-unit">--</span></div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-label">Original Revenue</div>
+        <div class="stat-value" id="revOrig">--</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">New Revenue</div>
+        <div class="stat-value" id="revNew">--</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Revenue Change</div>
+        <div class="stat-value" id="revChange">--</div>
+      </div>
+    </div>
+
+    <div class="formula-box">
+      <code>Ed = (% Change in Quantity Demanded) / (% Change in Price)</code><br>
+      <span style="color:#aaa;">Total Revenue = Price &times; Quantity</span>
+    </div>
+  </div>
+
+  <!-- Chart -->
+  <div class="card">
+    <h2>Demand Curve</h2>
+    <div class="chart-wrap">
+      <canvas id="demandChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Revenue Maximization Challenge -->
+  <div class="card">
+    <div class="revenue-challenge">
+      <h3>Revenue Maximization Challenge</h3>
+      <p style="font-size:0.85rem;color:#ccc;margin-bottom:0.75rem;">
+        Can you find the price increase that <strong style="color:#D4A843;">maximizes total revenue</strong> for each product? Use the slider above to experiment.
+      </p>
+      <button class="btn" id="checkRevBtn" onclick="checkRevMax()">Check My Answer</button>
+      <button class="btn btn-outline" id="hintBtn" onclick="showHint()">Hint</button>
+      <div id="revFeedback"></div>
+      <div id="hintBox" style="display:none;margin-top:0.5rem;font-size:0.85rem;color:#aaa;padding:0.5rem;background:#1a1a1a;border-radius:6px;">
+      </div>
+      <div class="score-bar" id="scoreBar">Products solved: 0 / 6</div>
+    </div>
+  </div>
+
+  <!-- Economics Behind This -->
+  <div class="card">
+    <button class="collapse-toggle" id="econToggle" onclick="toggleCollapse('econToggle','econBody')">The Economics Behind This</button>
+    <div class="collapse-body" id="econBody">
+      <div class="info-text">
+        <p><strong>Price Elasticity of Demand</strong> measures how responsive consumers are to a change in price. It is calculated as the percentage change in quantity demanded divided by the percentage change in price.</p>
+
+        <p><strong>Elastic demand (|Ed| &gt; 1):</strong> Consumers are very responsive to price changes. A small price increase leads to a large drop in quantity demanded. Total revenue falls when price rises.</p>
+
+        <p><strong>Inelastic demand (|Ed| &lt; 1):</strong> Consumers are not very responsive. Price increases lead to small drops in quantity demanded. Total revenue rises when price rises.</p>
+
+        <p><strong>Unit elastic (|Ed| = 1):</strong> Revenue is maximized at this point. The percentage change in quantity exactly offsets the percentage change in price.</p>
+
+        <h3 style="margin-top:1rem;">Determinants of Elasticity</h3>
+        <ul class="info-list">
+          <li><strong>Availability of substitutes:</strong> More substitutes = more elastic. Designer handbags have many alternatives; insulin does not.</li>
+          <li><strong>Necessity vs. luxury:</strong> Necessities (gasoline, insulin) tend to be inelastic. Luxuries (designer handbags) are elastic.</li>
+          <li><strong>Time horizon:</strong> Demand becomes more elastic over time as consumers find alternatives.</li>
+          <li><strong>Budget share:</strong> Goods that take a larger share of income tend to be more elastic. A 50% increase in the price of a car matters more than a 50% increase in the price of salt.</li>
+          <li><strong>Definition of the market:</strong> Narrower markets (Coca-Cola) are more elastic than broader markets (soft drinks).</li>
+        </ul>
+
+        <h3 style="margin-top:1rem;">Revenue and Elasticity</h3>
+        <p>The relationship between price changes and revenue depends entirely on elasticity:</p>
+        <ul class="info-list">
+          <li>If demand is <strong>elastic</strong>: raising price decreases revenue (quantity drops a lot).</li>
+          <li>If demand is <strong>inelastic</strong>: raising price increases revenue (quantity drops only a little).</li>
+          <li>Revenue is <strong>maximized</strong> where demand is unit elastic (|Ed| = 1).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div class="card">
+    <button class="collapse-toggle" id="quizToggle" onclick="toggleCollapse('quizToggle','quizBody')">Test Your Knowledge</button>
+    <div class="collapse-body" id="quizBody">
+
+      <div class="quiz-q" id="q1">
+        <p><strong>1.</strong> If the price of insulin rises by 20% and the quantity demanded falls by only 2%, what is the price elasticity of demand?</p>
+        <button class="quiz-option" onclick="answer(1,this,'wrong')">A) 2.0 (Elastic)</button>
+        <button class="quiz-option" onclick="answer(1,this,'correct')">B) 0.1 (Inelastic)</button>
+        <button class="quiz-option" onclick="answer(1,this,'wrong')">C) 1.0 (Unit elastic)</button>
+        <button class="quiz-option" onclick="answer(1,this,'wrong')">D) 10.0 (Perfectly elastic)</button>
+        <div class="quiz-feedback" id="fb1"></div>
+      </div>
+
+      <div class="quiz-q" id="q2">
+        <p><strong>2.</strong> A firm sells a product with elastic demand. If it raises the price, what happens to total revenue?</p>
+        <button class="quiz-option" onclick="answer(2,this,'correct')">A) Revenue decreases</button>
+        <button class="quiz-option" onclick="answer(2,this,'wrong')">B) Revenue increases</button>
+        <button class="quiz-option" onclick="answer(2,this,'wrong')">C) Revenue stays the same</button>
+        <button class="quiz-option" onclick="answer(2,this,'wrong')">D) Cannot be determined</button>
+        <div class="quiz-feedback" id="fb2"></div>
+      </div>
+
+      <div class="quiz-q" id="q3">
+        <p><strong>3.</strong> Which of the following goods is likely to have the MOST elastic demand?</p>
+        <button class="quiz-option" onclick="answer(3,this,'wrong')">A) Tap water</button>
+        <button class="quiz-option" onclick="answer(3,this,'wrong')">B) Gasoline</button>
+        <button class="quiz-option" onclick="answer(3,this,'correct')">C) A specific brand of cereal</button>
+        <button class="quiz-option" onclick="answer(3,this,'wrong')">D) Electricity</button>
+        <div class="quiz-feedback" id="fb3"></div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Product data: basePrice, baseQty, elasticity
+const products = {
+  gasoline:  { name: 'Gasoline',          basePrice: 3.50,  baseQty: 1000, elasticity: 0.3 },
+  insulin:   { name: 'Insulin',           basePrice: 300,   baseQty: 500,  elasticity: 0.1 },
+  handbags:  { name: 'Designer Handbags', basePrice: 2000,  baseQty: 200,  elasticity: 2.5 },
+  fastfood:  { name: 'Fast Food',         basePrice: 8,     baseQty: 5000, elasticity: 1.2 },
+  netflix:   { name: 'Netflix',           basePrice: 15,    baseQty: 8000, elasticity: 1.8 },
+  water:     { name: 'Bottled Water',     basePrice: 1.50,  baseQty: 3000, elasticity: 0.5 }
+};
+
+// Revenue challenge tracking
+const solved = {};
+let solvedCount = 0;
+
+const selectEl = document.getElementById('productSelect');
+const sliderEl = document.getElementById('priceSlider');
+
+// Build demand curve chart
+const ctx = document.getElementById('demandChart').getContext('2d');
+const demandChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: [],
+    datasets: [
+      {
+        label: 'Demand Curve',
+        data: [],
+        borderColor: '#D4A843',
+        backgroundColor: 'rgba(212,168,67,0.1)',
+        fill: true,
+        tension: 0.3,
+        pointRadius: 0
+      },
+      {
+        label: 'Original Point',
+        data: [],
+        borderColor: '#42a5f5',
+        backgroundColor: '#42a5f5',
+        pointRadius: 8,
+        pointStyle: 'circle',
+        showLine: false
+      },
+      {
+        label: 'New Point',
+        data: [],
+        borderColor: '#f44336',
+        backgroundColor: '#f44336',
+        pointRadius: 8,
+        pointStyle: 'triangle',
+        showLine: false
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 1.8,
+    plugins: {
+      legend: {
+        labels: { color: '#aaa', font: { size: 11 } }
+      }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Quantity', color: '#aaa' },
+        ticks: { color: '#888' },
+        grid: { color: '#222' }
+      },
+      y: {
+        title: { display: true, text: 'Price ($)', color: '#aaa' },
+        ticks: { color: '#888' },
+        grid: { color: '#222' }
+      }
+    }
+  }
+});
+
+function getProduct() {
+  return products[selectEl.value];
+}
+
+function updateAll() {
+  const p = getProduct();
+  const pctChange = parseInt(sliderEl.value);
+  const newPrice = p.basePrice * (1 + pctChange / 100);
+  const pctQtyChange = -p.elasticity * pctChange;
+  const newQty = Math.max(0, p.baseQty * (1 + pctQtyChange / 100));
+
+  const origRev = p.basePrice * p.baseQty;
+  const newRev = newPrice * newQty;
+  const revDiff = newRev - origRev;
+
+  // Stats
+  document.getElementById('sliderLabel').textContent = '+' + pctChange + '%';
+  document.getElementById('pctPrice').textContent = '+' + pctChange + '%';
+  document.getElementById('pctQty').textContent = (pctQtyChange >= 0 ? '+' : '') + pctQtyChange.toFixed(1) + '%';
+
+  const absElast = p.elasticity;
+  document.getElementById('elastVal').textContent = absElast.toFixed(2);
+
+  let badge = '';
+  if (absElast > 1) badge = '<span class="badge badge-elastic">Elastic</span>';
+  else if (absElast < 1) badge = '<span class="badge badge-inelastic">Inelastic</span>';
+  else badge = '<span class="badge badge-unit">Unit Elastic</span>';
+  document.getElementById('elastBadge').innerHTML = badge;
+
+  document.getElementById('revOrig').textContent = '$' + origRev.toLocaleString(undefined, {maximumFractionDigits:0});
+  document.getElementById('revNew').textContent = '$' + newRev.toLocaleString(undefined, {maximumFractionDigits:0});
+
+  const revEl = document.getElementById('revChange');
+  if (pctChange === 0) {
+    revEl.textContent = '--';
+    revEl.className = 'stat-value';
+  } else {
+    const pctRevChange = ((revDiff / origRev) * 100).toFixed(1);
+    revEl.textContent = (revDiff >= 0 ? '+$' : '-$') + Math.abs(revDiff).toLocaleString(undefined, {maximumFractionDigits:0}) + ' (' + (revDiff >= 0 ? '+' : '') + pctRevChange + '%)';
+    revEl.className = 'stat-value ' + (revDiff >= 0 ? 'green' : 'red');
+  }
+
+  // Update chart — build demand curve from 0 to 2x base price
+  const points = [];
+  const steps = 30;
+  const maxP = p.basePrice * 2;
+  for (let i = 0; i <= steps; i++) {
+    const pr = (maxP / steps) * i;
+    const pctFromBase = ((pr - p.basePrice) / p.basePrice) * 100;
+    const q = Math.max(0, p.baseQty * (1 + (-p.elasticity * pctFromBase) / 100));
+    points.push({ x: Math.round(q), y: pr });
+  }
+  points.sort((a, b) => a.x - b.x);
+
+  demandChart.data.datasets[0].data = points;
+  demandChart.data.datasets[1].data = [{ x: Math.round(p.baseQty), y: p.basePrice }];
+  demandChart.data.datasets[2].data = pctChange > 0 ? [{ x: Math.round(newQty), y: newPrice }] : [];
+
+  demandChart.options.scales.x.type = 'linear';
+  demandChart.options.scales.x.min = 0;
+  demandChart.options.scales.y.min = 0;
+
+  demandChart.update();
+}
+
+selectEl.addEventListener('change', () => {
+  sliderEl.value = 0;
+  updateAll();
+});
+sliderEl.addEventListener('input', updateAll);
+
+// Revenue Maximization Challenge
+function checkRevMax() {
+  const key = selectEl.value;
+  const p = getProduct();
+  const pctChange = parseInt(sliderEl.value);
+
+  // Find optimal price increase (where revenue is maximized)
+  // Revenue = P*(1+x/100) * Q*(1 - e*x/100)
+  // dR/dx = 0 => derivative: baseP*baseQ * [ (1 - e*x/100)/100 + (1+x/100)*(-e/100) ] = 0
+  // Simplify: 1 - e*x/100 - e*(1+x/100) = 0 => 1 - e - 2*e*x/100 = 0
+  // x = (1-e)/(2*e) * 100
+  let optimalPct;
+  if (p.elasticity <= 0) {
+    optimalPct = 50; // max slider
+  } else {
+    optimalPct = ((1 - p.elasticity) / (2 * p.elasticity)) * 100;
+  }
+  // Clamp to slider range
+  optimalPct = Math.max(0, Math.min(50, Math.round(optimalPct)));
+
+  const diff = Math.abs(pctChange - optimalPct);
+  const fb = document.getElementById('revFeedback');
+
+  if (diff <= 2) {
+    fb.innerHTML = '<div class="best-revenue-msg">Correct! A price increase of about +' + optimalPct + '% maximizes revenue for ' + p.name + '.</div>';
+    if (!solved[key]) {
+      solved[key] = true;
+      solvedCount++;
+      document.getElementById('scoreBar').textContent = 'Products solved: ' + solvedCount + ' / 6';
+    }
+  } else {
+    const hint = pctChange < optimalPct ? 'Try a higher price increase.' : 'Try a lower price increase.';
+    fb.innerHTML = '<div style="margin-top:0.5rem;font-size:0.85rem;color:#f44336;padding:0.5rem;background:#3d1b1b;border-radius:6px;">Not quite. ' + hint + '</div>';
+  }
+}
+
+function showHint() {
+  const p = getProduct();
+  const box = document.getElementById('hintBox');
+  if (p.elasticity < 1) {
+    box.innerHTML = 'For <strong style="color:#D4A843;">inelastic</strong> goods, raising the price increases revenue because quantity barely drops. The optimal price increase may be at or near the maximum of the slider.';
+  } else if (p.elasticity > 1) {
+    box.innerHTML = 'For <strong style="color:#D4A843;">elastic</strong> goods, raising the price a lot will tank quantity demanded and hurt revenue. The optimal increase is modest.';
+  } else {
+    box.innerHTML = 'When demand is unit elastic, revenue is already maximized at the current price.';
+  }
+  box.style.display = 'block';
+}
+
+// Collapse panels
+function toggleCollapse(toggleId, bodyId) {
+  const toggle = document.getElementById(toggleId);
+  const body = document.getElementById(bodyId);
+  toggle.classList.toggle('open');
+  body.classList.toggle('open');
+}
+
+// Quiz
+const explanations = {
+  1: '2% / 20% = 0.1. Since |Ed| < 1, demand is inelastic. Insulin is a necessity with no close substitutes.',
+  2: 'With elastic demand (|Ed| > 1), a price increase causes a proportionally larger decrease in quantity demanded, so total revenue falls.',
+  3: 'A specific brand of cereal has many close substitutes (other cereals), making its demand highly elastic. Broader categories like water, gasoline, and electricity have fewer substitutes.'
+};
+
+function answer(qNum, btn, result) {
+  const q = document.getElementById('q' + qNum);
+  if (q.dataset.answered) return;
+  q.dataset.answered = 'true';
+
+  btn.classList.add(result);
+  if (result === 'wrong') {
+    q.querySelectorAll('.quiz-option').forEach(b => {
+      if (b !== btn) b.style.opacity = '0.5';
+    });
+    // Highlight correct
+    const correct = q.querySelectorAll('.quiz-option');
+    correct.forEach(b => {
+      if (b.getAttribute('onclick').includes("'correct'")) b.classList.add('correct');
+    });
+  } else {
+    q.querySelectorAll('.quiz-option').forEach(b => {
+      if (b !== btn) b.style.opacity = '0.5';
+    });
+  }
+
+  const fb = document.getElementById('fb' + qNum);
+  fb.innerHTML = '<div style="padding:0.5rem;border-radius:6px;background:' + (result === 'correct' ? '#1b3d1b' : '#3d1b1b') + ';color:' + (result === 'correct' ? '#a5d6a7' : '#ef9a9a') + ';">' + (result === 'correct' ? 'Correct! ' : 'Incorrect. ') + explanations[qNum] + '</div>';
+}
+
+// Init
+updateAll();
+</script>
+</body>
+</html>

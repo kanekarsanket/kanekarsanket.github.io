@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prisoner's Dilemma | Principles of Microeconomics</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f5f5f5;
+  color: #222;
+  line-height: 1.6;
+}
+.header {
+  background: #000;
+  color: #D4A843;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header h1 { font-size: 1.25rem; }
+.header a { color: #D4A843; text-decoration: none; font-size: 0.9rem; }
+.header a:hover { text-decoration: underline; }
+.container { max-width: 800px; margin: 0 auto; padding: 1rem; }
+.card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+.card h2 { color: #000; margin-bottom: 0.75rem; font-size: 1.2rem; }
+.gold-accent { color: #D4A843; font-weight: bold; }
+.hidden { display: none; }
+.btn {
+  display: inline-block;
+  background: #000;
+  color: #D4A843;
+  border: 2px solid #D4A843;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn:hover { background: #D4A843; color: #000; }
+
+/* Payoff matrix */
+.matrix-wrap { overflow-x: auto; margin: 1rem 0; }
+.payoff-matrix {
+  border-collapse: collapse;
+  margin: 0 auto;
+  font-size: 0.95rem;
+}
+.payoff-matrix th, .payoff-matrix td {
+  border: 2px solid #000;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  min-width: 100px;
+}
+.payoff-matrix th {
+  background: #000;
+  color: #D4A843;
+}
+.payoff-matrix .corner { background: #333; }
+.payoff-matrix .header-label { background: #222; color: #D4A843; font-weight: bold; }
+.payoff-cell { font-size: 1.1rem; }
+.payoff-you { color: #D4A843; font-weight: bold; }
+.payoff-ai { color: #666; }
+.cell-highlight { background: #fffbe6 !important; }
+
+/* Choice buttons */
+.choice-area {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+.choice-btn {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 3px solid;
+  transition: all 0.2s;
+  min-width: 160px;
+}
+.choice-btn.cooperate {
+  background: #fff;
+  color: #28a745;
+  border-color: #28a745;
+}
+.choice-btn.cooperate:hover { background: #28a745; color: #fff; }
+.choice-btn.defect {
+  background: #fff;
+  color: #dc3545;
+  border-color: #dc3545;
+}
+.choice-btn.defect:hover { background: #dc3545; color: #fff; }
+
+/* Round result */
+.round-result {
+  text-align: center;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+.round-result.good { background: #d4edda; }
+.round-result.bad { background: #f8d7da; }
+.round-result.neutral { background: #fff3cd; }
+
+/* History table */
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+}
+.history-table th {
+  background: #000;
+  color: #D4A843;
+  padding: 0.5rem;
+  text-align: center;
+}
+.history-table td {
+  padding: 0.5rem;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+.history-table tr:nth-child(even) { background: #faf7f0; }
+
+/* Scores */
+.score-display {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+.score-box {
+  background: #000;
+  color: #D4A843;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  text-align: center;
+  min-width: 140px;
+}
+.score-box .label { font-size: 0.8rem; opacity: 0.8; }
+.score-box .value { font-size: 2rem; font-weight: bold; }
+
+.round-badge {
+  display: inline-block;
+  background: #D4A843;
+  color: #000;
+  font-weight: bold;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.explanation {
+  background: #fffbe6;
+  border-left: 4px solid #D4A843;
+  padding: 1.25rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1rem 0;
+}
+.explanation h3 { color: #000; margin-bottom: 0.5rem; }
+
+.strategy-box {
+  background: #f0f0f0;
+  border-left: 4px solid #000;
+  padding: 1.25rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1rem 0;
+}
+.strategy-box h3 { margin-bottom: 0.5rem; }
+
+.quiz-q { margin-bottom: 1.25rem; }
+.quiz-q p { font-weight: bold; margin-bottom: 0.5rem; }
+.quiz-q label {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  margin: 0.25rem 0;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  transition: background 0.2s;
+}
+.quiz-q label:hover { background: #f0f0f0; }
+.quiz-q label.correct { background: #d4edda; border-color: #28a745; }
+.quiz-q label.incorrect { background: #f8d7da; border-color: #dc3545; }
+.quiz-feedback {
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  display: none;
+}
+
+.chart-container { position: relative; width: 100%; max-height: 350px; margin: 1rem 0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Prisoner's Dilemma</h1>
+  <a href="../index.html">Back to Games</a>
+</div>
+
+<div class="container">
+
+  <!-- Intro -->
+  <div class="card" id="intro-card">
+    <h2>The Prisoner's Dilemma</h2>
+    <p>You and an opponent each choose to <strong style="color:#28a745;">Cooperate</strong> or <strong style="color:#dc3545;">Defect</strong>. Your payoffs depend on both choices:</p>
+
+    <div class="matrix-wrap">
+      <table class="payoff-matrix">
+        <tr>
+          <th class="corner"></th>
+          <th class="corner"></th>
+          <th colspan="2" class="header-label">Opponent</th>
+        </tr>
+        <tr>
+          <th class="corner"></th>
+          <th class="corner"></th>
+          <th>Cooperate</th>
+          <th>Defect</th>
+        </tr>
+        <tr>
+          <th rowspan="2" class="header-label">You</th>
+          <th>Cooperate</th>
+          <td class="payoff-cell"><span class="payoff-you">3</span>, <span class="payoff-ai">3</span></td>
+          <td class="payoff-cell"><span class="payoff-you">0</span>, <span class="payoff-ai">5</span></td>
+        </tr>
+        <tr>
+          <th>Defect</th>
+          <td class="payoff-cell"><span class="payoff-you">5</span>, <span class="payoff-ai">0</span></td>
+          <td class="payoff-cell"><span class="payoff-you">1</span>, <span class="payoff-ai">1</span></td>
+        </tr>
+      </table>
+    </div>
+    <p style="font-size:0.85rem; color:#666; text-align:center; margin-top:0.5rem;">
+      Payoffs shown as: <span class="payoff-you">Your points</span>, <span class="payoff-ai">Opponent's points</span>
+    </p>
+    <p style="margin-top:1rem;">You will play <strong>10 rounds</strong> against an AI opponent. Can you figure out its strategy?</p>
+    <div style="text-align:center; margin-top:1rem;">
+      <button class="btn" onclick="startGame()">Start Game</button>
+    </div>
+  </div>
+
+  <!-- Game area -->
+  <div id="game-area" class="hidden">
+    <!-- Live payoff matrix with highlighting -->
+    <div class="card" id="matrix-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+        <span class="round-badge" id="round-badge">Round 1 of 10</span>
+        <div class="score-display" style="margin:0;">
+          <div class="score-box" style="padding:0.5rem 1rem;"><div class="label">You</div><div class="value" style="font-size:1.3rem;" id="live-score-you">0</div></div>
+          <div class="score-box" style="padding:0.5rem 1rem;"><div class="label">Opponent</div><div class="value" style="font-size:1.3rem;" id="live-score-ai">0</div></div>
+        </div>
+      </div>
+
+      <div class="matrix-wrap">
+        <table class="payoff-matrix" id="live-matrix">
+          <tr>
+            <th class="corner"></th>
+            <th class="corner"></th>
+            <th colspan="2" class="header-label">Opponent</th>
+          </tr>
+          <tr>
+            <th class="corner"></th>
+            <th class="corner"></th>
+            <th>Cooperate</th>
+            <th>Defect</th>
+          </tr>
+          <tr>
+            <th rowspan="2" class="header-label">You</th>
+            <th>Cooperate</th>
+            <td class="payoff-cell" id="cell-cc"><span class="payoff-you">3</span>, <span class="payoff-ai">3</span></td>
+            <td class="payoff-cell" id="cell-cd"><span class="payoff-you">0</span>, <span class="payoff-ai">5</span></td>
+          </tr>
+          <tr>
+            <th>Defect</th>
+            <td class="payoff-cell" id="cell-dc"><span class="payoff-you">5</span>, <span class="payoff-ai">0</span></td>
+            <td class="payoff-cell" id="cell-dd"><span class="payoff-you">1</span>, <span class="payoff-ai">1</span></td>
+          </tr>
+        </table>
+      </div>
+
+      <h2 style="text-align:center; margin-top:1rem;">Make Your Choice</h2>
+      <div class="choice-area" id="choice-area">
+        <button class="choice-btn cooperate" onclick="makeChoice('C')">Cooperate</button>
+        <button class="choice-btn defect" onclick="makeChoice('D')">Defect</button>
+      </div>
+
+      <div id="round-result" class="hidden"></div>
+      <div style="text-align:center;">
+        <button class="btn hidden" id="next-btn" onclick="nextRound()">Next Round</button>
+      </div>
+    </div>
+
+    <!-- History -->
+    <div class="card">
+      <h2>Round History</h2>
+      <table class="history-table">
+        <thead><tr><th>Round</th><th>You</th><th>Opponent</th><th>Your Points</th><th>Opponent Points</th></tr></thead>
+        <tbody id="history-tbody"></tbody>
+      </table>
+      <p id="history-empty" style="text-align:center; color:#999; padding:1rem;">No rounds played yet.</p>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div id="summary-area" class="hidden">
+    <div class="card">
+      <h2>Game Over -- Final Scores</h2>
+      <div class="score-display">
+        <div class="score-box"><div class="label">You</div><div class="value" id="final-you">0</div></div>
+        <div class="score-box"><div class="label">Opponent</div><div class="value" id="final-ai">0</div></div>
+        <div class="score-box" style="background:#D4A843;color:#000;"><div class="label">If Both Always Cooperated</div><div class="value">30 each</div></div>
+      </div>
+      <p id="outcome-msg" style="text-align:center; margin-top:1rem; font-size:1.1rem; font-weight:bold;"></p>
+    </div>
+
+    <div class="card">
+      <h2>Choices Over Rounds</h2>
+      <div class="chart-container">
+        <canvas id="choicesChart"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Cumulative Scores</h2>
+      <div class="chart-container">
+        <canvas id="scoresChart"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="explanation">
+        <h3>The Economics Behind This</h3>
+        <p><strong>Nash Equilibrium:</strong> In a one-shot Prisoner's Dilemma, Defect is the dominant strategy for both players. No matter what the other player does, you earn more by defecting. When both follow this logic, both defect and earn only 1 point each -- even though mutual cooperation would yield 3 points each. This (Defect, Defect) outcome is the Nash Equilibrium.</p>
+        <p style="margin-top:0.75rem;"><strong>Dominant Strategy:</strong> A strategy is dominant when it is the best response regardless of what the other player chooses. Here, Defect dominates Cooperate: if the opponent cooperates, defecting gives you 5 > 3; if the opponent defects, defecting gives you 1 > 0.</p>
+        <p style="margin-top:0.75rem;"><strong>Why Cooperation Is Hard:</strong> Individual rationality leads to a collectively worse outcome. Each player has an incentive to defect, but when both do, both are worse off. This tension between individual and collective rationality is at the heart of many economic problems.</p>
+        <p style="margin-top:0.75rem;"><strong>Real-World Examples:</strong></p>
+        <ul style="margin-left:1.5rem; margin-top:0.25rem;">
+          <li><strong>Arms Race:</strong> Countries spend on weapons (defect) instead of disarming (cooperate), leaving both poorer and no safer.</li>
+          <li><strong>OPEC:</strong> Member countries agree to limit oil production, but each has incentive to secretly produce more.</li>
+          <li><strong>Price Wars:</strong> Firms could maintain high prices (cooperate), but each has incentive to undercut competitors (defect).</li>
+          <li><strong>Climate Change:</strong> Nations benefit from others reducing emissions while maintaining their own industrial output.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="strategy-box">
+        <h3>Strategy Guide: Tit-for-Tat</h3>
+        <p>Your AI opponent used the <strong>Tit-for-Tat</strong> strategy, one of the most successful strategies in repeated Prisoner's Dilemma tournaments (discovered by Anatol Rapoport).</p>
+        <p style="margin-top:0.75rem;"><strong>How it works:</strong> Cooperate on the first round, then copy whatever the opponent did in the previous round. It is simple, forgiving (returns to cooperation after the opponent does), and retaliatory (punishes defection immediately).</p>
+        <p style="margin-top:0.75rem;"><strong>Repeated vs. One-Shot Games:</strong> In a single game, defecting is rational. But when the game repeats, cooperation becomes sustainable because players can punish defection in future rounds. The threat of future punishment changes the calculus -- this is called the "shadow of the future."</p>
+        <p style="margin-top:0.75rem;"><strong>Key Insight:</strong> Institutions, contracts, and repeated interactions help sustain cooperation by converting one-shot dilemmas into repeated games. This is why ongoing business relationships, trade agreements, and legal systems are so important in economics.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Test Your Understanding</h2>
+      <div id="quiz-area"></div>
+      <div style="text-align:center; margin-top:1rem;">
+        <button class="btn" onclick="checkQuiz()">Check Answers</button>
+        <button class="btn" style="margin-left:0.5rem;" onclick="resetGame()">Play Again</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const TOTAL_ROUNDS = 10;
+const PAYOFFS = {
+  'CC': [3, 3],
+  'CD': [0, 5],
+  'DC': [5, 0],
+  'DD': [1, 1]
+};
+
+let currentRound = 0;
+let playerChoices = [];
+let aiChoices = [];
+let playerScores = [];
+let aiScores = [];
+let totalPlayer = 0;
+let totalAI = 0;
+
+function startGame() {
+  document.getElementById('intro-card').classList.add('hidden');
+  document.getElementById('game-area').classList.remove('hidden');
+  currentRound = 0;
+  playerChoices = [];
+  aiChoices = [];
+  playerScores = [];
+  aiScores = [];
+  totalPlayer = 0;
+  totalAI = 0;
+  document.getElementById('history-tbody').innerHTML = '';
+  document.getElementById('history-empty').classList.remove('hidden');
+  updateLiveScores();
+  prepareRound();
+}
+
+function prepareRound() {
+  document.getElementById('round-badge').textContent = `Round ${currentRound + 1} of ${TOTAL_ROUNDS}`;
+  document.getElementById('choice-area').classList.remove('hidden');
+  document.getElementById('round-result').classList.add('hidden');
+  document.getElementById('next-btn').classList.add('hidden');
+  clearCellHighlights();
+}
+
+function clearCellHighlights() {
+  ['cell-cc','cell-cd','cell-dc','cell-dd'].forEach(id => {
+    document.getElementById(id).classList.remove('cell-highlight');
+  });
+}
+
+function getAIChoice() {
+  // Tit-for-Tat: cooperate first round, then mirror player's last choice
+  if (currentRound === 0) return 'C';
+  return playerChoices[currentRound - 1];
+}
+
+function makeChoice(playerChoice) {
+  const aiChoice = getAIChoice();
+  const key = playerChoice + aiChoice;
+  const [pScore, aScore] = PAYOFFS[key];
+
+  playerChoices.push(playerChoice);
+  aiChoices.push(aiChoice);
+  playerScores.push(pScore);
+  aiScores.push(aScore);
+  totalPlayer += pScore;
+  totalAI += aScore;
+
+  // Highlight matrix cell
+  clearCellHighlights();
+  const cellId = 'cell-' + playerChoice.toLowerCase() + aiChoice.toLowerCase();
+  document.getElementById(cellId).classList.add('cell-highlight');
+
+  // Show result
+  const resultDiv = document.getElementById('round-result');
+  resultDiv.classList.remove('hidden');
+  const pLabel = playerChoice === 'C' ? '<span style="color:#28a745;font-weight:bold;">Cooperated</span>' : '<span style="color:#dc3545;font-weight:bold;">Defected</span>';
+  const aLabel = aiChoice === 'C' ? '<span style="color:#28a745;font-weight:bold;">Cooperated</span>' : '<span style="color:#dc3545;font-weight:bold;">Defected</span>';
+  let cssClass = 'neutral';
+  if (pScore >= 3) cssClass = 'good';
+  else if (pScore === 0) cssClass = 'bad';
+  resultDiv.innerHTML = `<div class="round-result ${cssClass}">
+    <p>You ${pLabel} | Opponent ${aLabel}</p>
+    <p style="font-size:1.2rem; font-weight:bold; margin-top:0.5rem;">You earned ${pScore} points | Opponent earned ${aScore} points</p>
+  </div>`;
+
+  // Hide choice buttons, show next
+  document.getElementById('choice-area').classList.add('hidden');
+  document.getElementById('next-btn').classList.remove('hidden');
+  if (currentRound + 1 >= TOTAL_ROUNDS) {
+    document.getElementById('next-btn').textContent = 'See Final Results';
+  }
+
+  // Update history
+  document.getElementById('history-empty').classList.add('hidden');
+  const tbody = document.getElementById('history-tbody');
+  const row = document.createElement('tr');
+  row.innerHTML = `<td>${currentRound + 1}</td>
+    <td style="color:${playerChoice === 'C' ? '#28a745' : '#dc3545'}; font-weight:bold;">${playerChoice === 'C' ? 'Cooperate' : 'Defect'}</td>
+    <td style="color:${aiChoice === 'C' ? '#28a745' : '#dc3545'}; font-weight:bold;">${aiChoice === 'C' ? 'Cooperate' : 'Defect'}</td>
+    <td>${pScore}</td><td>${aScore}</td>`;
+  tbody.appendChild(row);
+
+  updateLiveScores();
+}
+
+function updateLiveScores() {
+  document.getElementById('live-score-you').textContent = totalPlayer;
+  document.getElementById('live-score-ai').textContent = totalAI;
+}
+
+function nextRound() {
+  currentRound++;
+  if (currentRound >= TOTAL_ROUNDS) {
+    showSummary();
+  } else {
+    prepareRound();
+  }
+}
+
+function showSummary() {
+  document.getElementById('game-area').classList.add('hidden');
+  document.getElementById('summary-area').classList.remove('hidden');
+  document.getElementById('final-you').textContent = totalPlayer;
+  document.getElementById('final-ai').textContent = totalAI;
+
+  const msg = document.getElementById('outcome-msg');
+  if (totalPlayer > totalAI) {
+    msg.textContent = 'You scored more than the opponent!';
+    msg.style.color = '#28a745';
+  } else if (totalPlayer < totalAI) {
+    msg.textContent = 'The opponent scored more than you.';
+    msg.style.color = '#dc3545';
+  } else {
+    msg.textContent = 'It is a tie!';
+    msg.style.color = '#D4A843';
+  }
+
+  // Choices chart
+  const roundLabels = Array.from({length: TOTAL_ROUNDS}, (_, i) => `R${i+1}`);
+  const playerData = playerChoices.map(c => c === 'C' ? 1 : 0);
+  const aiData = aiChoices.map(c => c === 'C' ? 1 : 0);
+
+  new Chart(document.getElementById('choicesChart'), {
+    type: 'bar',
+    data: {
+      labels: roundLabels,
+      datasets: [
+        { label: 'You', data: playerData, backgroundColor: '#D4A843cc', borderColor: '#D4A843', borderWidth: 1 },
+        { label: 'Opponent', data: aiData, backgroundColor: '#555555cc', borderColor: '#555', borderWidth: 1 }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { position: 'bottom' } },
+      scales: {
+        y: {
+          min: 0, max: 1,
+          ticks: { callback: v => v === 1 ? 'Cooperate' : 'Defect', stepSize: 1 },
+          title: { display: true, text: 'Choice' }
+        }
+      }
+    }
+  });
+
+  // Cumulative scores chart
+  let cumPlayer = [], cumAI = [], sp = 0, sa = 0;
+  for (let i = 0; i < TOTAL_ROUNDS; i++) {
+    sp += playerScores[i]; sa += aiScores[i];
+    cumPlayer.push(sp); cumAI.push(sa);
+  }
+
+  new Chart(document.getElementById('scoresChart'), {
+    type: 'line',
+    data: {
+      labels: roundLabels,
+      datasets: [
+        { label: 'You', data: cumPlayer, borderColor: '#D4A843', backgroundColor: '#D4A84333', borderWidth: 3, pointRadius: 5, tension: 0.3 },
+        { label: 'Opponent', data: cumAI, borderColor: '#555', backgroundColor: '#55555533', borderWidth: 2, pointRadius: 5, tension: 0.3 }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { position: 'bottom' } },
+      scales: {
+        y: { beginAtZero: true, title: { display: true, text: 'Cumulative Score' } }
+      }
+    }
+  });
+
+  renderQuiz();
+}
+
+function renderQuiz() {
+  const questions = [
+    {
+      q: "In a one-shot Prisoner's Dilemma, what is the Nash Equilibrium?",
+      opts: ["Both players cooperate", "Both players defect", "One cooperates, one defects", "There is no Nash Equilibrium"],
+      correct: 1,
+      explanation: "Both Defect is the Nash Equilibrium because Defect is the dominant strategy for each player -- neither can improve their payoff by unilaterally changing their choice. Even though Both Cooperate yields higher payoffs, it is not stable because each player has incentive to deviate."
+    },
+    {
+      q: "Why can cooperation emerge in a repeated Prisoner's Dilemma but not in a one-shot game?",
+      opts: ["Players become more altruistic over time", "Players can punish defection in future rounds, making cooperation self-enforcing", "The payoffs change in repeated games", "Repeated games have different rules"],
+      correct: 1,
+      explanation: "In repeated games, the possibility of future interaction means that defection today can be punished tomorrow. This 'shadow of the future' makes cooperation sustainable as a self-enforcing equilibrium -- players cooperate not out of altruism, but because the long-term gains outweigh the short-term temptation to defect."
+    },
+    {
+      q: "Which real-world situation is BEST described as a Prisoner's Dilemma?",
+      opts: ["Choosing what to eat for lunch", "Two competing firms deciding whether to keep prices high or undercut each other", "A student choosing which major to pursue", "A consumer deciding between two brands of cereal"],
+      correct: 1,
+      explanation: "Competing firms face a Prisoner's Dilemma: both would profit more if they kept prices high (cooperate), but each has incentive to undercut the other (defect) to capture more market share. If both undercut, profits drop for everyone -- just like mutual defection in the game."
+    }
+  ];
+
+  const area = document.getElementById('quiz-area');
+  area.innerHTML = '';
+  questions.forEach((question, qi) => {
+    let html = `<div class="quiz-q" id="q${qi}"><p>${qi+1}. ${question.q}</p>`;
+    question.opts.forEach((opt, oi) => {
+      html += `<label><input type="radio" name="q${qi}" value="${oi}"> ${opt}</label>`;
+    });
+    html += `<div class="quiz-feedback" id="fb${qi}"></div></div>`;
+    area.innerHTML += html;
+  });
+  window._quizData = questions;
+}
+
+function checkQuiz() {
+  const questions = window._quizData;
+  questions.forEach((question, qi) => {
+    const selected = document.querySelector(`input[name="q${qi}"]:checked`);
+    const fb = document.getElementById(`fb${qi}`);
+    const labels = document.querySelectorAll(`#q${qi} label`);
+    labels.forEach(l => { l.classList.remove('correct', 'incorrect'); });
+
+    if (!selected) {
+      fb.style.display = 'block';
+      fb.style.background = '#fff3cd';
+      fb.textContent = 'Please select an answer.';
+      return;
+    }
+    const val = parseInt(selected.value);
+    labels[val].classList.add(val === question.correct ? 'correct' : 'incorrect');
+    if (val !== question.correct) {
+      labels[question.correct].classList.add('correct');
+    }
+    fb.style.display = 'block';
+    fb.style.background = val === question.correct ? '#d4edda' : '#f8d7da';
+    fb.textContent = (val === question.correct ? 'Correct! ' : 'Incorrect. ') + question.explanation;
+  });
+}
+
+function resetGame() {
+  document.getElementById('summary-area').classList.add('hidden');
+  document.getElementById('intro-card').classList.remove('hidden');
+}
+</script>
+</body>
+</html>

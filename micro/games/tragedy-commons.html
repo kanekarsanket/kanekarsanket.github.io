@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tragedy of the Commons Simulation</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #0a0a0a;
+  color: #fff;
+  min-height: 100vh;
+}
+
+header {
+  background: #000;
+  border-bottom: 4px solid #D4A843;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+header h1 {
+  font-size: 1.2rem;
+  color: #D4A843;
+}
+
+header a {
+  color: #D4A843;
+  text-decoration: none;
+  font-size: 0.85rem;
+  border: 1px solid #D4A843;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+header a:hover {
+  background: #D4A843;
+  color: #000;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+.card {
+  background: #151515;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.card h2 {
+  color: #D4A843;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #2a2a2a;
+  padding-bottom: 0.5rem;
+}
+
+.card h3 {
+  color: #D4A843;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+label {
+  display: block;
+  font-size: 0.8rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.4rem;
+}
+
+input[type="range"] {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: #333;
+  outline: none;
+  margin-bottom: 1rem;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #D4A843;
+  cursor: pointer;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.6rem 1.5rem;
+  background: #D4A843;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn:hover { background: #c49a3a; }
+.btn:disabled { opacity: 0.4; cursor: default; }
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid #D4A843;
+  color: #D4A843;
+}
+
+.btn-outline:hover {
+  background: #D4A843;
+  color: #000;
+}
+
+.slider-val {
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #D4A843;
+  margin-bottom: 0.5rem;
+}
+
+/* Lake gauge */
+.lake-container {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.lake-gauge {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  height: 40px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 0.5rem auto;
+}
+
+.lake-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1565c0, #42a5f5);
+  border-radius: 20px;
+  transition: width 0.5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #fff;
+  min-width: 40px;
+}
+
+.lake-fill.danger {
+  background: linear-gradient(90deg, #b71c1c, #f44336);
+}
+
+.lake-fill.warning {
+  background: linear-gradient(90deg, #e65100, #ff9800);
+}
+
+.lake-label {
+  font-size: 0.85rem;
+  color: #aaa;
+  margin-top: 0.3rem;
+}
+
+/* Round log */
+.round-log {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  margin-top: 0.75rem;
+}
+
+.round-log th {
+  background: #1a1a1a;
+  color: #D4A843;
+  padding: 0.5rem;
+  text-align: center;
+  border-bottom: 1px solid #333;
+}
+
+.round-log td {
+  padding: 0.4rem 0.5rem;
+  text-align: center;
+  border-bottom: 1px solid #1a1a1a;
+  color: #ccc;
+}
+
+.round-log tr:last-child td {
+  border-bottom: none;
+}
+
+.round-log .you-col { color: #42a5f5; font-weight: bold; }
+
+/* Fisher cards */
+.fisher-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.fisher-card {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 0.75rem;
+  text-align: center;
+}
+
+.fisher-card.you {
+  border-color: #42a5f5;
+}
+
+.fisher-card .fisher-name {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #888;
+  margin-bottom: 0.2rem;
+}
+
+.fisher-card .fisher-total {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #D4A843;
+}
+
+.chart-wrap {
+  position: relative;
+  width: 100%;
+  max-height: 300px;
+  margin: 1rem 0;
+}
+
+.status-msg {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.status-msg.tragedy {
+  background: #3d1b1b;
+  color: #ef9a9a;
+  border: 1px solid #f44336;
+}
+
+.status-msg.complete {
+  background: #1b3d1b;
+  color: #a5d6a7;
+  border: 1px solid #4caf50;
+}
+
+.comparison-box {
+  background: #1a1a1a;
+  border-left: 3px solid #D4A843;
+  padding: 0.75rem 1rem;
+  border-radius: 0 6px 6px 0;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: #ccc;
+  line-height: 1.6;
+}
+
+.comparison-box strong { color: #D4A843; }
+
+.collapse-toggle {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: #D4A843;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #2a2a2a;
+  margin-bottom: 0.75rem;
+}
+
+.collapse-toggle::after {
+  content: " +";
+  float: right;
+}
+
+.collapse-toggle.open::after {
+  content: " \2212";
+}
+
+.collapse-body {
+  display: none;
+}
+
+.collapse-body.open {
+  display: block;
+}
+
+.info-text {
+  font-size: 0.85rem;
+  color: #ccc;
+  line-height: 1.7;
+}
+
+.info-text p { margin-bottom: 0.75rem; }
+.info-text strong { color: #D4A843; }
+
+.info-list {
+  list-style: none;
+  padding: 0;
+}
+
+.info-list li {
+  padding: 0.4rem 0 0.4rem 1.2rem;
+  position: relative;
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+.info-list li::before {
+  content: "\25B8";
+  position: absolute;
+  left: 0;
+  color: #D4A843;
+}
+
+.quiz-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.6rem 1rem;
+  margin-bottom: 0.5rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: border-color 0.2s;
+}
+
+.quiz-option:hover { border-color: #D4A843; }
+.quiz-option.correct { border-color: #4caf50; background: #1b3d1b; }
+.quiz-option.wrong { border-color: #f44336; background: #3d1b1b; }
+
+.quiz-feedback {
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.quiz-q { margin-bottom: 1.25rem; }
+.quiz-q p { margin-bottom: 0.6rem; font-size: 0.9rem; }
+
+.hidden { display: none; }
+
+@media (max-width: 600px) {
+  header h1 { font-size: 1rem; }
+  .fisher-row { grid-template-columns: repeat(2, 1fr); }
+  .round-log { font-size: 0.7rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Tragedy of the Commons</h1>
+  <a href="../index.html">Back to Micro Hub</a>
+</header>
+
+<div class="container">
+
+  <!-- Intro / Scenario -->
+  <div class="card" id="introCard">
+    <h2>The Shared Fishing Lake</h2>
+    <p style="font-size:0.9rem;color:#ccc;line-height:1.6;margin-bottom:1rem;">
+      You and 3 other fishers share a lake with <strong style="color:#D4A843;">100 fish</strong>. Each round, everyone decides how many fish to catch. The lake regenerates <strong style="color:#D4A843;">20% of remaining fish</strong> after each round. There are <strong style="color:#D4A843;">10 rounds</strong>.
+    </p>
+    <p style="font-size:0.9rem;color:#ccc;line-height:1.6;margin-bottom:1rem;">
+      If the lake runs out of fish, the game ends early. Can you balance profit with sustainability, or will greed lead to a tragedy?
+    </p>
+    <button class="btn" onclick="startGame()">Start Fishing</button>
+  </div>
+
+  <!-- Game Panel -->
+  <div class="card hidden" id="gameCard">
+    <h2 id="roundTitle">Round 1 of 10</h2>
+
+    <!-- Lake gauge -->
+    <div class="lake-container">
+      <div class="lake-gauge">
+        <div class="lake-fill" id="lakeFill" style="width:100%;">100 fish</div>
+      </div>
+      <div class="lake-label">Fish Population in the Lake</div>
+    </div>
+
+    <!-- Slider -->
+    <label for="catchSlider">How many fish will you catch this round?</label>
+    <div class="slider-val" id="catchLabel">0 fish</div>
+    <input type="range" id="catchSlider" min="0" max="20" value="0" step="1">
+
+    <div style="text-align:center;margin-top:0.5rem;">
+      <button class="btn" id="fishBtn" onclick="playRound()">Cast Your Net</button>
+    </div>
+
+    <!-- Round log table -->
+    <div style="overflow-x:auto;margin-top:1.25rem;">
+      <table class="round-log" id="logTable">
+        <thead>
+          <tr>
+            <th>Round</th>
+            <th>You</th>
+            <th>Fisher B</th>
+            <th>Fisher C</th>
+            <th>Fisher D</th>
+            <th>Remaining</th>
+            <th>Regen</th>
+          </tr>
+        </thead>
+        <tbody id="logBody">
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Results Panel -->
+  <div class="card hidden" id="resultsCard">
+    <h2 id="resultsTitle">Game Over</h2>
+    <div id="statusMsg"></div>
+
+    <!-- Total catch per fisher -->
+    <h3>Total Catch</h3>
+    <div class="fisher-row" id="fisherTotals"></div>
+
+    <!-- Population chart -->
+    <h3>Fish Population Over Time</h3>
+    <div class="chart-wrap">
+      <canvas id="popChart"></canvas>
+    </div>
+
+    <!-- Cooperation comparison -->
+    <div class="comparison-box" id="coopComparison"></div>
+
+    <div style="text-align:center;margin-top:1rem;">
+      <button class="btn" onclick="resetGame()">Play Again</button>
+    </div>
+  </div>
+
+  <!-- Economics Behind This -->
+  <div class="card">
+    <button class="collapse-toggle" id="econToggle" onclick="toggleCollapse('econToggle','econBody')">The Economics Behind This</button>
+    <div class="collapse-body" id="econBody">
+      <div class="info-text">
+        <p><strong>The Tragedy of the Commons</strong> occurs when individuals, acting in their own self-interest, deplete a shared resource even though it is not in anyone's long-term interest. The term was popularized by ecologist Garrett Hardin in 1968.</p>
+
+        <p><strong>Common Pool Resources</strong> are goods that are <strong>rivalrous</strong> (one person's use reduces availability for others) but <strong>non-excludable</strong> (it is hard to prevent people from using them). Examples include fisheries, forests, groundwater, and the atmosphere.</p>
+
+        <h3 style="margin-top:1rem;">Why Does Overexploitation Happen?</h3>
+        <ul class="info-list">
+          <li><strong>Negative externality:</strong> Each fisher bears only a fraction of the cost of overfishing but gets 100% of the benefit from their catch. The cost is spread across all users.</li>
+          <li><strong>No property rights:</strong> No one owns the fish in the lake, so there is no incentive to conserve for the future.</li>
+          <li><strong>Free-rider problem:</strong> Even if you conserve, others might not, so your sacrifice is wasted.</li>
+        </ul>
+
+        <h3 style="margin-top:1rem;">Possible Solutions</h3>
+        <ul class="info-list">
+          <li><strong>Property rights (privatization):</strong> Assign ownership of portions of the resource. Owners have incentive to manage sustainably.</li>
+          <li><strong>Government regulation:</strong> Set catch limits, fishing seasons, or licensing requirements.</li>
+          <li><strong>Pigouvian taxes:</strong> Tax each unit of the resource extracted to internalize the external cost.</li>
+          <li><strong>Tradable quotas (cap-and-trade):</strong> Set a total allowable catch and let fishers trade quotas among themselves.</li>
+          <li><strong>Community management:</strong> Elinor Ostrom (Nobel Prize 2009) showed that communities can self-govern shared resources through trust, monitoring, and graduated sanctions.</li>
+        </ul>
+
+        <h3 style="margin-top:1rem;">Market Failure</h3>
+        <p>The tragedy of the commons is a classic example of <strong>market failure</strong>: the free market, left alone, produces an inefficient outcome. The socially optimal level of fishing is lower than what individual incentives produce. Government intervention or collective action can improve the outcome.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div class="card">
+    <button class="collapse-toggle" id="quizToggle" onclick="toggleCollapse('quizToggle','quizBody')">Test Your Knowledge</button>
+    <div class="collapse-body" id="quizBody">
+
+      <div class="quiz-q" id="q1">
+        <p><strong>1.</strong> The tragedy of the commons is most likely to occur with which type of good?</p>
+        <button class="quiz-option" onclick="answer(1,this,'wrong')">A) Private good (excludable, rivalrous)</button>
+        <button class="quiz-option" onclick="answer(1,this,'wrong')">B) Public good (non-excludable, non-rivalrous)</button>
+        <button class="quiz-option" onclick="answer(1,this,'correct')">C) Common pool resource (non-excludable, rivalrous)</button>
+        <button class="quiz-option" onclick="answer(1,this,'wrong')">D) Club good (excludable, non-rivalrous)</button>
+        <div class="quiz-feedback" id="fb1"></div>
+      </div>
+
+      <div class="quiz-q" id="q2">
+        <p><strong>2.</strong> A Pigouvian tax on fishing would work by:</p>
+        <button class="quiz-option" onclick="answer(2,this,'wrong')">A) Banning fishing entirely</button>
+        <button class="quiz-option" onclick="answer(2,this,'correct')">B) Making fishers pay the social cost of their catch, reducing overfishing</button>
+        <button class="quiz-option" onclick="answer(2,this,'wrong')">C) Giving subsidies to the most efficient fishers</button>
+        <button class="quiz-option" onclick="answer(2,this,'wrong')">D) Allowing unlimited fishing but taxing profits</button>
+        <div class="quiz-feedback" id="fb2"></div>
+      </div>
+
+      <div class="quiz-q" id="q3">
+        <p><strong>3.</strong> Which of the following is NOT a solution to the tragedy of the commons?</p>
+        <button class="quiz-option" onclick="answer(3,this,'wrong')">A) Assigning property rights</button>
+        <button class="quiz-option" onclick="answer(3,this,'wrong')">B) Government-imposed catch limits</button>
+        <button class="quiz-option" onclick="answer(3,this,'correct')">C) Allowing open access with no restrictions</button>
+        <button class="quiz-option" onclick="answer(3,this,'wrong')">D) Community-based management agreements</button>
+        <div class="quiz-feedback" id="fb3"></div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Game state
+let fish = 100;
+let round = 0;
+const maxRounds = 10;
+const regenRate = 0.20;
+let gameOver = false;
+
+const totalCatch = [0, 0, 0, 0]; // You, B, C, D
+const popHistory = [100]; // fish count at start of each round
+const roundData = []; // detailed per-round data
+
+const catchSlider = document.getElementById('catchSlider');
+const catchLabel = document.getElementById('catchLabel');
+
+catchSlider.addEventListener('input', () => {
+  const maxCatch = Math.min(20, Math.floor(fish / 4));
+  if (parseInt(catchSlider.value) > maxCatch) {
+    catchSlider.value = maxCatch;
+  }
+  catchLabel.textContent = catchSlider.value + ' fish';
+});
+
+function aiDecision(fishRemaining) {
+  // Greedy but reactive: catch more when plentiful, less when scarce
+  const ratio = fishRemaining / 100;
+  let base;
+  if (ratio > 0.7) {
+    base = 8 + Math.floor(Math.random() * 6); // 8-13
+  } else if (ratio > 0.4) {
+    base = 4 + Math.floor(Math.random() * 5); // 4-8
+  } else if (ratio > 0.15) {
+    base = 2 + Math.floor(Math.random() * 3); // 2-4
+  } else {
+    base = 1 + Math.floor(Math.random() * 2); // 1-2
+  }
+  return Math.min(base, Math.floor(fishRemaining / 4), 20);
+}
+
+function updateLakeGauge() {
+  const fill = document.getElementById('lakeFill');
+  const pct = Math.max(0, (fish / 150) * 100); // scale to 150 for visual headroom
+  fill.style.width = Math.max(5, Math.min(100, pct)) + '%';
+  fill.textContent = Math.round(fish) + ' fish';
+
+  if (fish < 20) {
+    fill.className = 'lake-fill danger';
+  } else if (fish < 50) {
+    fill.className = 'lake-fill warning';
+  } else {
+    fill.className = 'lake-fill';
+  }
+}
+
+function startGame() {
+  document.getElementById('introCard').classList.add('hidden');
+  document.getElementById('gameCard').classList.remove('hidden');
+  document.getElementById('resultsCard').classList.add('hidden');
+  updateLakeGauge();
+  updateSliderMax();
+}
+
+function updateSliderMax() {
+  const maxCatch = Math.min(20, Math.floor(fish / 4));
+  catchSlider.max = Math.max(0, maxCatch);
+  if (parseInt(catchSlider.value) > maxCatch) {
+    catchSlider.value = maxCatch;
+  }
+  catchLabel.textContent = catchSlider.value + ' fish';
+}
+
+function playRound() {
+  if (gameOver) return;
+
+  round++;
+  const yourCatch = parseInt(catchSlider.value);
+
+  // AI decisions
+  const aiB = aiDecision(fish);
+  const aiC = aiDecision(fish);
+  const aiD = aiDecision(fish);
+
+  const totalThisRound = yourCatch + aiB + aiC + aiD;
+
+  // Ensure we don't catch more than available
+  let actualCatches = [yourCatch, aiB, aiC, aiD];
+  if (totalThisRound > fish) {
+    // Proportional reduction
+    const scale = fish / totalThisRound;
+    actualCatches = actualCatches.map(c => Math.floor(c * scale));
+  }
+
+  // Deduct fish
+  fish -= (actualCatches[0] + actualCatches[1] + actualCatches[2] + actualCatches[3]);
+  fish = Math.max(0, fish);
+
+  // Regeneration
+  const regen = Math.round(fish * regenRate);
+  fish += regen;
+
+  // Record
+  for (let i = 0; i < 4; i++) totalCatch[i] += actualCatches[i];
+  popHistory.push(Math.round(fish));
+
+  roundData.push({
+    round: round,
+    catches: [...actualCatches],
+    remaining: Math.round(fish),
+    regen: regen
+  });
+
+  // Update log table
+  const tbody = document.getElementById('logBody');
+  const tr = document.createElement('tr');
+  tr.innerHTML = '<td>' + round + '</td>' +
+    '<td class="you-col">' + actualCatches[0] + '</td>' +
+    '<td>' + actualCatches[1] + '</td>' +
+    '<td>' + actualCatches[2] + '</td>' +
+    '<td>' + actualCatches[3] + '</td>' +
+    '<td>' + Math.round(fish) + '</td>' +
+    '<td>+' + regen + '</td>';
+  tbody.appendChild(tr);
+
+  // Update UI
+  document.getElementById('roundTitle').textContent = 'Round ' + Math.min(round + 1, maxRounds) + ' of ' + maxRounds;
+  updateLakeGauge();
+  updateSliderMax();
+  catchSlider.value = 0;
+  catchLabel.textContent = '0 fish';
+
+  // Check end conditions
+  if (fish <= 0) {
+    gameOver = true;
+    endGame(true);
+  } else if (round >= maxRounds) {
+    gameOver = true;
+    endGame(false);
+  }
+}
+
+function endGame(tragedy) {
+  document.getElementById('fishBtn').disabled = true;
+  document.getElementById('resultsCard').classList.remove('hidden');
+
+  const msgEl = document.getElementById('statusMsg');
+  if (tragedy) {
+    document.getElementById('resultsTitle').textContent = 'TRAGEDY!';
+    msgEl.className = 'status-msg tragedy';
+    msgEl.textContent = 'The lake has been completely depleted after ' + round + ' rounds! All fishers lose their livelihood.';
+  } else {
+    document.getElementById('resultsTitle').textContent = 'Game Complete';
+    msgEl.className = 'status-msg complete';
+    msgEl.textContent = 'All 10 rounds completed! ' + Math.round(fish) + ' fish remain in the lake.';
+  }
+
+  // Fisher totals
+  const names = ['You', 'Fisher B', 'Fisher C', 'Fisher D'];
+  const totalsDiv = document.getElementById('fisherTotals');
+  totalsDiv.innerHTML = '';
+  for (let i = 0; i < 4; i++) {
+    const div = document.createElement('div');
+    div.className = 'fisher-card' + (i === 0 ? ' you' : '');
+    div.innerHTML = '<div class="fisher-name">' + names[i] + '</div><div class="fisher-total">' + totalCatch[i] + ' fish</div>';
+    totalsDiv.appendChild(div);
+  }
+
+  // Population chart
+  const ctx = document.getElementById('popChart').getContext('2d');
+  const labels = popHistory.map((_, i) => i === 0 ? 'Start' : 'R' + i);
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Fish Population',
+        data: popHistory,
+        borderColor: '#42a5f5',
+        backgroundColor: 'rgba(66,165,245,0.15)',
+        fill: true,
+        tension: 0.3,
+        pointBackgroundColor: popHistory.map(v => v < 20 ? '#f44336' : v < 50 ? '#ff9800' : '#42a5f5')
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 2,
+      plugins: {
+        legend: { labels: { color: '#aaa' } }
+      },
+      scales: {
+        x: { ticks: { color: '#888' }, grid: { color: '#222' } },
+        y: {
+          title: { display: true, text: 'Fish Count', color: '#aaa' },
+          ticks: { color: '#888' },
+          grid: { color: '#222' },
+          min: 0
+        }
+      }
+    }
+  });
+
+  // Cooperation comparison
+  // Optimal sustainable harvest: catch exactly the regeneration each round, split 4 ways
+  // Each round: lake has F fish, regen = 0.2*F after catch
+  // Sustainable: total catch = regen of previous population
+  // If we keep lake at 100: catch = 0 first, then regen gives 120... better: keep lake at capacity
+  // Max sustainable: catch = regen. If lake = 100, regen = 20, so 20 total catch (5 each) per round
+  // Over 10 rounds: 50 fish each = 200 total, lake still at 100
+  const optPerRound = 20;
+  const optPerFisher = optPerRound / 4;
+  const optTotal = optPerFisher * maxRounds;
+  const actualTotal = totalCatch.reduce((a, b) => a + b, 0);
+
+  const compDiv = document.getElementById('coopComparison');
+  compDiv.innerHTML = '<strong>What If Everyone Cooperated?</strong><br><br>' +
+    'If all 4 fishers agreed to catch only <strong>' + optPerFisher + ' fish per round</strong> (the sustainable harvest), the lake would maintain its population of 100 fish throughout all 10 rounds.<br><br>' +
+    'Each fisher would catch <strong>' + optTotal + ' fish total</strong> over 10 rounds, and the lake would remain healthy.<br><br>' +
+    'Actual total catch: <strong>' + actualTotal + ' fish</strong> (your share: ' + totalCatch[0] + ').<br>' +
+    'Cooperative total would have been: <strong>' + (optTotal * 4) + ' fish</strong> (' + optTotal + ' each).<br><br>' +
+    (actualTotal < optTotal * 4
+      ? 'Overexploitation resulted in <strong>' + (optTotal * 4 - actualTotal) + ' fewer fish</strong> caught overall. Everyone loses when the commons is depleted.'
+      : 'Impressive! The total catch matched or exceeded the cooperative benchmark. Sustainability matters!');
+}
+
+function resetGame() {
+  fish = 100;
+  round = 0;
+  gameOver = false;
+  totalCatch.fill(0);
+  popHistory.length = 0;
+  popHistory.push(100);
+  roundData.length = 0;
+
+  document.getElementById('logBody').innerHTML = '';
+  document.getElementById('roundTitle').textContent = 'Round 1 of 10';
+  document.getElementById('fishBtn').disabled = false;
+  document.getElementById('resultsCard').classList.add('hidden');
+  document.getElementById('gameCard').classList.add('hidden');
+  document.getElementById('introCard').classList.remove('hidden');
+
+  catchSlider.value = 0;
+  catchSlider.max = 20;
+  catchLabel.textContent = '0 fish';
+  updateLakeGauge();
+}
+
+// Collapse panels
+function toggleCollapse(toggleId, bodyId) {
+  document.getElementById(toggleId).classList.toggle('open');
+  document.getElementById(bodyId).classList.toggle('open');
+}
+
+// Quiz
+const explanations = {
+  1: 'Common pool resources are rivalrous (my fish is not your fish) but non-excludable (hard to keep people out of the lake). This combination leads to overuse.',
+  2: 'A Pigouvian tax internalizes the negative externality by making each fisher pay for the social cost of depleting the shared resource, which reduces overfishing to the socially optimal level.',
+  3: 'Open access with no restrictions is exactly what CAUSES the tragedy of the commons. All the other options are potential solutions.'
+};
+
+function answer(qNum, btn, result) {
+  const q = document.getElementById('q' + qNum);
+  if (q.dataset.answered) return;
+  q.dataset.answered = 'true';
+
+  btn.classList.add(result);
+  q.querySelectorAll('.quiz-option').forEach(b => {
+    if (b !== btn) b.style.opacity = '0.5';
+    if (result === 'wrong' && b.getAttribute('onclick').includes("'correct'")) b.classList.add('correct');
+  });
+
+  const fb = document.getElementById('fb' + qNum);
+  fb.innerHTML = '<div style="padding:0.5rem;border-radius:6px;background:' + (result === 'correct' ? '#1b3d1b' : '#3d1b1b') + ';color:' + (result === 'correct' ? '#a5d6a7' : '#ef9a9a') + ';">' + (result === 'correct' ? 'Correct! ' : 'Incorrect. ') + explanations[qNum] + '</div>';
+}
+</script>
+</body>
+</html>

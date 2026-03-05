@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Structures Quiz | Principles of Microeconomics | Dr. Sanket Kanekar</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #0a0a0a;
+  color: #fff;
+  min-height: 100vh;
+  line-height: 1.5;
+}
+a { color: #D4A843; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.header {
+  background: #000;
+  border-bottom: 3px solid #D4A843;
+  padding: 16px 20px;
+  text-align: center;
+}
+.header h1 { color: #D4A843; font-size: 1.3rem; margin-bottom: 2px; }
+.header p { color: #aaa; font-size: 0.85rem; }
+.back-link {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #D4A843;
+}
+
+.container { max-width: 700px; margin: 0 auto; padding: 20px 16px 40px; }
+
+/* Start Screen */
+#start-screen { text-align: center; padding-top: 30px; }
+#start-screen h2 { color: #D4A843; font-size: 1.6rem; margin-bottom: 12px; }
+#start-screen p { color: #ccc; font-size: 0.95rem; margin-bottom: 20px; max-width: 500px; margin-left: auto; margin-right: auto; }
+.structure-preview {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 28px;
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.structure-preview div {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+}
+.structure-preview div strong { color: #D4A843; font-size: 0.9rem; display: block; margin-bottom: 4px; }
+.structure-preview div span { color: #999; font-size: 0.75rem; }
+
+.btn-primary {
+  background: #D4A843;
+  color: #000;
+  border: none;
+  padding: 14px 40px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+.btn-primary:hover { background: #e0b94f; }
+.btn-primary:active { transform: scale(0.97); }
+
+/* Progress Bar */
+.progress-area { margin-bottom: 20px; }
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  color: #aaa;
+}
+.progress-info .score-display { color: #D4A843; font-weight: 700; }
+.progress-bar-bg {
+  width: 100%;
+  height: 8px;
+  background: #222;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: #D4A843;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+/* Question Card */
+.question-card {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 28px 24px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.question-label { color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.question-text { color: #fff; font-size: 1.35rem; font-weight: 700; margin-bottom: 4px; }
+.question-hint { color: #999; font-size: 0.85rem; margin-top: 6px; font-style: italic; }
+
+/* Answer Buttons */
+.answers-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.answer-btn {
+  background: #1a1a1a;
+  border: 2px solid #333;
+  border-radius: 10px;
+  padding: 16px 12px;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.1s;
+}
+.answer-btn:hover { border-color: #D4A843; background: #1f1a10; }
+.answer-btn:active { transform: scale(0.97); }
+.answer-btn.correct { border-color: #2ecc71; background: #0f2f1a; color: #2ecc71; }
+.answer-btn.incorrect { border-color: #e74c3c; background: #2f0f0f; color: #e74c3c; }
+.answer-btn.show-correct { border-color: #2ecc71; background: #0f2f1a; }
+.answer-btn.disabled { pointer-events: none; opacity: 0.6; }
+
+/* Feedback */
+.feedback-box {
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  display: none;
+  text-align: left;
+}
+.feedback-box.correct-fb { background: #0d2818; border: 1px solid #2ecc71; }
+.feedback-box.incorrect-fb { background: #2a0f0f; border: 1px solid #e74c3c; }
+.feedback-box .fb-title { font-weight: 700; font-size: 1rem; margin-bottom: 6px; }
+.feedback-box.correct-fb .fb-title { color: #2ecc71; }
+.feedback-box.incorrect-fb .fb-title { color: #e74c3c; }
+.feedback-box .fb-text { color: #ccc; font-size: 0.88rem; }
+
+.btn-next {
+  background: #D4A843;
+  color: #000;
+  border: none;
+  padding: 12px 32px;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  display: none;
+}
+.btn-next:hover { background: #e0b94f; }
+
+/* Results Screen */
+#results-screen { display: none; text-align: center; }
+.results-header { margin-bottom: 24px; }
+.results-header h2 { color: #D4A843; font-size: 1.5rem; margin-bottom: 8px; }
+.score-big { font-size: 3rem; font-weight: 700; color: #fff; }
+.score-big span { color: #D4A843; }
+.grade-badge {
+  display: inline-block;
+  padding: 6px 24px;
+  border-radius: 20px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-top: 8px;
+}
+.grade-A { background: #2ecc71; color: #000; }
+.grade-B { background: #D4A843; color: #000; }
+.grade-C { background: #f39c12; color: #000; }
+.grade-D { background: #e67e22; color: #fff; }
+.grade-F { background: #e74c3c; color: #fff; }
+
+/* Review Table */
+.review-section { margin-top: 28px; text-align: left; }
+.review-section h3 { color: #D4A843; font-size: 1.1rem; margin-bottom: 12px; }
+.review-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 28px; }
+table.review-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  min-width: 500px;
+}
+table.review-table th {
+  background: #1a1a1a;
+  color: #D4A843;
+  padding: 10px 8px;
+  text-align: left;
+  border-bottom: 2px solid #D4A843;
+  white-space: nowrap;
+}
+table.review-table td {
+  padding: 9px 8px;
+  border-bottom: 1px solid #222;
+  color: #ccc;
+  vertical-align: top;
+}
+table.review-table tr:nth-child(even) td { background: #111; }
+td.result-correct { color: #2ecc71; font-weight: 700; }
+td.result-incorrect { color: #e74c3c; font-weight: 700; }
+
+/* Comparison Table */
+.comparison-panel {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 28px;
+  text-align: left;
+}
+.comparison-panel h3 { color: #D4A843; font-size: 1.1rem; margin-bottom: 14px; text-align: center; }
+table.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  min-width: 560px;
+}
+table.compare-table th {
+  background: #D4A843;
+  color: #000;
+  padding: 10px 6px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+table.compare-table th:first-child { text-align: left; }
+table.compare-table td {
+  padding: 8px 6px;
+  border-bottom: 1px solid #222;
+  color: #ccc;
+  text-align: center;
+  vertical-align: top;
+}
+table.compare-table td:first-child { text-align: left; font-weight: 600; color: #fff; }
+table.compare-table tr:nth-child(even) td { background: #0d0d0d; }
+
+.btn-row { margin-top: 28px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn-secondary {
+  background: transparent;
+  border: 2px solid #D4A843;
+  color: #D4A843;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn-secondary:hover { background: #1f1a10; }
+
+@media (max-width: 500px) {
+  .answers-grid { grid-template-columns: 1fr; }
+  .structure-preview { grid-template-columns: 1fr; }
+  .question-text { font-size: 1.15rem; }
+  .score-big { font-size: 2.3rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Market Structures Quiz Game</h1>
+  <p>Principles of Microeconomics &mdash; Dr. Sanket Kanekar</p>
+  <a href="../index.html" class="back-link">&larr; Back to Course</a>
+</div>
+
+<div class="container">
+
+  <!-- START SCREEN -->
+  <div id="start-screen">
+    <h2>Classify the Market Structure</h2>
+    <p>You will see 15 real-world companies and industries. Your job is to classify each one into the correct market structure based on what you have learned.</p>
+    <div class="structure-preview">
+      <div><strong>Perfect Competition</strong><span>Many firms, identical products, easy entry</span></div>
+      <div><strong>Monopolistic Competition</strong><span>Many firms, differentiated products</span></div>
+      <div><strong>Oligopoly</strong><span>Few large firms, high barriers</span></div>
+      <div><strong>Monopoly</strong><span>One firm, no close substitutes</span></div>
+    </div>
+    <button class="btn-primary" onclick="startGame()">Start Quiz (15 Questions)</button>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quiz-screen" style="display:none;">
+    <div class="progress-area">
+      <div class="progress-info">
+        <span id="progress-label">Question 1 of 15</span>
+        <span class="score-display">Score: <span id="score-display">0</span>/15</span>
+      </div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+    </div>
+    <div class="question-card">
+      <div class="question-label">Classify this industry</div>
+      <div class="question-text" id="question-text"></div>
+      <div class="question-hint" id="question-hint"></div>
+    </div>
+    <div class="answers-grid" id="answers-grid"></div>
+    <div class="feedback-box" id="feedback-box">
+      <div class="fb-title" id="fb-title"></div>
+      <div class="fb-text" id="fb-text"></div>
+    </div>
+    <div style="text-align:center;">
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">Next Question &rarr;</button>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="results-screen">
+    <div class="results-header">
+      <h2>Quiz Complete!</h2>
+      <div class="score-big"><span id="final-score">0</span>/15</div>
+      <div><span class="grade-badge" id="grade-badge"></span></div>
+    </div>
+
+    <div class="review-section">
+      <h3>Your Answers Review</h3>
+      <div class="review-table-wrap">
+        <table class="review-table">
+          <thead><tr><th>#</th><th>Industry</th><th>Correct Answer</th><th>Your Answer</th><th>Result</th></tr></thead>
+          <tbody id="review-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="comparison-panel">
+      <h3>The Economics Behind This: Market Structures Compared</h3>
+      <div class="review-table-wrap">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Characteristic</th>
+              <th>Perfect Competition</th>
+              <th>Monopolistic Competition</th>
+              <th>Oligopoly</th>
+              <th>Monopoly</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td># of Firms</td><td>Very many</td><td>Many</td><td>Few (2&ndash;10)</td><td>One</td></tr>
+            <tr><td>Product Type</td><td>Identical (homogeneous)</td><td>Differentiated (similar)</td><td>Identical or differentiated</td><td>Unique, no close substitutes</td></tr>
+            <tr><td>Entry Barriers</td><td>None</td><td>Low</td><td>High</td><td>Very high or blocked</td></tr>
+            <tr><td>Price Control</td><td>None (price taker)</td><td>Some</td><td>Significant (interdependent)</td><td>Substantial (price maker)</td></tr>
+            <tr><td>Non-price Competition</td><td>None</td><td>Advertising, branding</td><td>Advertising, brand loyalty</td><td>Public relations</td></tr>
+            <tr><td>Long-run Profit</td><td>Zero economic profit</td><td>Zero economic profit</td><td>Positive possible</td><td>Positive possible</td></tr>
+            <tr><td>Demand Curve</td><td>Perfectly elastic</td><td>Downward sloping (elastic)</td><td>Downward sloping (kinked)</td><td>Downward sloping (market demand)</td></tr>
+            <tr><td>Real-world Examples</td><td>Wheat farming, corn, stock markets</td><td>Restaurants, clothing, coffee shops</td><td>Airlines, wireless carriers, auto makers</td><td>Local utilities, USPS first-class mail</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-primary" onclick="startGame()">Play Again</button>
+      <a href="../index.html" class="btn-secondary" style="display:inline-flex;align-items:center;">Back to Course</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    name: "Wheat Farming",
+    hint: "Thousands of small farms growing the same crop",
+    answer: "Perfect Competition",
+    explanation: "Wheat farming has many small producers growing an identical (homogeneous) product. No single farmer can influence the market price, making them price takers. Barriers to entry are low."
+  },
+  {
+    name: "Coca-Cola vs Pepsi",
+    hint: "Two dominant brands in the soft drink industry",
+    answer: "Oligopoly",
+    explanation: "The soft drink industry is dominated by a few large firms (Coca-Cola and PepsiCo control ~70% of the market). High barriers to entry include massive advertising budgets and brand loyalty. Firms are interdependent in their pricing decisions."
+  },
+  {
+    name: "Your Local Electric Company",
+    hint: "One provider serves the entire area",
+    answer: "Monopoly",
+    explanation: "Local electric utilities are natural monopolies. One firm serves the entire market because the infrastructure costs (power lines, plants) create extremely high barriers to entry. They are price makers regulated by government."
+  },
+  {
+    name: "Restaurants in Montgomery",
+    hint: "Many different dining options with unique menus",
+    answer: "Monopolistic Competition",
+    explanation: "There are many restaurants, each offering a differentiated product (different cuisines, ambiance, quality). Entry barriers are low, and each restaurant has some control over its price due to product differentiation, but faces competition from many substitutes."
+  },
+  {
+    name: "OPEC Oil Cartel",
+    hint: "A small group of countries controlling oil production",
+    answer: "Oligopoly",
+    explanation: "OPEC consists of a few major oil-producing nations that coordinate output to influence global oil prices. This is a classic oligopoly (cartel) with high barriers to entry, strategic interdependence, and significant market power."
+  },
+  {
+    name: "Apple iPhone",
+    hint: "One company controls the iOS smartphone ecosystem",
+    answer: "Oligopoly",
+    explanation: "The smartphone market is an oligopoly dominated by a few major players (Apple, Samsung, Google). While Apple has unique products, they compete directly with Samsung and others. High R&D costs and brand loyalty create significant barriers to entry."
+  },
+  {
+    name: "Generic T-shirt Sellers on Amazon",
+    hint: "Hundreds of sellers offering very similar plain t-shirts",
+    answer: "Monopolistic Competition",
+    explanation: "Many sellers offer similar but slightly differentiated products (different fits, materials, branding). Barriers to entry are low, and sellers have some price-setting ability through branding and reviews, but face intense competition."
+  },
+  {
+    name: "AT&T, Verizon, T-Mobile",
+    hint: "Three major wireless carriers dominate the US market",
+    answer: "Oligopoly",
+    explanation: "The US wireless market is dominated by three carriers. Barriers to entry are extremely high (spectrum licenses cost billions, network infrastructure is massive). Firms watch each other's pricing closely, showing classic oligopolistic interdependence."
+  },
+  {
+    name: "U.S. Postal Service First-Class Mail",
+    hint: "Only one entity is legally allowed to deliver first-class mail",
+    answer: "Monopoly",
+    explanation: "USPS has a legal (government-granted) monopoly on first-class mail delivery. No other company is permitted to deliver standard letters to mailboxes. This is a monopoly enforced by law with absolute barriers to entry."
+  },
+  {
+    name: "Local Coffee Shops",
+    hint: "Many independent shops and chains in a city",
+    answer: "Monopolistic Competition",
+    explanation: "Many coffee shops compete in a typical city, each differentiating through ambiance, specialty drinks, location, and branding. Barriers to entry are low (relatively cheap to open a shop). Each has some pricing power but faces many close substitutes."
+  },
+  {
+    name: "Boeing and Airbus",
+    hint: "Two companies make nearly all large commercial aircraft",
+    answer: "Oligopoly",
+    explanation: "The large commercial aircraft market is a duopoly (a special case of oligopoly). Boeing and Airbus face virtually no competition due to enormous barriers to entry: billions in R&D, manufacturing expertise, and decades of certification requirements."
+  },
+  {
+    name: "Uber and Lyft",
+    hint: "Two dominant ride-sharing platforms in the US",
+    answer: "Oligopoly",
+    explanation: "The US ride-sharing market is dominated by two firms. While entry is theoretically possible, network effects (riders need drivers and vice versa) and massive capital requirements create high barriers. The firms closely monitor each other's pricing."
+  },
+  {
+    name: "Diamond Market (De Beers)",
+    hint: "One company historically controlled 80-90% of diamonds",
+    answer: "Monopoly",
+    explanation: "De Beers historically controlled 80-90% of the global diamond supply, functioning as a near-monopoly. They controlled supply, set prices, and created artificial scarcity. While their market share has declined, it remains a classic textbook example of monopoly power."
+  },
+  {
+    name: "Corn Farming in Alabama",
+    hint: "Many small farmers growing the same commodity crop",
+    answer: "Perfect Competition",
+    explanation: "Like wheat farming, corn production features many small producers growing an identical product. Corn is a commodity traded at market prices that no individual farmer can influence. Entry requires only land and basic equipment."
+  },
+  {
+    name: "Nike vs Adidas vs Under Armour",
+    hint: "Three major sportswear brands competing globally",
+    answer: "Oligopoly",
+    explanation: "The athletic apparel market is dominated by a few large firms. Barriers to entry are high due to massive advertising budgets, brand loyalty, athlete endorsements, and global supply chains. Each firm's decisions are influenced by the others' strategies."
+  }
+];
+
+const STRUCTURES = ["Perfect Competition", "Monopolistic Competition", "Oligopoly", "Monopoly"];
+
+let currentQuestion = 0;
+let score = 0;
+let answers = [];
+let shuffledQuestions = [];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startGame() {
+  currentQuestion = 0;
+  score = 0;
+  answers = [];
+  shuffledQuestions = shuffle(QUESTIONS);
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = shuffledQuestions[currentQuestion];
+  document.getElementById('progress-label').textContent = `Question ${currentQuestion + 1} of 15`;
+  document.getElementById('score-display').textContent = score;
+  document.getElementById('progress-fill').style.width = ((currentQuestion) / 15 * 100) + '%';
+  document.getElementById('question-text').textContent = q.name;
+  document.getElementById('question-hint').textContent = q.hint;
+
+  const grid = document.getElementById('answers-grid');
+  grid.innerHTML = '';
+  STRUCTURES.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.textContent = s;
+    btn.onclick = () => selectAnswer(s, btn);
+    grid.appendChild(btn);
+  });
+
+  document.getElementById('feedback-box').style.display = 'none';
+  document.getElementById('feedback-box').className = 'feedback-box';
+  document.getElementById('btn-next').style.display = 'none';
+}
+
+function selectAnswer(selected, clickedBtn) {
+  const q = shuffledQuestions[currentQuestion];
+  const isCorrect = selected === q.answer;
+  const allBtns = document.querySelectorAll('.answer-btn');
+
+  allBtns.forEach(btn => {
+    btn.classList.add('disabled');
+    if (btn.textContent === q.answer) btn.classList.add('show-correct');
+  });
+
+  if (isCorrect) {
+    clickedBtn.className = 'answer-btn correct disabled';
+    score++;
+  } else {
+    clickedBtn.className = 'answer-btn incorrect disabled';
+  }
+
+  answers.push({ question: q, selected, isCorrect });
+
+  const fb = document.getElementById('feedback-box');
+  fb.style.display = 'block';
+  fb.className = 'feedback-box ' + (isCorrect ? 'correct-fb' : 'incorrect-fb');
+  document.getElementById('fb-title').textContent = isCorrect ? 'Correct!' : `Incorrect - The answer is ${q.answer}`;
+  document.getElementById('fb-text').textContent = q.explanation;
+
+  document.getElementById('score-display').textContent = score;
+
+  const nextBtn = document.getElementById('btn-next');
+  nextBtn.style.display = 'inline-block';
+  nextBtn.textContent = currentQuestion === 14 ? 'See Results' : 'Next Question \u2192';
+}
+
+function nextQuestion() {
+  currentQuestion++;
+  if (currentQuestion >= 15) {
+    showResults();
+  } else {
+    showQuestion();
+  }
+}
+
+function showResults() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'block';
+  document.getElementById('final-score').textContent = score;
+
+  let grade, gradeClass;
+  const pct = (score / 15) * 100;
+  if (pct >= 90) { grade = 'A'; gradeClass = 'grade-A'; }
+  else if (pct >= 80) { grade = 'B'; gradeClass = 'grade-B'; }
+  else if (pct >= 70) { grade = 'C'; gradeClass = 'grade-C'; }
+  else if (pct >= 60) { grade = 'D'; gradeClass = 'grade-D'; }
+  else { grade = 'F'; gradeClass = 'grade-F'; }
+
+  const badge = document.getElementById('grade-badge');
+  badge.textContent = `Grade: ${grade} (${Math.round(pct)}%)`;
+  badge.className = 'grade-badge ' + gradeClass;
+
+  const tbody = document.getElementById('review-body');
+  tbody.innerHTML = '';
+  answers.forEach((a, i) => {
+    const tr = document.createElement('tr');
+    const resultClass = a.isCorrect ? 'result-correct' : 'result-incorrect';
+    tr.innerHTML = `
+      <td>${i + 1}</td>
+      <td>${a.question.name}</td>
+      <td>${a.question.answer}</td>
+      <td>${a.selected}</td>
+      <td class="${resultClass}">${a.isCorrect ? 'Correct' : 'Incorrect'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('progress-fill').style.width = '100%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
