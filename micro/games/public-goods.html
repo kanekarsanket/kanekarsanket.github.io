@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Public Goods Game | Principles of Microeconomics</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f5f5f5;
+  color: #222;
+  line-height: 1.6;
+}
+.header {
+  background: #000;
+  color: #D4A843;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header h1 { font-size: 1.25rem; }
+.header a { color: #D4A843; text-decoration: none; font-size: 0.9rem; }
+.header a:hover { text-decoration: underline; }
+.container { max-width: 800px; margin: 0 auto; padding: 1rem; }
+
+/* Intro / Setup */
+.card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+.card h2 { color: #000; margin-bottom: 0.75rem; font-size: 1.2rem; }
+.gold-accent { color: #D4A843; font-weight: bold; }
+
+/* Slider area */
+.slider-wrap { margin: 1.5rem 0; text-align: center; }
+.slider-wrap input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(to right, #D4A843 0%, #000 100%);
+  outline: none;
+}
+.slider-wrap input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: #D4A843;
+  border: 3px solid #000;
+  cursor: pointer;
+}
+.slider-val {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #000;
+  margin: 0.5rem 0;
+}
+.btn {
+  display: inline-block;
+  background: #000;
+  color: #D4A843;
+  border: 2px solid #D4A843;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn:hover { background: #D4A843; color: #000; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Round results */
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+.results-table th {
+  background: #000;
+  color: #D4A843;
+  padding: 0.5rem;
+  text-align: center;
+}
+.results-table td {
+  padding: 0.5rem;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+.results-table tr:nth-child(even) { background: #faf7f0; }
+.highlight-row { background: #fffbe6 !important; font-weight: bold; }
+
+/* Summary */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+.summary-box {
+  background: #000;
+  color: #D4A843;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+}
+.summary-box .label { font-size: 0.8rem; opacity: 0.8; }
+.summary-box .value { font-size: 1.5rem; font-weight: bold; }
+
+/* Explanation */
+.explanation {
+  background: #fffbe6;
+  border-left: 4px solid #D4A843;
+  padding: 1.25rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1rem 0;
+}
+.explanation h3 { color: #000; margin-bottom: 0.5rem; }
+
+/* Quiz */
+.quiz-q { margin-bottom: 1.25rem; }
+.quiz-q p { font-weight: bold; margin-bottom: 0.5rem; }
+.quiz-q label {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  margin: 0.25rem 0;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  transition: background 0.2s;
+}
+.quiz-q label:hover { background: #f0f0f0; }
+.quiz-q label.correct { background: #d4edda; border-color: #28a745; }
+.quiz-q label.incorrect { background: #f8d7da; border-color: #dc3545; }
+.quiz-feedback {
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  display: none;
+}
+
+.chart-container { position: relative; width: 100%; max-height: 350px; margin: 1rem 0; }
+.hidden { display: none; }
+.round-badge {
+  display: inline-block;
+  background: #D4A843;
+  color: #000;
+  font-weight: bold;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+.pot-animation {
+  font-size: 1.3rem;
+  text-align: center;
+  padding: 0.75rem;
+  background: #000;
+  color: #D4A843;
+  border-radius: 8px;
+  margin: 0.75rem 0;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Public Goods Game</h1>
+  <a href="../index.html">Back to Games</a>
+</div>
+
+<div class="container">
+
+  <!-- Intro -->
+  <div class="card" id="intro-card">
+    <h2>Welcome to the Public Goods Game</h2>
+    <p>You and 3 other players each receive <span class="gold-accent">$10</span> every round. Each player decides how much to contribute to a <strong>public pot</strong>.</p>
+    <p style="margin-top:0.5rem;">The public pot is <span class="gold-accent">multiplied by 1.6x</span> and then <strong>split equally</strong> among all 4 players -- regardless of who contributed.</p>
+    <p style="margin-top:0.5rem;">You will play <strong>5 rounds</strong>. Your goal: maximize your total earnings.</p>
+    <div style="text-align:center; margin-top:1rem;">
+      <button class="btn" onclick="startGame()">Start Game</button>
+    </div>
+  </div>
+
+  <!-- Game area -->
+  <div id="game-area" class="hidden">
+    <div class="card" id="round-card">
+      <span class="round-badge" id="round-badge">Round 1 of 5</span>
+      <h2>How much will you contribute?</h2>
+      <p>You have <span class="gold-accent">$10</span> this round. Any amount you don't contribute, you keep.</p>
+      <div class="slider-wrap">
+        <input type="range" id="contrib-slider" min="0" max="10" step="1" value="5" oninput="updateSlider()">
+        <div class="slider-val">$<span id="slider-val">5</span></div>
+        <p style="font-size:0.85rem; color:#666;">You keep: $<span id="keep-val">5</span></p>
+      </div>
+      <div style="text-align:center;">
+        <button class="btn" id="submit-btn" onclick="submitContribution()">Contribute</button>
+      </div>
+    </div>
+
+    <!-- Round result -->
+    <div class="card hidden" id="result-card">
+      <h2>Round Results</h2>
+      <div id="pot-info"></div>
+      <table class="results-table" id="round-table">
+        <thead><tr><th>Player</th><th>Contributed</th><th>Kept</th><th>Share from Pot</th><th>Round Earnings</th></tr></thead>
+        <tbody id="round-tbody"></tbody>
+      </table>
+      <div style="text-align:center; margin-top:1rem;">
+        <button class="btn" id="next-btn" onclick="nextRound()">Next Round</button>
+      </div>
+    </div>
+
+    <!-- Cumulative scoreboard -->
+    <div class="card" id="scoreboard-card">
+      <h2>Scoreboard</h2>
+      <table class="results-table">
+        <thead><tr><th>Player</th><th>Total Earnings</th></tr></thead>
+        <tbody id="score-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div id="summary-area" class="hidden">
+    <div class="card">
+      <h2>Game Over -- Final Results</h2>
+      <div class="summary-grid" id="summary-grid"></div>
+    </div>
+    <div class="card">
+      <h2>Contributions Over Rounds</h2>
+      <div class="chart-container">
+        <canvas id="contribChart"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Earnings Over Rounds</h2>
+      <div class="chart-container">
+        <canvas id="earningsChart"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="explanation">
+        <h3>The Economics Behind This</h3>
+        <p><strong>The Free-Rider Problem:</strong> Each dollar you contribute costs you $1 but only returns $0.40 to you (1.6 / 4 players). Individually, it is rational to contribute nothing and let others fund the public good. But if everyone free-rides, the pot is empty and everyone is worse off.</p>
+        <p style="margin-top:0.75rem;"><strong>Social vs. Private Optimum:</strong> If all 4 players contribute their full $10, the pot becomes $64 (40 x 1.6), and each earns $16 -- far more than the $10 from keeping everything. The socially optimal outcome is full contribution, but the individually rational strategy is to contribute $0.</p>
+        <p style="margin-top:0.75rem;"><strong>Why Public Goods Are Underprovided:</strong> Public goods are non-excludable (you cannot stop someone from benefiting) and non-rivalrous (one person's use does not reduce another's). Because of these properties, markets underprovide public goods -- people wait for others to pay. This is why governments often step in to provide national defense, public parks, and clean air regulations.</p>
+        <p style="margin-top:0.75rem;"><strong>Real-World Examples:</strong> Climate change mitigation, public radio/television, open-source software, vaccination programs, and street lighting are all public goods vulnerable to free-riding.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Test Your Understanding</h2>
+      <div id="quiz-area"></div>
+      <div style="text-align:center; margin-top:1rem;">
+        <button class="btn" onclick="checkQuiz()">Check Answers</button>
+        <button class="btn" style="margin-left:0.5rem;" onclick="resetGame()">Play Again</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const ROUNDS = 5;
+const PLAYERS = 4;
+const MULTIPLIER = 1.6;
+const ENDOWMENT = 10;
+const playerNames = ['You', 'Player B', 'Player C', 'Player D'];
+
+let currentRound = 0;
+let contributions = [[], [], [], []]; // per player per round
+let earnings = [[], [], [], []];
+let totalEarnings = [0, 0, 0, 0];
+let aiBaseContribs = [0, 7, 6, 8]; // initial tendencies for AI players
+
+function startGame() {
+  document.getElementById('intro-card').classList.add('hidden');
+  document.getElementById('game-area').classList.remove('hidden');
+  currentRound = 0;
+  contributions = [[], [], [], []];
+  earnings = [[], [], [], []];
+  totalEarnings = [0, 0, 0, 0];
+  aiBaseContribs = [0, 7, 6, 8];
+  updateScoreboard();
+  prepareRound();
+}
+
+function prepareRound() {
+  document.getElementById('round-badge').textContent = `Round ${currentRound + 1} of ${ROUNDS}`;
+  document.getElementById('round-card').classList.remove('hidden');
+  document.getElementById('result-card').classList.add('hidden');
+  document.getElementById('contrib-slider').value = 5;
+  updateSlider();
+  document.getElementById('submit-btn').disabled = false;
+}
+
+function updateSlider() {
+  const v = parseInt(document.getElementById('contrib-slider').value);
+  document.getElementById('slider-val').textContent = v;
+  document.getElementById('keep-val').textContent = ENDOWMENT - v;
+}
+
+function getAIContributions(playerContrib) {
+  // AI starts cooperative but reduces if player free-rides
+  let avgPlayerContrib = 0;
+  if (contributions[0].length > 0) {
+    avgPlayerContrib = contributions[0].reduce((a, b) => a + b, 0) / contributions[0].length;
+  }
+  let aiContribs = [];
+  for (let i = 1; i < PLAYERS; i++) {
+    let base = aiBaseContribs[i];
+    // Reduce contributions if player is free-riding
+    if (contributions[0].length > 0) {
+      let adjustment = (avgPlayerContrib - 5) * 0.4; // if player below 5, AI reduces
+      base = Math.max(0, Math.min(10, base + adjustment));
+      // Additional decay each round
+      base = Math.max(1, base - currentRound * 0.3);
+    }
+    // Add some randomness
+    let contrib = Math.round(base + (Math.random() * 2 - 1));
+    contrib = Math.max(0, Math.min(10, contrib));
+    aiContribs.push(contrib);
+  }
+  return aiContribs;
+}
+
+function submitContribution() {
+  document.getElementById('submit-btn').disabled = true;
+  const playerContrib = parseInt(document.getElementById('contrib-slider').value);
+  const aiContribs = getAIContributions(playerContrib);
+  const roundContribs = [playerContrib, ...aiContribs];
+
+  const totalPot = roundContribs.reduce((a, b) => a + b, 0);
+  const multipliedPot = totalPot * MULTIPLIER;
+  const share = multipliedPot / PLAYERS;
+
+  // Record data
+  for (let i = 0; i < PLAYERS; i++) {
+    contributions[i].push(roundContribs[i]);
+    const roundEarning = (ENDOWMENT - roundContribs[i]) + share;
+    earnings[i].push(roundEarning);
+    totalEarnings[i] += roundEarning;
+  }
+
+  // Display results
+  const potInfo = document.getElementById('pot-info');
+  potInfo.innerHTML = `
+    <div class="pot-animation">
+      Total Contributed: $${totalPot} &rarr; Multiplied (1.6x): $${multipliedPot.toFixed(2)} &rarr; Each Player's Share: $${share.toFixed(2)}
+    </div>
+  `;
+
+  const tbody = document.getElementById('round-tbody');
+  tbody.innerHTML = '';
+  for (let i = 0; i < PLAYERS; i++) {
+    const kept = ENDOWMENT - roundContribs[i];
+    const roundEarning = kept + share;
+    const row = document.createElement('tr');
+    if (i === 0) row.classList.add('highlight-row');
+    row.innerHTML = `<td>${playerNames[i]}</td><td>$${roundContribs[i]}</td><td>$${kept}</td><td>$${share.toFixed(2)}</td><td>$${roundEarning.toFixed(2)}</td>`;
+    tbody.appendChild(row);
+  }
+
+  document.getElementById('round-card').classList.add('hidden');
+  document.getElementById('result-card').classList.remove('hidden');
+  updateScoreboard();
+
+  if (currentRound + 1 >= ROUNDS) {
+    document.getElementById('next-btn').textContent = 'See Final Results';
+  }
+}
+
+function updateScoreboard() {
+  const tbody = document.getElementById('score-tbody');
+  tbody.innerHTML = '';
+  for (let i = 0; i < PLAYERS; i++) {
+    const row = document.createElement('tr');
+    if (i === 0) row.classList.add('highlight-row');
+    row.innerHTML = `<td>${playerNames[i]}</td><td>$${totalEarnings[i].toFixed(2)}</td>`;
+    tbody.appendChild(row);
+  }
+}
+
+function nextRound() {
+  currentRound++;
+  if (currentRound >= ROUNDS) {
+    showSummary();
+  } else {
+    prepareRound();
+  }
+}
+
+function showSummary() {
+  document.getElementById('game-area').classList.add('hidden');
+  document.getElementById('summary-area').classList.remove('hidden');
+
+  // Summary boxes
+  const grid = document.getElementById('summary-grid');
+  grid.innerHTML = '';
+  for (let i = 0; i < PLAYERS; i++) {
+    grid.innerHTML += `<div class="summary-box"><div class="label">${playerNames[i]}</div><div class="value">$${totalEarnings[i].toFixed(2)}</div></div>`;
+  }
+
+  // Max possible
+  const maxPossible = ROUNDS * (ENDOWMENT + (ENDOWMENT * PLAYERS * MULTIPLIER / PLAYERS));
+  // If all contributed $10: each gets 0 + (40*1.6/4) = 16 per round = 80 total
+  grid.innerHTML += `<div class="summary-box" style="background:#D4A843;color:#000;"><div class="label">If All Cooperated</div><div class="value">$${(ROUNDS * 16).toFixed(2)} each</div></div>`;
+
+  // Contribution chart
+  const colors = ['#D4A843', '#555', '#888', '#bbb'];
+  new Chart(document.getElementById('contribChart'), {
+    type: 'line',
+    data: {
+      labels: Array.from({length: ROUNDS}, (_, i) => `Round ${i+1}`),
+      datasets: playerNames.map((name, i) => ({
+        label: name,
+        data: contributions[i],
+        borderColor: colors[i],
+        backgroundColor: colors[i] + '33',
+        borderWidth: i === 0 ? 3 : 2,
+        pointRadius: 5,
+        tension: 0.3
+      }))
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { position: 'bottom' } },
+      scales: {
+        y: { beginAtZero: true, max: 10, title: { display: true, text: 'Contribution ($)' } }
+      }
+    }
+  });
+
+  // Earnings chart
+  const cumulativeEarnings = earnings.map(playerEarnings => {
+    let cumul = [];
+    let sum = 0;
+    playerEarnings.forEach(e => { sum += e; cumul.push(sum); });
+    return cumul;
+  });
+
+  new Chart(document.getElementById('earningsChart'), {
+    type: 'bar',
+    data: {
+      labels: Array.from({length: ROUNDS}, (_, i) => `Round ${i+1}`),
+      datasets: playerNames.map((name, i) => ({
+        label: name,
+        data: cumulativeEarnings[i],
+        backgroundColor: colors[i] + '99',
+        borderColor: colors[i],
+        borderWidth: 1
+      }))
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { position: 'bottom' } },
+      scales: {
+        y: { beginAtZero: true, title: { display: true, text: 'Cumulative Earnings ($)' } }
+      }
+    }
+  });
+
+  // Quiz
+  renderQuiz();
+}
+
+function renderQuiz() {
+  const questions = [
+    {
+      q: "In this game, what is the individually rational strategy for a self-interested player?",
+      opts: ["Contribute all $10 every round", "Contribute $0 and free-ride on others", "Contribute exactly $5 each round", "Match what others contribute"],
+      correct: 1,
+      explanation: "Since each $1 contributed only returns $0.40 to the contributor, a purely self-interested player maximizes personal earnings by contributing nothing and keeping the full $10 -- while still receiving a share of others' contributions."
+    },
+    {
+      q: "Which of the following is the BEST example of a public good?",
+      opts: ["A movie ticket", "A slice of pizza", "National defense", "A pair of shoes"],
+      correct: 2,
+      explanation: "National defense is non-excludable (everyone in the country benefits) and non-rivalrous (one person being protected doesn't reduce protection for others). This makes it a classic public good."
+    },
+    {
+      q: "Why do markets tend to underprovide public goods?",
+      opts: ["Because public goods are too expensive to produce", "Because people can benefit without paying, so they have little incentive to contribute", "Because governments always provide public goods instead", "Because public goods have no value to consumers"],
+      correct: 1,
+      explanation: "Because public goods are non-excludable, people can enjoy the benefits without paying (free-riding). This means private firms cannot charge for them effectively, leading to underprovision by the market."
+    }
+  ];
+
+  const area = document.getElementById('quiz-area');
+  area.innerHTML = '';
+  questions.forEach((question, qi) => {
+    let html = `<div class="quiz-q" id="q${qi}"><p>${qi+1}. ${question.q}</p>`;
+    question.opts.forEach((opt, oi) => {
+      html += `<label><input type="radio" name="q${qi}" value="${oi}"> ${opt}</label>`;
+    });
+    html += `<div class="quiz-feedback" id="fb${qi}"></div></div>`;
+    area.innerHTML += html;
+  });
+  window._quizData = questions;
+}
+
+function checkQuiz() {
+  const questions = window._quizData;
+  questions.forEach((question, qi) => {
+    const selected = document.querySelector(`input[name="q${qi}"]:checked`);
+    const fb = document.getElementById(`fb${qi}`);
+    const labels = document.querySelectorAll(`#q${qi} label`);
+    labels.forEach(l => { l.classList.remove('correct', 'incorrect'); });
+
+    if (!selected) {
+      fb.style.display = 'block';
+      fb.style.background = '#fff3cd';
+      fb.textContent = 'Please select an answer.';
+      return;
+    }
+    const val = parseInt(selected.value);
+    labels[val].classList.add(val === question.correct ? 'correct' : 'incorrect');
+    if (val !== question.correct) {
+      labels[question.correct].classList.add('correct');
+    }
+    fb.style.display = 'block';
+    fb.style.background = val === question.correct ? '#d4edda' : '#f8d7da';
+    fb.textContent = (val === question.correct ? 'Correct! ' : 'Incorrect. ') + question.explanation;
+  });
+}
+
+function resetGame() {
+  document.getElementById('summary-area').classList.add('hidden');
+  document.getElementById('intro-card').classList.remove('hidden');
+}
+</script>
+</body>
+</html>
