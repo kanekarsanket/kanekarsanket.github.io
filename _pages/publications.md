@@ -5,18 +5,30 @@ permalink: /research/
 author_profile: true
 ---
 
+
 ## Working Papers
 
+
 ### [Impact of High School Graduation Requirements on Health of High School Students](https://github.com/kanekarsanket/kanekarsanket.github.io/raw/master/files/Impact_of_High_School_Graduation_Requirements_on_the_Health_of_High_School_Students.pdf) (Job Market Paper)
+
 
 In this study, I evaluate the relationship between high school students' rigorous coursework and their health behaviors, such as body mass index (BMI), smoking cigarettes, alcohol consumption, and TV viewing. I consider the state increase in high school students' math graduation requirements as a measure of their rigorous coursework. I use the state survey data from Youth Risk Behavioral Surveillance System from 1999 to 2019 and employ the difference in difference methods in this study. The results suggest that states with higher math requirements for graduation are likely to have a lower BMI and obesity prevalence. The BMI decreases by 0.12 units at a 5% significance value, and the probability of being obese decreases by 1.3 percentage points at a 1% significance value. The results by race suggest that BMI and obesity prevalence decreases for white students with a significant value, while no significant change was observed for minority students (black and Hispanic). Additionally, white high school students are less likely to smoke a cigarette and watch TV, while no such impact was observed for minority students. Furthermore, there is an increase in current drinking behavior among white high school students. These findings suggest that incorporating more math content into high school curricula could be an effective way to improve health factors among young people.
 
 
 ### [Arthritis, Health Care Access, and Health Disparity in the Largest U.S. Cities](https://github.com/kanekarsanket/kanekarsanket.github.io/raw/master/files/ManuscriptHealthAndPlace.pdf) (with Tannista Banerjee)
 
-The objective is to evaluate the relationship between U.S. cities’ socio-economic factors, doctors’ visits, and arthritis. We analyze how regular doctors’ visits act as a mediating factor by which arthritis prevalence and related health disparities can be reduced. We use 500 Cities Project and American Community Survey data spanning from 2014 to 2017 and a path analysis model in this paper. Our results suggest that the previous year doctors’ visits lower arthritis prevalence by 0.03 percent (p value 0.04). The indirect results support this notion as cities with higher median income, insurance coverage, and certain percentages of races present are associated with lower arthritis prevalence. We also observe a higher prevalence of doctors’ visits in cities according to such socio-economic factors. Lower arthritis prevalence was seen in cities with higher black percentage populations due to such cities having more prevalent doctors’ visits. Policies should address awareness of the importance of regular doctor visits to limit the impact on the future chronic condition.
+
+The objective is to evaluate the relationship between U.S. cities' socio-economic factors, doctors' visits, and arthritis. We analyze how regular doctors' visits act as a mediating factor by which arthritis prevalence and related health disparities can be reduced. We use 500 Cities Project and American Community Survey data spanning from 2014 to 2017 and a path analysis model in this paper. Our results suggest that the previous year doctors' visits lower arthritis prevalence by 0.03 percent (p value 0.04). The indirect results support this notion as cities with higher median income, insurance coverage, and certain percentages of races present are associated with lower arthritis prevalence. We also observe a higher prevalence of doctors' visits in cities according to such socio-economic factors. Lower arthritis prevalence was seen in cities with higher black percentage populations due to such cities having more prevalent doctors' visits. Policies should address awareness of the importance of regular doctor visits to limit the impact on the future chronic condition.
+
+
+### Health Disparities in Alabama's Black Belt: A Cross-Sectional Decomposition of the County-Level Gap, 2023
+
+
+Alabama's Black Belt, an 18-county region with a majority African American population and persistent poverty, has long been identified as one of the most disadvantaged areas in the United States. This study quantifies the breadth of the Black Belt health gap across 14 outcomes and decomposes it into components attributable to socioeconomic status, racial composition, and unobserved factors. I analyzed all 67 Alabama counties using a 2023 cross-section that combined the American Community Survey (ACS), CDC PLACES, and County Health Rankings (CHR). I compared 18 Black Belt counties with 49 non-Black Belt counties using ordinary least squares with heteroskedasticity-robust (HC3) standard errors, a threefold Oaxaca-Blinder decomposition (endowments, coefficients, interaction), and causal mediation analysis with bootstrap confidence intervals (2,000 replications). Black Belt counties exhibited worse outcomes across nearly every indicator: higher diabetes prevalence (17.1% vs. 12.7%), obesity (47.3% vs. 40.0%), hypertension (46.9% vs. 39.7%), and premature mortality (14,837 vs. 12,092 years of life lost per 100,000), and lower life expectancy (71.3 vs. 73.1 years). The Oaxaca-Blinder decomposition attributed 62% to 136% of the raw gap to differences in endowments (poverty, income, education, and racial composition). Causal mediation indicated that 84% to 123% of the total Black Belt effect operated indirectly through socioeconomic and racial mediators, while the average direct effect was statistically indistinguishable from zero in every model. The Alabama Black Belt health penalty is large, broad, and almost entirely attributable to differences in measurable structural conditions. Policies that reduce poverty, expand healthcare coverage, and invest in human capital in the region are likely to close most of the observed gap.
+
 
 ## Paper in Progress
+
 
 ### Same Sex Marriage and Racial Health Disparity among LGBT
 ### The Impact of COVID-19 on Health Care Utilization (with Tannista Banerjee)
