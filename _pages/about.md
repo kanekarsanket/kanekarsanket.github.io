@@ -8,12 +8,6 @@ redirect_from:
   -   - /about.html
       - ---
 
+      I am a tenure-track Assistant Professor in Economics at Alabama State University. My primary research interests lie in the areas of developmental economics, health economics, public health, and public policy. I am particularly interested in applying empirical econometric methods to evaluate the efficacy of various policies and programs.
 
-      I am a tenure-track Assistant Professor in Economics at Alabama State University. My primary
-      research interests lie in the areas of developmental economics, rural economics, health economics, public health, and public policy. I am
-      particularly interested in applying empirical econometric methods to evaluate the efficacy of
-      various policies and programs.
-
-
-      If you are interested in my work or would like to collaborate, please feel free to reach out to me.
-      My email address is skanekar@alasu.edu.
+      If you are interested in my work or would like to collaborate, please feel free to reach out to me. My email address is sanketkanekar08@gmail.com
