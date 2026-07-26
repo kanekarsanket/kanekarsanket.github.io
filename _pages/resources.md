@@ -20,3 +20,4 @@ title: "Resources"
 - [Our World in Data](https://ourworldindata.org/)
 - [U.S. Census Bureau](https://www.census.gov/)
 - [Kaggle Datasets](https://www.kaggle.com/datasets)
+- [Global Edge MSU](https://globaledge.msu.edu/global-resources) — comprehensive global business resources and country insights
