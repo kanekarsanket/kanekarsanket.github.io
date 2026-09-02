@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 4: Supply &amp; Demand Market Simulator</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #0a0a0a;
+  color: #fff;
+  min-height: 100vh;
+}
+
+header {
+  background: #000;
+  border-bottom: 4px solid #D4A843;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+header h1 { font-size: 1.2rem; color: #D4A843; }
+header h1 small { display: block; font-size: 0.75rem; color: #aaa; font-weight: normal; margin-top: 0.2rem; }
+header a {
+  color: #D4A843; text-decoration: none; font-size: 0.85rem;
+  border: 1px solid #D4A843; padding: 0.35rem 0.75rem; border-radius: 6px; transition: background 0.2s;
+}
+header a:hover { background: #D4A843; color: #000; }
+
+.container { max-width: 1000px; margin: 0 auto; padding: 1.5rem 1rem; }
+
+.panel {
+  background: #151515; border: 1px solid #2a2a2a; border-radius: 12px;
+  padding: 1.25rem; margin-bottom: 1.25rem;
+}
+.panel h3 {
+  font-size: 0.9rem; color: #D4A843; margin-bottom: 0.9rem;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.panel p { font-size: 0.88rem; color: #ccc; line-height: 1.6; }
+
+/* Tabs */
+.tabs { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.tab {
+  background: #1a1a1a; border: 1px solid #333; color: #ccc; padding: 0.6rem 1.1rem;
+  border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600;
+}
+.tab.active { background: #D4A843; color: #000; border-color: #D4A843; }
+.tab-page { display: none; }
+.tab-page.active { display: block; }
+
+/* Equilibrium bar */
+.eq-bar { display: flex; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.eq-box {
+  flex: 1; min-width: 130px; background: #151515; border: 1px solid #2a2a2a;
+  border-radius: 10px; padding: 0.9rem; text-align: center;
+}
+.eq-box .label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 0.3rem; }
+.eq-box .value { font-size: 1.4rem; font-weight: 700; color: #D4A843; }
+.eq-box.surplus .value { color: #4caf50; }
+.eq-box.shortage .value { color: #f44336; }
+
+/* Chart */
+.chart-wrap { background: #151515; border: 1px solid #2a2a2a; border-radius: 12px; padding: 1rem; margin-bottom: 1.25rem; }
+canvas#marketChart { width: 100% !important; max-height: 420px; }
+.chart-title { font-size: 0.85rem; color: #aaa; text-align: center; margin-bottom: 0.4rem; }
+.chart-title span { color: #D4A843; font-weight: 600; }
+
+/* Controls */
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; }
+.shift-group { margin-bottom: 0.85rem; }
+.shift-group label { display: flex; justify-content: space-between; font-size: 0.8rem; color: #bbb; margin-bottom: 0.25rem; }
+.shift-group label .hint { color: #777; font-size: 0.72rem; }
+.shift-group input[type=range] { width: 100%; accent-color: #D4A843; }
+.range-scale { display: flex; justify-content: space-between; font-size: 0.68rem; color: #666; }
+.range-scale b { color: #D4A843; font-weight: 600; }
+.income-type { display: flex; gap: 0.5rem; margin: 0.25rem 0 0.5rem; }
+.income-type button { padding: 0.25rem 0.6rem; font-size: 0.72rem; }
+
+.btn-row { display: flex; gap: 0.6rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+button {
+  font-family: inherit; cursor: pointer; border: none; border-radius: 8px;
+  padding: 0.55rem 1.1rem; font-size: 0.83rem; font-weight: 600; transition: background 0.2s;
+}
+.btn-gold { background: #D4A843; color: #000; }
+.btn-gold:hover { background: #e6bc5a; }
+.btn-secondary { background: #2a2a2a; color: #fff; border: 1px solid #444; }
+.btn-secondary:hover { background: #3a3a3a; }
+.btn-active { background: #D4A843; color: #000; border-color: #D4A843; }
+.btn-sm { padding: 0.35rem 0.7rem; font-size: 0.75rem; }
+
+/* Price control */
+.price-mode { display: flex; gap: 0.6rem; margin-bottom: 0.8rem; flex-wrap: wrap; }
+
+/* Scenario buttons */
+.scenario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.6rem; }
+.scenario-btn {
+  background: #1a1a1a; border: 1px solid #333; color: #ddd; text-align: left;
+  padding: 0.7rem 0.85rem; border-radius: 8px; font-weight: normal; font-size: 0.8rem; line-height: 1.4;
+}
+.scenario-btn b { display: block; color: #D4A843; margin-bottom: 0.15rem; }
+.scenario-btn:hover { border-color: #D4A843; }
+
+/* Table */
+table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+th, td { padding: 0.45rem 0.5rem; text-align: center; border-bottom: 1px solid #222; }
+th { color: #D4A843; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; }
+tr.eq-row td { background: rgba(212,168,67,0.15); font-weight: 700; }
+tr.cur-row td { outline: 1px solid #D4A843; }
+td.surplus { color: #4caf50; } td.shortage { color: #f44336; } td.eq { color: #D4A843; }
+.table-wrap { overflow-x: auto; }
+
+/* Explanation */
+.explanation p b { color: #D4A843; }
+
+/* Concepts accordion */
+details { border: 1px solid #2a2a2a; border-radius: 8px; margin-bottom: 0.5rem; background: #111; }
+summary { cursor: pointer; padding: 0.7rem 0.9rem; font-size: 0.88rem; font-weight: 600; color: #eee; }
+details .body { padding: 0 0.9rem 0.9rem; font-size: 0.85rem; color: #ccc; line-height: 1.6; }
+details .body ul { margin: 0.4rem 0 0.4rem 1.2rem; }
+details .body li { margin-bottom: 0.25rem; }
+details .body table { margin: 0.5rem 0; font-size: 0.8rem; }
+
+/* Quiz */
+.quiz-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1rem; }
+.quiz-top .score { font-size: 0.85rem; color: #ccc; }
+.quiz-top .score b { color: #D4A843; }
+.quiz-cat { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 0.4rem; }
+.quiz-q { font-size: 1rem; color: #fff; font-weight: 600; line-height: 1.5; margin-bottom: 1rem; }
+.quiz-opt {
+  display: block; width: 100%; text-align: left; background: #1a1a1a; border: 1px solid #333;
+  color: #ddd; padding: 0.7rem 0.9rem; border-radius: 8px; margin-bottom: 0.5rem; font-weight: normal; font-size: 0.88rem; line-height: 1.4;
+}
+.quiz-opt:hover:not(:disabled) { border-color: #D4A843; }
+.quiz-opt.correct { background: rgba(76,175,80,0.18); border-color: #4caf50; color: #fff; }
+.quiz-opt.wrong { background: rgba(244,67,54,0.18); border-color: #f44336; color: #fff; }
+.quiz-opt:disabled { cursor: default; }
+.quiz-feedback { margin-top: 0.9rem; font-size: 0.88rem; line-height: 1.6; padding: 0.8rem; border-radius: 8px; background: #111; display: none; }
+.quiz-feedback.show { display: block; }
+.quiz-feedback .verdict { font-weight: 700; margin-bottom: 0.3rem; }
+.quiz-feedback.correct .verdict { color: #4caf50; }
+.quiz-feedback.wrong .verdict { color: #f44336; }
+.quiz-actions { display: flex; gap: 0.6rem; margin-top: 0.9rem; flex-wrap: wrap; }
+.progress { height: 6px; background: #222; border-radius: 3px; margin-bottom: 1rem; overflow: hidden; }
+.progress div { height: 100%; background: #D4A843; width: 0; transition: width 0.3s; }
+.quiz-setup { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin-bottom: 1rem; }
+.quiz-setup select { background: #1a1a1a; color: #fff; border: 1px solid #444; border-radius: 6px; padding: 0.45rem; font-size: 0.83rem; }
+.result-big { font-size: 2rem; color: #D4A843; font-weight: 700; margin: 0.5rem 0; }
+.review-item { border-top: 1px solid #222; padding: 0.7rem 0; font-size: 0.83rem; color: #ccc; }
+.review-item b { color: #fff; }
+.review-item .ok { color: #4caf50; } .review-item .no { color: #f44336; }
+
+footer { text-align: center; padding: 1.25rem; border-top: 1px solid #222; font-size: 0.78rem; color: #666; }
+
+@media (max-width: 640px) {
+  header h1 { font-size: 1rem; }
+  .controls { grid-template-columns: 1fr; }
+  .eq-box .value { font-size: 1.15rem; }
+  canvas#marketChart { max-height: 300px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Supply &amp; Demand Market Simulator<small>Chapter 4: The Market Forces of Supply and Demand</small></h1>
+  <a href="../index.html">&larr; Back to Portal</a>
+</header>
+
+<div class="container">
+
+  <div class="tabs">
+    <button class="tab active" data-tab="sim" onclick="showTab('sim')">Simulator</button>
+    <button class="tab" data-tab="quiz" onclick="showTab('quiz')">Practice Quiz</button>
+    <button class="tab" data-tab="concepts" onclick="showTab('concepts')">Chapter Concepts</button>
+  </div>
+
+  <!-- ================= SIMULATOR ================= -->
+  <div class="tab-page active" id="tab-sim">
+
+    <div class="eq-bar">
+      <div class="eq-box"><div class="label">Equilibrium Price</div><div class="value" id="eqPrice">$3.00</div></div>
+      <div class="eq-box"><div class="label">Equilibrium Quantity</div><div class="value" id="eqQty">15</div></div>
+      <div class="eq-box"><div class="label">Current Price</div><div class="value" id="curPrice">$3.00</div></div>
+      <div class="eq-box" id="gapBox"><div class="label" id="gapLabel">Market Status</div><div class="value" id="gapValue">Equilibrium</div></div>
+    </div>
+
+    <div class="chart-wrap">
+      <div class="chart-title">The market for <span id="marketName">lattes</span></div>
+      <canvas id="marketChart"></canvas>
+    </div>
+
+    <div class="panel">
+      <h3>Market price</h3>
+      <div class="price-mode">
+        <button class="btn-active" id="modeAuto" onclick="setPriceMode('auto')">Let the market find equilibrium</button>
+        <button class="btn-secondary" id="modeManual" onclick="setPriceMode('manual', true)">Set the price yourself</button>
+        <button class="btn-secondary" id="btnAdjust" onclick="adjustToEq()" style="display:none">Watch price adjust &rarr;</button>
+      </div>
+      <div class="shift-group" id="priceGroup" style="display:none">
+        <label><span>Market price</span><span class="hint" id="priceHint">$3.00</span></label>
+        <input type="range" id="price" min="0" max="8" value="3" step="0.25">
+        <div class="range-scale"><span>$0</span><span>$4</span><span>$8</span></div>
+      </div>
+      <p id="priceNote">The price settles where quantity demanded equals quantity supplied. Switch to "Set the price yourself" to create a surplus or shortage and see how the market pushes the price back.</p>
+    </div>
+
+    <div class="controls">
+      <div class="panel" style="margin:0">
+        <h3>Demand shifters (buyers)</h3>
+
+        <div class="shift-group">
+          <label><span>Number of buyers</span><span class="hint">fewer &larr; &rarr; more</span></label>
+          <input type="range" id="buyers" min="-12" max="12" value="0" step="1">
+          <div class="range-scale"><span>-12</span><b id="buyersVal">0</b><span>+12</span></div>
+        </div>
+
+        <div class="shift-group">
+          <label><span>Buyers' income</span><span class="hint">lower &larr; &rarr; higher</span></label>
+          <input type="range" id="income" min="-12" max="12" value="0" step="1">
+          <div class="range-scale"><span>-12</span><b id="incomeVal">0</b><span>+12</span></div>
+          <div class="income-type">
+            <span style="font-size:0.72rem;color:#999;align-self:center">This good is:</span>
+            <button class="btn-active" id="incNormal" onclick="setIncomeType('normal')">Normal</button>
+            <button class="btn-secondary" id="incInferior" onclick="setIncomeType('inferior')">Inferior</button>
+          </div>
+        </div>
+
+        <div class="shift-group">
+          <label><span>Price of substitutes <span class="hint">(e.g. cappuccino)</span></span><span class="hint">lower &larr; &rarr; higher</span></label>
+          <input type="range" id="subs" min="-12" max="12" value="0" step="1">
+          <div class="range-scale"><span>-12</span><b id="subsVal">0</b><span>+12</span></div>
+        </div>
+
+        <div class="shift-group">
+          <label><span>Price of complements <span class="hint">(e.g. pastries)</span></span><span class="hint">lower &larr; &rarr; higher</span></label>
+          <input type="range" id="comps" min="-12" max="12" value="0" step="1">
+          <div class="range-scale"><span>-12</span><b id="compsVal">0</b><span>+12</span></div>
+        </div>
+
+        <div class="shift-group">
+          <label><span>Tastes</span><span class="hint">less popular &larr; &rarr; more popular</span></label>
+          <input type="range" id="tastes" min="-12" max="12" value="0" step="1">
+          <div class="range-scale"><span>-12</span><b id="tastesVal">0</b><span>+12</span></div>
+        </div>
+
+        <div class="shift-group">
+          <label><span>Expectations <span class="hint">(future price or income)</span></span><span class="hint">expect lower &larr; &rarr; expect higher</span></label>
+          <input type="range" id="dexp" min="-12" max="12" value="0" step="1">
+          <div class="range-scale"><span>-12</span><b id="dexpVal">0</b><span>+12</span></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin:0">
+        <h3>Supply shifters (sellers)</h3>
+
+        <div class="shift-group">
+          <label><span>Input prices <span class="hint">(milk, beans, wages)</span></span><span class="hint">lower &larr; &rarr; higher</span></label>
+          <input type="range" id="inputs" min="-12" max="12" value="0" step="1">
+          <div class="range-scale"><span>-12</span><b id="inputsVal">0</b><span>+12</span></div>
+        </div>
+
+        <div class="shift-group">
+          <label><span>Technology</span><span class="hint">worse &larr; &rarr; better</span></label>
+          <input type="range" id="tech" min="-12" max="12" value="0" step="1">
+          <div class="range-scale"><span>-12</span><b id="techVal">0</b><span>+12</span></div>
+        </div>
+
+        <div class="shift-group">
+          <label><span>Number of sellers</span><span class="hint">fewer &larr; &rarr; more</span></label>
+          <input type="range" id="sellers" min="-12" max="12" value="0" step="1">
+          <div class="range-scale"><span>-12</span><b id="sellersVal">0</b><span>+12</span></div>
+        </div>
+
+        <div class="shift-group">
+          <label><span>Expected future price <span class="hint">(storable goods)</span></span><span class="hint">expect lower &larr; &rarr; expect higher</span></label>
+          <input type="range" id="sexp" min="-12" max="12" value="0" step="1">
+          <div class="range-scale"><span>-12</span><b id="sexpVal">0</b><span>+12</span></div>
+        </div>
+
+        <p style="font-size:0.75rem;color:#888;margin-top:0.5rem">Slider values are in units of the good (lattes) added to or removed from quantity at every price. The chapter's example shifts curves by 5.</p>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-gold" onclick="resetAll()">Reset to chapter example</button>
+      <button class="btn-secondary" onclick="toggleTable()" id="btnTable">Show schedule table</button>
+    </div>
+
+    <div class="panel" id="tablePanel" style="display:none">
+      <h3>Demand and supply schedules</h3>
+      <div class="btn-row" style="margin-bottom:0.8rem">
+        <button class="btn-sm btn-active" id="tblMarket" onclick="setTableView('market')">Market totals (with shifts)</button>
+        <button class="btn-sm btn-secondary" id="tblIndiv" onclick="setTableView('indiv')">Individual buyers &amp; sellers (chapter data)</button>
+      </div>
+      <div class="table-wrap"><table id="schedTable"></table></div>
+      <p style="font-size:0.75rem;color:#888;margin-top:0.6rem" id="tableNote"></p>
+    </div>
+
+    <div class="panel explanation">
+      <h3>What's happening?</h3>
+      <p id="explanationText"></p>
+    </div>
+
+    <div class="panel">
+      <h3>Active Learning scenarios from the chapter</h3>
+      <p style="margin-bottom:0.8rem">Click a scenario. The simulator sets the sliders and explains the three-step method: which curve shifts, which direction, and what happens to price and quantity.</p>
+      <div class="scenario-grid" id="scenarioGrid"></div>
+    </div>
+
+  </div>
+
+  <!-- ================= QUIZ ================= -->
+  <div class="tab-page" id="tab-quiz">
+    <div class="panel">
+      <h3>Practice quiz: <span id="bankCount"></span> questions from Chapter 4</h3>
+      <div id="quizSetup">
+        <p style="margin-bottom:0.8rem">Each round gives you 10 random questions. After you answer, use <b style="color:#D4A843">Show on graph</b> to see the scenario in the simulator and check the answer visually.</p>
+        <div class="quiz-setup">
+          <label style="font-size:0.83rem;color:#bbb">Topic:</label>
+          <select id="topicSelect"><option value="all">All topics</option></select>
+          <label style="font-size:0.83rem;color:#bbb">Questions:</label>
+          <select id="countSelect"><option value="10">10</option><option value="20">20</option><option value="all">All</option></select>
+          <button class="btn-gold" onclick="startRound()">Start round</button>
+        </div>
+      </div>
+
+      <div id="quizPlay" style="display:none">
+        <div class="quiz-top">
+          <span class="score">Question <b id="qNum">1</b> of <b id="qTotal">10</b></span>
+          <span class="score">Score: <b id="qScore">0</b></span>
+        </div>
+        <div class="progress"><div id="qProgress"></div></div>
+        <div class="quiz-cat" id="qCat"></div>
+        <div class="quiz-q" id="qText"></div>
+        <div id="qOpts"></div>
+        <div class="quiz-feedback" id="qFeedback">
+          <div class="verdict" id="qVerdict"></div>
+          <div id="qExplain"></div>
+        </div>
+        <div class="quiz-actions">
+          <button class="btn-secondary" id="btnShowGraph" onclick="showOnGraph()" style="display:none">Show on graph</button>
+          <button class="btn-gold" id="btnNext" onclick="nextQuestion()" style="display:none">Next question &rarr;</button>
+          <button class="btn-secondary" onclick="quitRound()">End round</button>
+        </div>
+      </div>
+
+      <div id="quizResult" style="display:none">
+        <p>Round complete</p>
+        <div class="result-big" id="resultScore"></div>
+        <p id="resultMsg" style="margin-bottom:1rem"></p>
+        <div class="btn-row">
+          <button class="btn-gold" onclick="startRound()">New round</button>
+          <button class="btn-secondary" onclick="backToSetup()">Change topic</button>
+        </div>
+        <h3 style="margin-top:1rem">Review</h3>
+        <div id="reviewList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= CONCEPTS ================= -->
+  <div class="tab-page" id="tab-concepts">
+    <div class="panel">
+      <h3>Chapter 4 in brief</h3>
+      <p style="margin-bottom:1rem">Five questions the chapter answers: What affects buyers' demand? What affects sellers' supply? How do supply and demand set price and quantity? How do changes in those factors change price and quantity? How do markets allocate resources?</p>
+
+      <details open>
+        <summary>Markets and competition</summary>
+        <div class="body">
+          A <b>market</b> is a group of buyers and sellers of a particular good or service. Buyers as a group determine <b>demand</b>; sellers as a group determine <b>supply</b>.
+          A <b>competitive market</b> has many buyers and sellers, each with a negligible effect on price. In a <b>perfectly competitive market</b> all goods are identical and everyone is a <b>price taker</b>.
+        </div>
+      </details>
+
+      <details>
+        <summary>Demand: law of demand, schedule, curve</summary>
+        <div class="body">
+          <b>Quantity demanded</b> is the amount buyers are willing and able to purchase. <b>Law of demand:</b> other things equal, when price rises, quantity demanded falls.
+          A <b>demand schedule</b> is a table; a <b>demand curve</b> is the graph (price on the vertical axis, quantity on the horizontal).
+          <table><tr><th>Price</th><th>Sam</th><th>Dean</th><th>Market QD</th></tr>
+          <tr><td>$0</td><td>16</td><td>8</td><td>24</td></tr><tr><td>$1</td><td>14</td><td>7</td><td>21</td></tr><tr><td>$2</td><td>12</td><td>6</td><td>18</td></tr>
+          <tr><td>$3</td><td>10</td><td>5</td><td>15</td></tr><tr><td>$4</td><td>8</td><td>4</td><td>12</td></tr><tr><td>$5</td><td>6</td><td>3</td><td>9</td></tr><tr><td>$6</td><td>4</td><td>2</td><td>6</td></tr></table>
+          <b>Market demand</b> is the sum of all individual demands: add the quantities at each price (a horizontal sum). In the simulator, market demand is QD = 24 − 3P.
+        </div>
+      </details>
+
+      <details>
+        <summary>Demand curve shifters (non-price determinants)</summary>
+        <div class="body">
+          A change in the good's own price moves you <b>along</b> the curve. A change in anything else shifts the whole curve:
+          <ul>
+            <li><b>Number of buyers:</b> more buyers, demand shifts right.</li>
+            <li><b>Income:</b> for a <b>normal good</b> (laptops, branded clothes) higher income raises demand; for an <b>inferior good</b> (instant ramen, fake watches) higher income lowers demand.</li>
+            <li><b>Prices of substitutes</b> (pizza and hamburgers, Coke and Pepsi, CDs and downloads): a higher price of one raises demand for the other.</li>
+            <li><b>Prices of complements</b> (computers and software, bagels and cream cheese, milk and coffee): a higher price of one lowers demand for the other.</li>
+            <li><b>Tastes:</b> the Atkins diet raised demand for eggs; veganism lowers demand for meat.</li>
+            <li><b>Expectations:</b> expecting higher income or higher prices raises demand now.</li>
+          </ul>
+          <b>Rule of thumb:</b> if the changing variable is on an axis (price), move along the curve; if it is not on an axis, the curve shifts.
+        </div>
+      </details>
+
+      <details>
+        <summary>Supply: law of supply, schedule, curve</summary>
+        <div class="body">
+          <b>Quantity supplied</b> is the amount sellers are willing and able to sell. <b>Law of supply:</b> other things equal, when price rises, quantity supplied rises.
+          <table><tr><th>Price</th><th>Starbucks</th><th>Peet's</th><th>Market QS</th></tr>
+          <tr><td>$0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>$1</td><td>3</td><td>2</td><td>5</td></tr><tr><td>$2</td><td>6</td><td>4</td><td>10</td></tr>
+          <tr><td>$3</td><td>9</td><td>6</td><td>15</td></tr><tr><td>$4</td><td>12</td><td>8</td><td>20</td></tr><tr><td>$5</td><td>15</td><td>10</td><td>25</td></tr><tr><td>$6</td><td>18</td><td>12</td><td>30</td></tr></table>
+          <b>Market supply</b> is the horizontal sum of individual supplies. In the simulator, market supply is QS = 5P.
+        </div>
+      </details>
+
+      <details>
+        <summary>Supply curve shifters (non-price determinants)</summary>
+        <div class="body">
+          <ul>
+            <li><b>Input prices</b> (wages, raw materials): supply is negatively related to input prices. Cheaper milk shifts latte supply right.</li>
+            <li><b>Technology:</b> a cost-saving improvement works like a fall in input prices and shifts supply right.</li>
+            <li><b>Number of sellers:</b> more sellers, supply shifts right.</li>
+            <li><b>Expectations:</b> if sellers of a storable good (oil) expect higher prices, they hold inventory back and current supply shifts left.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details>
+        <summary>Equilibrium, surplus and shortage</summary>
+        <div class="body">
+          <b>Equilibrium</b> is where the curves intersect: quantity supplied equals quantity demanded. In the latte market that is <b>$3 and 15 lattes</b>.
+          <ul>
+            <li><b>Surplus</b> (excess supply): QS &gt; QD. At $5, QD = 9 and QS = 25, a surplus of 16. Sellers cut prices, QD rises, QS falls, until equilibrium.</li>
+            <li><b>Shortage</b> (excess demand): QD &gt; QS. At $1, QD = 21 and QS = 5, a shortage of 16. Sellers raise prices, QD falls, QS rises, until equilibrium.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details>
+        <summary>Shift vs. movement along a curve</summary>
+        <div class="body">
+          <b>Change in demand / supply</b> = a shift of the curve, caused by a non-price determinant.<br>
+          <b>Change in quantity demanded / supplied</b> = a movement along a fixed curve, caused by a change in the good's own price.
+        </div>
+      </details>
+
+      <details>
+        <summary>Three steps for analyzing a change in equilibrium</summary>
+        <div class="body">
+          <ol style="margin:0.4rem 0 0.4rem 1.2rem">
+            <li>Decide whether the event shifts supply, demand, or both.</li>
+            <li>Decide whether the curve shifts right or left.</li>
+            <li>Use the diagram to compare the old and new equilibrium.</li>
+          </ol>
+          <table>
+            <tr><th>Event</th><th>Price</th><th>Quantity</th></tr>
+            <tr><td>Demand up</td><td>rises</td><td>rises</td></tr>
+            <tr><td>Demand down</td><td>falls</td><td>falls</td></tr>
+            <tr><td>Supply up</td><td>falls</td><td>rises</td></tr>
+            <tr><td>Supply down</td><td>rises</td><td>falls</td></tr>
+            <tr><td>Both up</td><td>ambiguous</td><td>rises</td></tr>
+            <tr><td>Both down</td><td>ambiguous</td><td>falls</td></tr>
+            <tr><td>Demand up, supply down</td><td>rises</td><td>ambiguous</td></tr>
+            <tr><td>Demand down, supply up</td><td>falls</td><td>ambiguous</td></tr>
+          </table>
+          Electric cars example: higher gas prices shift demand right (P and Q rise); cheaper technology shifts supply right (P falls, Q rises); both together raise Q while the effect on P depends on which shift is bigger.
+        </div>
+      </details>
+
+      <details>
+        <summary>How prices allocate resources</summary>
+        <div class="body">
+          In market economies, prices adjust to balance supply and demand. Those equilibrium prices are the signals that guide economic decisions and allocate scarce resources. "Markets are usually a good way to organize economic activity."
+        </div>
+      </details>
+    </div>
+  </div>
+
+</div>
+
+<footer>Built by Dr. Sanket Kanekar</footer>
+
+<script src="ch4-questions.js"></script>
+<script>
+/* =========================================================
+   MODEL: the chapter's latte market
+   Market demand:  QD = 24 - 3P  (Sam + Dean)
+   Market supply:  QS = 5P       (Starbucks + Peet's)
+   Shifts add/subtract lattes at every price.
+   ========================================================= */
+const D_INT = 24, D_SLOPE = 3, S_SLOPE = 5;
+const Q_MAX = 40, P_MAX = 8;
+const INDIV = {
+  sam:  [16,14,12,10,8,6,4], dean: [8,7,6,5,4,3,2],
+  sbux: [0,3,6,9,12,15,18], peets: [0,2,4,6,8,10,12]
+};
+
+let incomeType = 'normal';
+let priceMode = 'auto';
+let tableView = 'market';
+let marketLabel = 'lattes';
+let adjustTimer = null;
+
+const D_IDS = ['buyers','income','subs','comps','tastes','dexp'];
+const S_IDS = ['inputs','tech','sellers','sexp'];
+const v = id => parseInt(document.getElementById(id).value);
+
+function getShifts() {
+  const inc = incomeType === 'normal' ? v('income') : -v('income');
+  const dShift = v('buyers') + inc + v('subs') - v('comps') + v('tastes') + v('dexp');
+  const sShift = -v('inputs') + v('tech') + v('sellers') - v('sexp');
+  return { dShift, sShift };
+}
+const demandQ = (P, d) => Math.max(0, D_INT + d - D_SLOPE * P);
+const supplyQ = (P, s) => Math.max(0, S_SLOPE * P + s);
+
+function equilibrium(d, s) {
+  // 24 + d - 3P = 5P + s  ->  P = (24 + d - s)/8
+  let P = (D_INT + d - s) / (D_SLOPE + S_SLOPE);
+  if (P < 0) P = 0;
+  let Q = supplyQ(P, s);
+  if (s < 0 && P * S_SLOPE + s < 0) { P = -s / S_SLOPE; Q = 0; }
+  return { P, Q };
+}
+
+function currentPrice(eq) {
+  return priceMode === 'manual' ? parseFloat(document.getElementById('price').value) : eq.P;
+}
+
+/* ================= CHART ================= */
+const ctx = document.getElementById('marketChart').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: { datasets: [
+    { label: 'Demand (D)', data: [], borderColor: '#5c9eff', borderWidth: 2.5, pointRadius: 0, tension: 0 },
+    { label: 'Supply (S)', data: [], borderColor: '#ff7043', borderWidth: 2.5, pointRadius: 0, tension: 0 },
+    { label: 'Original D', data: [], borderColor: 'rgba(92,158,255,0.35)', borderWidth: 1.5, borderDash: [6,4], pointRadius: 0, tension: 0 },
+    { label: 'Original S', data: [], borderColor: 'rgba(255,112,67,0.35)', borderWidth: 1.5, borderDash: [6,4], pointRadius: 0, tension: 0 },
+    { label: 'Equilibrium', data: [], borderColor: '#D4A843', backgroundColor: '#D4A843', pointRadius: 7, showLine: false },
+    { label: 'Current price', data: [], borderColor: '#fff', borderWidth: 1.5, borderDash: [4,4], pointRadius: 0 },
+    { label: 'QD / QS at price', data: [], borderColor: '#fff', backgroundColor: '#fff', pointRadius: 5, showLine: false }
+  ]},
+  options: {
+    responsive: true, maintainAspectRatio: true, aspectRatio: 1.8, animation: { duration: 150 },
+    scales: {
+      x: { type: 'linear', min: 0, max: Q_MAX, title: { display: true, text: 'Quantity of lattes', color: '#aaa' }, ticks: { color: '#888', stepSize: 5 }, grid: { color: '#222' } },
+      y: { type: 'linear', min: 0, max: P_MAX, title: { display: true, text: 'Price of lattes ($)', color: '#aaa' }, ticks: { color: '#888', stepSize: 1, callback: val => '$' + val }, grid: { color: '#222' } }
+    },
+    plugins: {
+      legend: { labels: { color: '#ccc', usePointStyle: true, padding: 12, filter: item => item.text !== 'QD / QS at price' && item.text !== 'Current price' } },
+      tooltip: { callbacks: { label: c => c.dataset.label + ': Q = ' + c.parsed.x.toFixed(1) + ', P = $' + c.parsed.y.toFixed(2) } }
+    }
+  }
+});
+
+function curvePts(fn, shift) {
+  // draw only the part of the line where quantity is between 0 and Q_MAX
+  const raw = fn === demandQ ? P => D_INT + shift - D_SLOPE * P : P => S_SLOPE * P + shift;
+  const pts = [];
+  for (let P = 0; P <= P_MAX; P += 0.05) {
+    const q = raw(P);
+    if (q >= 0 && q <= Q_MAX) pts.push({ x: q, y: P });
+  }
+  return pts;
+}
+
+function update() {
+  const { dShift, sShift } = getShifts();
+  const eq = equilibrium(dShift, sShift);
+  const P = currentPrice(eq);
+  const qd = demandQ(P, dShift), qs = supplyQ(P, sShift);
+
+  chart.data.datasets[0].data = curvePts(demandQ, dShift);
+  chart.data.datasets[1].data = curvePts(supplyQ, sShift);
+  chart.data.datasets[2].data = dShift !== 0 ? curvePts(demandQ, 0) : [];
+  chart.data.datasets[3].data = sShift !== 0 ? curvePts(supplyQ, 0) : [];
+  chart.data.datasets[4].data = [{ x: eq.Q, y: eq.P }];
+  chart.data.datasets[5].data = priceMode === 'manual' ? [{ x: 0, y: P }, { x: Q_MAX, y: P }] : [];
+  chart.data.datasets[6].data = priceMode === 'manual' ? [{ x: qd, y: P }, { x: qs, y: P }] : [];
+  chart.options.scales.x.title.text = 'Quantity of ' + marketLabel;
+  chart.options.scales.y.title.text = 'Price of ' + marketLabel + ' ($)';
+  chart.update();
+
+  document.getElementById('marketName').textContent = marketLabel;
+  document.getElementById('eqPrice').textContent = '$' + eq.P.toFixed(2);
+  document.getElementById('eqQty').textContent = eq.Q.toFixed(eq.Q % 1 ? 1 : 0);
+  document.getElementById('curPrice').textContent = '$' + P.toFixed(2);
+  document.getElementById('priceHint').textContent = '$' + P.toFixed(2);
+
+  const gapBox = document.getElementById('gapBox'), gl = document.getElementById('gapLabel'), gv = document.getElementById('gapValue');
+  const diff = qs - qd;
+  if (priceMode === 'manual' && Math.abs(diff) > 0.01) {
+    gl.textContent = diff > 0 ? 'Surplus (QS − QD)' : 'Shortage (QD − QS)';
+    gv.textContent = Math.abs(diff).toFixed(1).replace(/\.0$/, '') + ' ' + marketLabel;
+    gapBox.className = 'eq-box ' + (diff > 0 ? 'surplus' : 'shortage');
+  } else {
+    gl.textContent = 'Market Status'; gv.textContent = 'Equilibrium'; gapBox.className = 'eq-box';
+  }
+
+  updateExplanation(eq, dShift, sShift, P, qd, qs);
+  if (document.getElementById('tablePanel').style.display !== 'none') renderTable(eq, dShift, sShift, P);
+}
+
+function fmt(n) { return (Math.round(n * 10) / 10).toString(); }
+
+function updateExplanation(eq, d, s, P, qd, qs) {
+  const parts = [];
+  const g = marketLabel;
+  if (d === 0 && s === 0 && priceMode === 'auto') {
+    parts.push('This is the chapter\'s latte market. Market demand is QD = 24 − 3P (Sam plus Dean) and market supply is QS = 5P (Starbucks plus Peet\'s). They cross at <b>$3 and 15 lattes</b>. Move a slider to shift a curve, or set the price yourself to create a surplus or shortage.');
+  }
+  if (d > 0) parts.push('<b>Demand shifted RIGHT</b> by ' + d + ' at every price (an increase in demand). Causes on your sliders: ' + demandCauses(true) + '. By itself this raises both equilibrium price and quantity.');
+  if (d < 0) parts.push('<b>Demand shifted LEFT</b> by ' + (-d) + ' at every price (a decrease in demand). Causes on your sliders: ' + demandCauses(false) + '. By itself this lowers both equilibrium price and quantity.');
+  if (s > 0) parts.push('<b>Supply shifted RIGHT</b> by ' + s + ' at every price (an increase in supply). Causes on your sliders: ' + supplyCauses(true) + '. By itself this lowers equilibrium price and raises quantity.');
+  if (s < 0) parts.push('<b>Supply shifted LEFT</b> by ' + (-s) + ' at every price (a decrease in supply). Causes on your sliders: ' + supplyCauses(false) + '. By itself this raises equilibrium price and lowers quantity.');
+  if (d !== 0 && s !== 0) {
+    let msg = '<b>Both curves shifted.</b> ';
+    if (d > 0 && s > 0) msg += 'Quantity definitely rises. Price is ambiguous: demand pushes it up, supply pushes it down. ';
+    if (d < 0 && s < 0) msg += 'Quantity definitely falls. Price is ambiguous: demand pushes it down, supply pushes it up. ';
+    if (d > 0 && s < 0) msg += 'Price definitely rises. Quantity is ambiguous: demand pushes it up, supply pushes it down. ';
+    if (d < 0 && s > 0) msg += 'Price definitely falls. Quantity is ambiguous: demand pushes it down, supply pushes it up. ';
+    msg += 'With these numbers the new equilibrium is $' + eq.P.toFixed(2) + ' and ' + fmt(eq.Q) + ' ' + g + ' (originally $3.00 and 15).';
+    parts.push(msg);
+  } else if (d !== 0 || s !== 0) {
+    parts.push('New equilibrium: <b>$' + eq.P.toFixed(2) + ' and ' + fmt(eq.Q) + ' ' + g + '</b> (originally $3.00 and 15). Note the <i>other</i> curve did not shift: buyers or sellers simply moved along it to the new price.');
+  }
+  if (priceMode === 'manual') {
+    const diff = qs - qd;
+    if (diff > 0.01) parts.push('At a price of <b>$' + P.toFixed(2) + '</b>, quantity demanded is ' + fmt(qd) + ' and quantity supplied is ' + fmt(qs) + ': a <b>surplus of ' + fmt(diff) + '</b>. The price is above equilibrium ($' + eq.P.toFixed(2) + '). Facing unsold ' + g + ', sellers cut the price; QD rises and QS falls until the surplus disappears.');
+    else if (diff < -0.01) parts.push('At a price of <b>$' + P.toFixed(2) + '</b>, quantity demanded is ' + fmt(qd) + ' and quantity supplied is ' + fmt(qs) + ': a <b>shortage of ' + fmt(-diff) + '</b>. The price is below equilibrium ($' + eq.P.toFixed(2) + '). Facing buyers who cannot get ' + g + ', sellers raise the price; QD falls and QS rises until the shortage disappears.');
+    else parts.push('At <b>$' + P.toFixed(2) + '</b> quantity demanded equals quantity supplied (' + fmt(qd) + '). The market is in equilibrium.');
+  }
+  document.getElementById('explanationText').innerHTML = parts.join('<br><br>');
+}
+
+function demandCauses(up) {
+  const c = [];
+  const b = v('buyers'), i = v('income'), su = v('subs'), co = v('comps'), t = v('tastes'), e = v('dexp');
+  if (up) {
+    if (b > 0) c.push('more buyers');
+    if (i > 0 && incomeType === 'normal') c.push('higher income (normal good)');
+    if (i < 0 && incomeType === 'inferior') c.push('lower income (inferior good)');
+    if (su > 0) c.push('pricier substitutes');
+    if (co < 0) c.push('cheaper complements');
+    if (t > 0) c.push('stronger tastes');
+    if (e > 0) c.push('expectations of higher prices or income');
+  } else {
+    if (b < 0) c.push('fewer buyers');
+    if (i < 0 && incomeType === 'normal') c.push('lower income (normal good)');
+    if (i > 0 && incomeType === 'inferior') c.push('higher income (inferior good)');
+    if (su < 0) c.push('cheaper substitutes');
+    if (co > 0) c.push('pricier complements');
+    if (t < 0) c.push('weaker tastes');
+    if (e < 0) c.push('expectations of lower prices or income');
+  }
+  return c.length ? c.join(', ') : 'a mix of settings';
+}
+function supplyCauses(up) {
+  const c = [];
+  const i = v('inputs'), t = v('tech'), n = v('sellers'), e = v('sexp');
+  if (up) {
+    if (i < 0) c.push('cheaper inputs');
+    if (t > 0) c.push('better technology');
+    if (n > 0) c.push('more sellers');
+    if (e < 0) c.push('sellers expect lower future prices');
+  } else {
+    if (i > 0) c.push('pricier inputs');
+    if (t < 0) c.push('worse technology');
+    if (n < 0) c.push('fewer sellers');
+    if (e > 0) c.push('sellers expect higher future prices (holding back inventory)');
+  }
+  return c.length ? c.join(', ') : 'a mix of settings';
+}
+
+/* ================= TABLE ================= */
+function renderTable(eq, d, s, P) {
+  const t = document.getElementById('schedTable');
+  let html = '';
+  if (tableView === 'market') {
+    html += '<tr><th>Price</th><th>Qty demanded</th><th>Qty supplied</th><th>Situation</th></tr>';
+    for (let p = 0; p <= 6; p++) {
+      const qd = demandQ(p, d), qs = supplyQ(p, s), diff = qs - qd;
+      const cls = (Math.abs(p - eq.P) < 0.001 ? 'eq-row ' : '') + (Math.abs(p - P) < 0.001 ? 'cur-row' : '');
+      let sit = diff > 0 ? '<td class="surplus">Surplus of ' + fmt(diff) + '</td>' : diff < 0 ? '<td class="shortage">Shortage of ' + fmt(-diff) + '</td>' : '<td class="eq">Equilibrium</td>';
+      html += '<tr class="' + cls + '"><td>$' + p + '.00</td><td>' + fmt(qd) + '</td><td>' + fmt(qs) + '</td>' + sit + '</tr>';
+    }
+    document.getElementById('tableNote').textContent = 'Gold row = equilibrium price. Outlined row = current price. Shifts from the sliders are already included.';
+  } else {
+    html += '<tr><th>Price</th><th>Sam</th><th>Dean</th><th>Market QD</th><th>Starbucks</th><th>Peet\'s</th><th>Market QS</th></tr>';
+    for (let p = 0; p <= 6; p++) {
+      const cls = p === 3 ? 'eq-row' : '';
+      html += '<tr class="' + cls + '"><td>$' + p + '.00</td><td>' + INDIV.sam[p] + '</td><td>' + INDIV.dean[p] + '</td><td>' + (INDIV.sam[p] + INDIV.dean[p]) + '</td><td>' + INDIV.sbux[p] + '</td><td>' + INDIV.peets[p] + '</td><td>' + (INDIV.sbux[p] + INDIV.peets[p]) + '</td></tr>';
+    }
+    document.getElementById('tableNote').textContent = 'Chapter data with no shifts. Market quantity at each price is the sum of the individual quantities (a horizontal sum of the curves).';
+  }
+  t.innerHTML = html;
+}
+function toggleTable() {
+  const p = document.getElementById('tablePanel');
+  const open = p.style.display === 'none';
+  p.style.display = open ? 'block' : 'none';
+  document.getElementById('btnTable').textContent = open ? 'Hide schedule table' : 'Show schedule table';
+  update();
+}
+function setTableView(vw) {
+  tableView = vw;
+  document.getElementById('tblMarket').className = 'btn-sm ' + (vw === 'market' ? 'btn-active' : 'btn-secondary');
+  document.getElementById('tblIndiv').className = 'btn-sm ' + (vw === 'indiv' ? 'btn-active' : 'btn-secondary');
+  update();
+}
+
+/* ================= CONTROLS ================= */
+function setIncomeType(t) {
+  incomeType = t;
+  document.getElementById('incNormal').className = t === 'normal' ? 'btn-active' : 'btn-secondary';
+  document.getElementById('incInferior').className = t === 'inferior' ? 'btn-active' : 'btn-secondary';
+  update();
+}
+function setPriceMode(m, nudge) {
+  priceMode = m;
+  clearInterval(adjustTimer);
+  document.getElementById('modeAuto').className = m === 'auto' ? 'btn-active' : 'btn-secondary';
+  document.getElementById('modeManual').className = m === 'manual' ? 'btn-active' : 'btn-secondary';
+  document.getElementById('priceGroup').style.display = m === 'manual' ? 'block' : 'none';
+  document.getElementById('btnAdjust').style.display = m === 'manual' ? 'inline-block' : 'none';
+  document.getElementById('priceNote').style.display = m === 'manual' ? 'none' : 'block';
+  if (m === 'manual' && nudge) {
+    const { dShift, sShift } = getShifts();
+    const eq = equilibrium(dShift, sShift);
+    if (Math.abs(parseFloat(document.getElementById('price').value) - eq.P) < 0.01) {
+      document.getElementById('price').value = Math.min(P_MAX, Math.round((eq.P + 2) * 4) / 4);
+    }
+  }
+  update();
+}
+function setPrice(p) {
+  document.getElementById('price').value = p;
+  setPriceMode('manual');
+}
+function adjustToEq() {
+  clearInterval(adjustTimer);
+  const el = document.getElementById('price');
+  adjustTimer = setInterval(() => {
+    const { dShift, sShift } = getShifts();
+    const eq = equilibrium(dShift, sShift);
+    let p = parseFloat(el.value);
+    const step = 0.125;
+    if (Math.abs(p - eq.P) <= step) { el.value = Math.round(eq.P * 1000) / 1000; update(); clearInterval(adjustTimer); return; }
+    el.value = p < eq.P ? p + step : p - step;
+    update();
+  }, 200);
+}
+function setSlider(id, val) {
+  document.getElementById(id).value = val;
+  document.getElementById(id + 'Val').textContent = val;
+}
+function resetAll(keepLabel) {
+  clearInterval(adjustTimer);
+  [...D_IDS, ...S_IDS].forEach(id => setSlider(id, 0));
+  incomeType = 'normal';
+  document.getElementById('incNormal').className = 'btn-active';
+  document.getElementById('incInferior').className = 'btn-secondary';
+  document.getElementById('price').value = 3;
+  if (!keepLabel) marketLabel = 'lattes';
+  setPriceMode('auto');
+}
+[...D_IDS, ...S_IDS].forEach(id => {
+  document.getElementById(id).addEventListener('input', function () {
+    document.getElementById(id + 'Val').textContent = this.value;
+    update();
+  });
+});
+document.getElementById('price').addEventListener('input', () => { clearInterval(adjustTimer); update(); });
+
+/* Apply a preset like the ones in the question bank */
+function applyPreset(g) {
+  resetAll(true);
+  marketLabel = (g && g.market) || 'lattes';
+  if (g && g.d) {
+    if (g.d.incomeType) setIncomeType(g.d.incomeType);
+    D_IDS.forEach(id => { if (g.d[id] !== undefined) setSlider(id, g.d[id]); });
+  }
+  if (g && g.s) S_IDS.forEach(id => { if (g.s[id] !== undefined) setSlider(id, g.s[id]); });
+  if (g && g.price !== undefined && g.price !== null) {
+    document.getElementById('price').value = g.price;
+    setPriceMode('manual');
+  } else {
+    setPriceMode('auto');
+  }
+}
+
+/* ================= ACTIVE LEARNING SCENARIOS ================= */
+const SCENARIOS = [
+  { t: 'AL1-A: Price of iPods falls', d: 'Market for music downloads', g: { d: { comps: -8 }, market: 'music downloads' },
+    x: 'iPods and downloads are complements. Cheaper iPods raise demand for downloads: D shifts right, price and quantity both rise.' },
+  { t: 'AL1-B: Price of downloads falls', d: 'Market for music downloads', g: { price: 2, market: 'music downloads' },
+    x: 'The good\'s own price changed, so the demand curve does not shift. Buyers move down along the curve to a lower price and higher quantity demanded (and at $2 there is a shortage, so the price will rise back).' },
+  { t: 'AL1-C: Price of music CDs falls', d: 'Market for music downloads', g: { d: { subs: -8 }, market: 'music downloads' },
+    x: 'CDs and downloads are substitutes. Cheaper CDs lower demand for downloads: D shifts left, price and quantity both fall.' },
+  { t: 'AL2-A: Retailers cut software price', d: 'Market for tax return software', g: { price: 2, market: 'tax software' },
+    x: 'The supply curve does not shift. Sellers move down along it to a lower price and lower quantity supplied.' },
+  { t: 'AL2-B: Cheaper production technology', d: 'Market for tax return software', g: { s: { tech: 8 }, market: 'tax software' },
+    x: 'Lower cost shifts supply right: at each price quantity supplied rises. Price falls, quantity rises.' },
+  { t: 'AL2-C: Professional preparers raise fees', d: 'Market for tax return software', g: { d: { subs: 8 }, market: 'tax software' },
+    x: 'Trick question: professionals are a substitute for the software, so this shifts DEMAND for software right, not supply. Price and quantity rise.' },
+  { t: 'Example 1: Gas price rises', d: 'Market for electric cars', g: { d: { subs: 8 }, market: 'electric cars' },
+    x: 'Step 1: gas price affects buyers, not production cost, so only D shifts. Step 2: D shifts right (electric cars are more attractive). Step 3: price and quantity rise. Note that producers supply more even though S did not shift: a movement along S.' },
+  { t: 'Example 2: New technology cuts cost', d: 'Market for electric cars', g: { s: { tech: 8 }, market: 'electric cars' },
+    x: 'Step 1: only S shifts. Step 2: S shifts right. Step 3: price falls, quantity rises.' },
+  { t: 'Example 3: Both events at once', d: 'Market for electric cars', g: { d: { subs: 8 }, s: { tech: 8 }, market: 'electric cars' },
+    x: 'Both curves shift right. Quantity rises for sure. Price is ambiguous: here the shifts are equal so price ends up unchanged at $3. Try making one shift bigger than the other.' },
+  { t: 'AL3-A: Price of CDs falls', d: 'Market for music downloads', g: { d: { subs: -8 }, market: 'music downloads' },
+    x: 'D shifts left. P and Q both fall.' },
+  { t: 'AL3-B: Royalties per song fall', d: 'Market for music downloads', g: { s: { inputs: -8 }, market: 'music downloads' },
+    x: 'Royalties are a cost of production, so S shifts right. P falls, Q rises.' },
+  { t: 'AL3-C: Both A and B', d: 'Market for music downloads', g: { d: { subs: -8 }, s: { inputs: -8 }, market: 'music downloads' },
+    x: 'D shifts left and S shifts right. P definitely falls. Q is ambiguous: lower demand reduces it, higher supply raises it.' },
+  { t: 'Surplus at $5', d: 'Latte market', g: { price: 5, market: 'lattes' },
+    x: 'At $5, QD = 9 and QS = 25: a surplus of 16 lattes. Sellers cut the price; click "Watch price adjust" to see it fall to $3.' },
+  { t: 'Shortage at $1', d: 'Latte market', g: { price: 1, market: 'lattes' },
+    x: 'At $1, QD = 21 and QS = 5: a shortage of 16 lattes. Sellers raise the price; click "Watch price adjust" to see it rise to $3.' },
+  { t: 'Chapter example: +5 buyers', d: 'Latte market', g: { d: { buyers: 5 }, market: 'lattes' },
+    x: 'The slide shifts demand right by 5 at every price. New equilibrium: $3.63 and 18.1 lattes.' },
+  { t: 'Chapter example: milk price falls', d: 'Latte market', g: { s: { inputs: -5 }, market: 'lattes' },
+    x: 'The slide shifts supply right by 5 at every price. New equilibrium: $2.38 and 16.9 lattes.' }
+];
+(function buildScenarios() {
+  const grid = document.getElementById('scenarioGrid');
+  SCENARIOS.forEach((sc, i) => {
+    const b = document.createElement('button');
+    b.className = 'scenario-btn';
+    b.innerHTML = '<b>' + sc.t + '</b>' + sc.d;
+    b.onclick = () => {
+      applyPreset(sc.g);
+      document.getElementById('explanationText').innerHTML = '<b>' + sc.t + '.</b> ' + sc.x + '<br><br>' + document.getElementById('explanationText').innerHTML;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    grid.appendChild(b);
+  });
+})();
+
+/* ================= TABS ================= */
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.tab-page').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
+  if (name === 'sim') chart.resize();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ================= QUIZ ================= */
+const BANK = (typeof CH4_QUESTIONS !== 'undefined') ? CH4_QUESTIONS : [];
+let round = [], idx = 0, score = 0, answered = false, results = [];
+
+(function initQuiz() {
+  document.getElementById('bankCount').textContent = BANK.length;
+  const cats = [...new Set(BANK.map(q => q.cat))];
+  const sel = document.getElementById('topicSelect');
+  cats.forEach(c => {
+    const o = document.createElement('option');
+    o.value = c; o.textContent = c + ' (' + BANK.filter(q => q.cat === c).length + ')';
+    sel.appendChild(o);
+  });
+})();
+
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+function startRound() {
+  const topic = document.getElementById('topicSelect').value;
+  const n = document.getElementById('countSelect').value;
+  let pool = topic === 'all' ? BANK.slice() : BANK.filter(q => q.cat === topic);
+  shuffle(pool);
+  round = n === 'all' ? pool : pool.slice(0, Math.min(parseInt(n), pool.length));
+  idx = 0; score = 0; results = [];
+  document.getElementById('quizSetup').style.display = 'none';
+  document.getElementById('quizResult').style.display = 'none';
+  document.getElementById('quizPlay').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  answered = false;
+  const q = round[idx];
+  document.getElementById('qNum').textContent = idx + 1;
+  document.getElementById('qTotal').textContent = round.length;
+  document.getElementById('qScore').textContent = score;
+  document.getElementById('qProgress').style.width = (idx / round.length * 100) + '%';
+  document.getElementById('qCat').textContent = q.cat;
+  document.getElementById('qText').textContent = q.q;
+  const box = document.getElementById('qOpts');
+  box.innerHTML = '';
+  // shuffle the option order but remember which is correct
+  const order = shuffle([0, 1, 2, 3]);
+  q._order = order;
+  order.forEach((oi, pos) => {
+    const b = document.createElement('button');
+    b.className = 'quiz-opt';
+    b.textContent = String.fromCharCode(65 + pos) + '. ' + q.o[oi];
+    b.onclick = () => answer(oi, b);
+    box.appendChild(b);
+  });
+  const fb = document.getElementById('qFeedback');
+  fb.className = 'quiz-feedback';
+  document.getElementById('btnNext').style.display = 'none';
+  document.getElementById('btnShowGraph').style.display = 'none';
+}
+
+function answer(oi, btn) {
+  if (answered) return;
+  answered = true;
+  const q = round[idx];
+  const ok = oi === q.a;
+  if (ok) score++;
+  results.push({ q, ok, chosen: oi });
+  document.querySelectorAll('.quiz-opt').forEach((b, pos) => {
+    b.disabled = true;
+    const optIndex = q._order[pos];
+    if (optIndex === q.a) b.classList.add('correct');
+    else if (optIndex === oi) b.classList.add('wrong');
+  });
+  const fb = document.getElementById('qFeedback');
+  fb.className = 'quiz-feedback show ' + (ok ? 'correct' : 'wrong');
+  document.getElementById('qVerdict').textContent = ok ? 'Correct!' : 'Not quite. The correct answer is: ' + q.o[q.a];
+  document.getElementById('qExplain').textContent = q.e;
+  document.getElementById('qScore').textContent = score;
+  document.getElementById('btnNext').style.display = 'inline-block';
+  document.getElementById('btnNext').textContent = idx + 1 < round.length ? 'Next question →' : 'See results →';
+  document.getElementById('btnShowGraph').style.display = q.g ? 'inline-block' : 'none';
+}
+
+function showOnGraph() {
+  const q = round[idx];
+  applyPreset(q.g);
+  showTab('sim');
+  document.getElementById('explanationText').innerHTML = '<b>Quiz question:</b> ' + q.q + '<br><b>Answer:</b> ' + q.o[q.a] + '<br><br>' + document.getElementById('explanationText').innerHTML +
+    '<br><br><button class="btn-gold btn-sm" onclick="showTab(\'quiz\')">&larr; Back to quiz</button>';
+}
+
+function nextQuestion() {
+  idx++;
+  if (idx >= round.length) finishRound(); else renderQuestion();
+}
+function quitRound() { if (results.length) finishRound(); else backToSetup(); }
+function backToSetup() {
+  document.getElementById('quizPlay').style.display = 'none';
+  document.getElementById('quizResult').style.display = 'none';
+  document.getElementById('quizSetup').style.display = 'block';
+}
+function finishRound() {
+  document.getElementById('quizPlay').style.display = 'none';
+  document.getElementById('quizResult').style.display = 'block';
+  const n = results.length, pct = Math.round(score / n * 100);
+  document.getElementById('resultScore').textContent = score + ' / ' + n + ' (' + pct + '%)';
+  document.getElementById('resultMsg').textContent = pct >= 90 ? 'Excellent. You have this chapter down.' : pct >= 70 ? 'Good work. Review the questions you missed below and try the graph for each.' : 'Keep practicing. Read the Chapter Concepts tab, then try another round.';
+  const list = document.getElementById('reviewList');
+  list.innerHTML = '';
+  results.forEach((r, i) => {
+    const div = document.createElement('div');
+    div.className = 'review-item';
+    div.innerHTML = '<b>' + (i + 1) + '. ' + r.q.q + '</b><br>' +
+      (r.ok ? '<span class="ok">Correct: ' : '<span class="no">You chose: ' + r.q.o[r.chosen] + '. Correct: ') + r.q.o[r.q.a] + '</span><br>' + r.q.e +
+      (r.q.g ? ' <button class="btn-secondary btn-sm" style="margin-left:0.4rem" onclick="applyPreset(BANK[' + BANK.indexOf(r.q) + '].g);showTab(\'sim\')">Show on graph</button>' : '');
+    list.appendChild(div);
+  });
+}
+
+/* Initial render */
+update();
+</script>
+
+</body>
+</html>
