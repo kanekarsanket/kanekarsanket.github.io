@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 3: Gains from Trade Simulator</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, Helvetica, sans-serif; background: #0a0a0a; color: #fff; min-height: 100vh; }
+header { background: #000; border-bottom: 4px solid #D4A843; padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+header h1 { font-size: 1.2rem; color: #D4A843; }
+header h1 small { display: block; font-size: 0.75rem; color: #aaa; font-weight: normal; margin-top: 0.2rem; }
+header a { color: #D4A843; text-decoration: none; font-size: 0.85rem; border: 1px solid #D4A843; padding: 0.35rem 0.75rem; border-radius: 6px; }
+header a:hover { background: #D4A843; color: #000; }
+.container { max-width: 1040px; margin: 0 auto; padding: 1.5rem 1rem; }
+.panel { background: #151515; border: 1px solid #2a2a2a; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.25rem; }
+.panel h3 { font-size: 0.9rem; color: #D4A843; margin-bottom: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.panel p { font-size: 0.88rem; color: #ccc; line-height: 1.6; }
+.panel p b { color: #D4A843; }
+.tabs { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.tab { background: #1a1a1a; border: 1px solid #333; color: #ccc; padding: 0.6rem 1.1rem; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
+.tab.active { background: #D4A843; color: #000; border-color: #D4A843; }
+.tab-page { display: none; } .tab-page.active { display: block; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; }
+.chart-wrap { background: #151515; border: 1px solid #2a2a2a; border-radius: 12px; padding: 1rem; }
+.chart-wrap canvas { width: 100% !important; max-height: 360px; }
+.chart-title { font-size: 0.9rem; font-weight: 700; text-align: center; margin-bottom: 0.4rem; }
+.cA { color: #5c9eff; } .cB { color: #ff7043; }
+.shift-group { margin-bottom: 0.85rem; }
+.shift-group label { display: flex; justify-content: space-between; font-size: 0.8rem; color: #bbb; margin-bottom: 0.25rem; }
+.shift-group input[type=range] { width: 100%; accent-color: #D4A843; }
+.range-scale { display: flex; justify-content: space-between; font-size: 0.68rem; color: #666; }
+button { font-family: inherit; cursor: pointer; border: none; border-radius: 8px; padding: 0.55rem 1.1rem; font-size: 0.83rem; font-weight: 600; }
+.btn-gold { background: #D4A843; color: #000; } .btn-gold:hover { background: #e6bc5a; }
+.btn-secondary { background: #2a2a2a; color: #fff; border: 1px solid #444; } .btn-secondary:hover { background: #3a3a3a; }
+.btn-active { background: #D4A843; color: #000; border-color: #D4A843; }
+.btn-sm { padding: 0.35rem 0.7rem; font-size: 0.75rem; }
+.btn-row { display: flex; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
+table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+th, td { padding: 0.45rem 0.5rem; text-align: center; border-bottom: 1px solid #222; }
+th { color: #D4A843; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; }
+td.win { color: #4caf50; font-weight: 700; } td.lose { color: #f44336; font-weight: 700; } td.lab { text-align: left; color: #bbb; }
+.badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 10px; font-size: 0.72rem; font-weight: 700; }
+.badge.A { background: rgba(92,158,255,0.2); color: #5c9eff; } .badge.B { background: rgba(255,112,67,0.2); color: #ff7043; } .badge.none { background: #333; color: #aaa; }
+.custom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.custom-grid input[type=number] { width: 100%; background: #1a1a1a; color: #fff; border: 1px solid #444; border-radius: 6px; padding: 0.4rem; font-size: 0.85rem; }
+.custom-grid label { font-size: 0.75rem; color: #bbb; display: block; margin: 0.4rem 0 0.2rem; }
+.warn { color: #ffb74d; }
+/* quiz + concepts (same as other pages) */
+.quiz-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1rem; }
+.quiz-top .score { font-size: 0.85rem; color: #ccc; } .quiz-top .score b { color: #D4A843; }
+.quiz-cat { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 0.4rem; }
+.quiz-q { font-size: 1rem; color: #fff; font-weight: 600; line-height: 1.5; margin-bottom: 1rem; }
+.quiz-opt { display: block; width: 100%; text-align: left; background: #1a1a1a; border: 1px solid #333; color: #ddd; padding: 0.7rem 0.9rem; border-radius: 8px; margin-bottom: 0.5rem; font-weight: normal; font-size: 0.88rem; line-height: 1.4; }
+.quiz-opt:hover:not(:disabled) { border-color: #D4A843; }
+.quiz-opt.correct { background: rgba(76,175,80,0.18); border-color: #4caf50; color: #fff; }
+.quiz-opt.wrong { background: rgba(244,67,54,0.18); border-color: #f44336; color: #fff; }
+.quiz-opt:disabled { cursor: default; }
+.quiz-feedback { margin-top: 0.9rem; font-size: 0.88rem; line-height: 1.6; padding: 0.8rem; border-radius: 8px; background: #111; display: none; }
+.quiz-feedback.show { display: block; }
+.quiz-feedback .verdict { font-weight: 700; margin-bottom: 0.3rem; }
+.quiz-feedback.correct .verdict { color: #4caf50; } .quiz-feedback.wrong .verdict { color: #f44336; }
+.quiz-actions { display: flex; gap: 0.6rem; margin-top: 0.9rem; flex-wrap: wrap; }
+.progress { height: 6px; background: #222; border-radius: 3px; margin-bottom: 1rem; overflow: hidden; }
+.progress div { height: 100%; background: #D4A843; width: 0; transition: width 0.3s; }
+.quiz-setup { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin-bottom: 1rem; }
+.quiz-setup select { background: #1a1a1a; color: #fff; border: 1px solid #444; border-radius: 6px; padding: 0.45rem; font-size: 0.83rem; }
+.result-big { font-size: 2rem; color: #D4A843; font-weight: 700; margin: 0.5rem 0; }
+.review-item { border-top: 1px solid #222; padding: 0.7rem 0; font-size: 0.83rem; color: #ccc; }
+.review-item b { color: #fff; } .review-item .ok { color: #4caf50; } .review-item .no { color: #f44336; }
+details { border: 1px solid #2a2a2a; border-radius: 8px; margin-bottom: 0.5rem; background: #111; }
+summary { cursor: pointer; padding: 0.7rem 0.9rem; font-size: 0.88rem; font-weight: 600; color: #eee; }
+details .body { padding: 0 0.9rem 0.9rem; font-size: 0.85rem; color: #ccc; line-height: 1.6; }
+details .body ul { margin: 0.4rem 0 0.4rem 1.2rem; }
+details .body table { margin: 0.5rem 0; font-size: 0.8rem; }
+footer { text-align: center; padding: 1.25rem; border-top: 1px solid #222; font-size: 0.78rem; color: #666; }
+@media (max-width: 700px) { header h1 { font-size: 1rem; } .two, .custom-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Gains from Trade Simulator<small>Chapter 3: Interdependence and the Gains from Trade</small></h1>
+  <a href="../index.html">&larr; Back to Portal</a>
+</header>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" data-tab="sim" onclick="showTab('sim')">Simulator</button>
+    <button class="tab" data-tab="quiz" onclick="showTab('quiz')">Practice Quiz</button>
+    <button class="tab" data-tab="concepts" onclick="showTab('concepts')">Chapter Concepts</button>
+  </div>
+
+  <!-- ================= SIMULATOR ================= -->
+  <div class="tab-page active" id="tab-sim">
+    <div class="btn-row">
+      <button class="btn-active" id="preUsjp" onclick="loadPreset('usjp')">U.S. &amp; Japan (chapter example)</button>
+      <button class="btn-secondary" id="preArbr" onclick="loadPreset('arbr')">Argentina &amp; Brazil (Active Learning 4)</button>
+      <button class="btn-secondary" id="preCustom" onclick="toggleCustom()">Custom numbers</button>
+      <button class="btn-secondary" onclick="loadPreset(currentPreset)">Reset</button>
+    </div>
+
+    <div class="panel" id="customPanel" style="display:none">
+      <h3>Custom numbers</h3>
+      <div class="custom-grid">
+        <div>
+          <b class="cA" id="cNameA">Country A</b>
+          <label>Labor hours available</label><input type="number" id="cLA" value="50000" step="1000">
+          <label>Hours per unit of good 1</label><input type="number" id="cH1A" value="100" step="1">
+          <label>Hours per unit of good 2</label><input type="number" id="cH2A" value="10" step="1">
+        </div>
+        <div>
+          <b class="cB" id="cNameB">Country B</b>
+          <label>Labor hours available</label><input type="number" id="cLB" value="30000" step="1000">
+          <label>Hours per unit of good 1</label><input type="number" id="cH1B" value="125" step="1">
+          <label>Hours per unit of good 2</label><input type="number" id="cH2B" value="25" step="1">
+        </div>
+      </div>
+      <div class="btn-row" style="margin-top:0.8rem"><button class="btn-gold" onclick="applyCustom()">Apply</button></div>
+    </div>
+
+    <div class="two">
+      <div class="chart-wrap"><div class="chart-title cA" id="titleA">U.S.</div><canvas id="chartA"></canvas></div>
+      <div class="chart-wrap"><div class="chart-title cB" id="titleB">Japan</div><canvas id="chartB"></canvas></div>
+    </div>
+
+    <div class="two">
+      <div class="panel" style="margin:0">
+        <h3>Step 1: Production</h3>
+        <div class="shift-group">
+          <label><span class="cA" id="lblPA"></span><b id="pAVal" style="color:#D4A843"></b></label>
+          <input type="range" id="pA" min="0" max="500" value="250" step="10">
+          <div class="range-scale"><span id="pAlo"></span><span id="pAhi"></span></div>
+        </div>
+        <div class="shift-group">
+          <label><span class="cB" id="lblPB"></span><b id="pBVal" style="color:#D4A843"></b></label>
+          <input type="range" id="pB" min="0" max="240" value="120" step="10">
+          <div class="range-scale"><span id="pBlo"></span><span id="pBhi"></span></div>
+        </div>
+        <p style="font-size:0.78rem;color:#999">Each country picks a point on its own PPF. The rest of its labor goes to the other good.</p>
+      </div>
+      <div class="panel" style="margin:0">
+        <h3>Step 2: Trade</h3>
+        <div class="shift-group">
+          <label><span id="lblX"></span><b id="xVal" style="color:#D4A843"></b></label>
+          <input type="range" id="x" min="0" max="5000" value="0" step="10">
+        </div>
+        <div class="shift-group">
+          <label><span id="lblY"></span><b id="yVal" style="color:#D4A843"></b></label>
+          <input type="range" id="y" min="0" max="240" value="0" step="5">
+        </div>
+        <div class="btn-row" style="margin:0">
+          <button class="btn-gold btn-sm" onclick="chapterTrade()">Use the chapter's trade</button>
+          <button class="btn-secondary btn-sm" onclick="noTrade()">No trade</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Step 3: Consumption and gains from trade</h3>
+      <div style="overflow-x:auto"><table id="gainsTable"></table></div>
+      <p id="tradeNote" style="margin-top:0.7rem"></p>
+    </div>
+
+    <div class="panel">
+      <h3>Absolute vs comparative advantage</h3>
+      <div style="overflow-x:auto"><table id="advTable"></table></div>
+      <p id="advNote" style="margin-top:0.7rem"></p>
+    </div>
+  </div>
+
+  <!-- ================= QUIZ ================= -->
+  <div class="tab-page" id="tab-quiz">
+    <div class="panel">
+      <h3>Practice quiz: <span id="bankCount"></span> questions from Chapter 3</h3>
+      <div id="quizSetup">
+        <p style="margin-bottom:0.8rem">Each round gives you 10 random questions. After you answer, use <b>Show on graph</b> to load the scenario in the simulator.</p>
+        <div class="quiz-setup">
+          <label style="font-size:0.83rem;color:#bbb">Topic:</label>
+          <select id="topicSelect"><option value="all">All topics</option></select>
+          <label style="font-size:0.83rem;color:#bbb">Questions:</label>
+          <select id="countSelect"><option value="10">10</option><option value="20">20</option><option value="all">All</option></select>
+          <button class="btn-gold" onclick="startRound()">Start round</button>
+        </div>
+      </div>
+      <div id="quizPlay" style="display:none">
+        <div class="quiz-top"><span class="score">Question <b id="qNum">1</b> of <b id="qTotal">10</b></span><span class="score">Score: <b id="qScore">0</b></span></div>
+        <div class="progress"><div id="qProgress"></div></div>
+        <div class="quiz-cat" id="qCat"></div>
+        <div class="quiz-q" id="qText"></div>
+        <div id="qOpts"></div>
+        <div class="quiz-feedback" id="qFeedback"><div class="verdict" id="qVerdict"></div><div id="qExplain"></div></div>
+        <div class="quiz-actions">
+          <button class="btn-secondary" id="btnShowGraph" onclick="showOnGraph()" style="display:none">Show on graph</button>
+          <button class="btn-gold" id="btnNext" onclick="nextQuestion()" style="display:none">Next question &rarr;</button>
+          <button class="btn-secondary" onclick="quitRound()">End round</button>
+        </div>
+      </div>
+      <div id="quizResult" style="display:none">
+        <p>Round complete</p>
+        <div class="result-big" id="resultScore"></div>
+        <p id="resultMsg" style="margin-bottom:1rem"></p>
+        <div class="btn-row"><button class="btn-gold" onclick="startRound()">New round</button><button class="btn-secondary" onclick="backToSetup()">Change topic</button></div>
+        <h3 style="margin-top:1rem">Review</h3>
+        <div id="reviewList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= CONCEPTS ================= -->
+  <div class="tab-page" id="tab-concepts">
+    <div class="panel">
+      <h3>Chapter 3 in brief</h3>
+      <p style="margin-bottom:1rem">Why do people and nations choose to be interdependent, and how can trade make everyone better off? The answer is comparative advantage.</p>
+      <details open><summary>The example: U.S. and Japan, computers and wheat</summary><div class="body">
+        <table><tr><th></th><th>Labor hours</th><th>Hours per computer</th><th>Hours per ton of wheat</th><th>Max computers</th><th>Max wheat</th></tr>
+        <tr><td>U.S.</td><td>50,000</td><td>100</td><td>10</td><td>500</td><td>5,000</td></tr>
+        <tr><td>Japan</td><td>30,000</td><td>125</td><td>25</td><td>240</td><td>1,200</td></tr></table>
+        <b>Without trade</b>, each country uses half its labor on each good and consumes what it produces: U.S. 250 computers and 2,500 tons; Japan 120 computers and 600 tons.</div></details>
+      <details><summary>Production and consumption with trade</summary><div class="body">
+        The U.S. produces 3,400 tons of wheat (34,000 hours) and 160 computers (16,000 hours). Japan produces 240 computers and no wheat.
+        The U.S. exports 700 tons of wheat and imports 110 computers. <b>Consumption = production + imports − exports.</b>
+        <table><tr><th></th><th colspan="2">U.S.</th><th colspan="2">Japan</th></tr>
+        <tr><th></th><th>computers</th><th>wheat</th><th>computers</th><th>wheat</th></tr>
+        <tr><td>produced</td><td>160</td><td>3,400</td><td>240</td><td>0</td></tr>
+        <tr><td>+ imported</td><td>110</td><td>0</td><td>0</td><td>700</td></tr>
+        <tr><td>− exported</td><td>0</td><td>700</td><td>110</td><td>0</td></tr>
+        <tr><td><b>= consumed</b></td><td><b>270</b></td><td><b>2,700</b></td><td><b>130</b></td><td><b>700</b></td></tr>
+        <tr><td>without trade</td><td>250</td><td>2,500</td><td>120</td><td>600</td></tr>
+        <tr><td><b>gains from trade</b></td><td><b>+20</b></td><td><b>+200</b></td><td><b>+10</b></td><td><b>+100</b></td></tr></table>
+        Both consumption points lie <b>outside</b> the country's PPF: trade untethers consumption from production, much like technological progress.</div></details>
+      <details><summary>Exports and imports</summary><div class="body">
+        <b>Imports:</b> goods produced abroad and sold domestically. <b>Exports:</b> goods produced domestically and sold abroad. A German tourist's $200 spent on a Las Vegas show counts as a U.S. export: produced here, bought by a foreigner, wherever it is consumed.</div></details>
+      <details><summary>Absolute advantage</summary><div class="body">
+        The ability to produce a good using <b>fewer inputs</b> than another producer. The U.S. has the absolute advantage in wheat (10 hours vs 25) AND in computers (100 hours vs 125). So why does Japan specialize in computers, and why do both gain?</div></details>
+      <details><summary>Comparative advantage</summary><div class="body">
+        The ability to produce a good at a <b>lower opportunity cost</b> than another producer.
+        <ul><li>Opportunity cost of a computer in the U.S.: 100 hours could grow 10 tons of wheat, so <b>10 tons</b>.</li>
+        <li>Opportunity cost of a computer in Japan: 125 hours could grow 5 tons, so <b>5 tons</b>.</li>
+        <li>Japan has the comparative advantage in computers; the U.S. (1/10 computer per ton vs 1/5) in wheat.</li></ul>
+        <b>Principle of comparative advantage:</b> each good should be produced by the producer with the smaller opportunity cost. Gains from trade come from differences in opportunity costs, not from absolute advantage.</div></details>
+      <details><summary>Key lessons</summary><div class="body">
+        <ul><li>Absolute advantage is not necessary for comparative advantage.</li>
+        <li>One producer can have an absolute advantage in both goods but never a comparative advantage in both: the opportunity cost of one good is the inverse of the other.</li>
+        <li>With different opportunity costs, each producer has a comparative advantage in one good.</li>
+        <li>The price of trade must lie <b>between the two opportunity costs</b> (between 5 and 10 tons per computer here; the chapter's 700 tons for 110 computers is about 6.4).</li>
+        <li>Trade makes the country as a whole better off, though some workers in import-competing industries can be worse off.</li></ul></div></details>
+      <details><summary>Active Learning 4: Argentina and Brazil</summary><div class="body">
+        Each has 10,000 hours. Argentina: 2 hours per lb of coffee, 4 hours per bottle of wine. Brazil: 1 hour per lb of coffee, 5 hours per bottle of wine.
+        <ul><li>Brazil has the absolute advantage in coffee (1 hour vs 2).</li>
+        <li>Opportunity cost of wine: Argentina 2 lb of coffee; Brazil 5 lb. <b>Argentina has the comparative advantage in wine.</b></li></ul></div></details>
+    </div>
+  </div>
+</div>
+
+<footer>Built by Dr. Sanket Kanekar</footer>
+
+<script src="ch3-questions.js"></script>
+<script>
+/* ================= MODEL ================= */
+const PRESETS = {
+  usjp: { nA: 'U.S.', nB: 'Japan', g1: 'computers', g2: 'tons of wheat', g1s: 'computer', g2s: 'ton of wheat', A: { L: 50000, h1: 100, h2: 10 }, B: { L: 30000, h1: 125, h2: 25 }, trade: { pA: 160, pB: 240, x: 700, y: 110 } },
+  arbr: { nA: 'Argentina', nB: 'Brazil', g1: 'lb of coffee', g2: 'bottles of wine', g1s: 'lb of coffee', g2s: 'bottle of wine', A: { L: 10000, h1: 2, h2: 4 }, B: { L: 10000, h1: 1, h2: 5 }, trade: { pA: 0, pB: 10000, x: 1000, y: 3000 } }
+};
+let currentPreset = 'usjp';
+let M = JSON.parse(JSON.stringify(PRESETS.usjp));
+const v = id => parseFloat(document.getElementById(id).value);
+const fmt = n => Math.round(n).toLocaleString('en-US');
+const fmt1 = n => (Math.round(n * 100) / 100).toLocaleString('en-US', { maximumFractionDigits: 2 });
+const max1 = c => c.L / c.h1, max2 = c => c.L / c.h2;
+const oc1 = c => c.h1 / c.h2;   // opportunity cost of good 1 in units of good 2
+const oc2 = c => c.h2 / c.h1;   // opportunity cost of good 2 in units of good 1
+
+function mkChart(id, color) {
+  return new Chart(document.getElementById(id).getContext('2d'), {
+    type: 'line',
+    data: { datasets: [
+      { label: 'PPF', data: [], borderColor: color, borderWidth: 3, pointRadius: 0, tension: 0 },
+      { label: 'No trade (half labor each)', data: [], borderColor: '#aaa', backgroundColor: '#aaa', pointRadius: 5, showLine: false },
+      { label: 'Production', data: [], borderColor: '#D4A843', backgroundColor: '#D4A843', pointRadius: 7, showLine: false },
+      { label: 'Consumption', data: [], borderColor: '#4caf50', backgroundColor: '#4caf50', pointRadius: 7, pointStyle: 'rectRot', showLine: false },
+      { label: 'Trade', data: [], borderColor: 'rgba(76,175,80,0.6)', borderWidth: 1.5, borderDash: [4,4], pointRadius: 0 }
+    ]},
+    options: { responsive: true, maintainAspectRatio: true, aspectRatio: 1.25, animation: { duration: 150 },
+      scales: { x: { type: 'linear', min: 0, title: { display: true, color: '#aaa' }, ticks: { color: '#888' }, grid: { color: '#222' } },
+                y: { type: 'linear', min: 0, title: { display: true, color: '#aaa' }, ticks: { color: '#888' }, grid: { color: '#222' } } },
+      plugins: { legend: { labels: { color: '#ccc', usePointStyle: true, padding: 10, boxWidth: 8, font: { size: 10 } } },
+                 tooltip: { callbacks: { label: c => c.dataset.label + ': ' + fmt(c.parsed.x) + ', ' + fmt(c.parsed.y) } } } }
+  });
+}
+const chartA = mkChart('chartA', '#5c9eff'), chartB = mkChart('chartB', '#ff7043');
+
+function setupSliders() {
+  const A = M.A, B = M.B;
+  const sA = document.getElementById('pA'), sB = document.getElementById('pB');
+  sA.max = max1(A); sA.step = 1; sB.max = max1(B); sB.step = 1;
+  document.getElementById('pAlo').textContent = 'all ' + M.g2; document.getElementById('pAhi').textContent = 'all ' + M.g1;
+  document.getElementById('pBlo').textContent = 'all ' + M.g2; document.getElementById('pBhi').textContent = 'all ' + M.g1;
+  document.getElementById('titleA').textContent = M.nA; document.getElementById('titleB').textContent = M.nB;
+  document.getElementById('lblX').innerHTML = '<span class="cA">' + M.nA + '</span> sends ' + M.g2 + ' to ' + M.nB;
+  document.getElementById('lblY').innerHTML = '<span class="cB">' + M.nB + '</span> sends ' + M.g1 + ' to ' + M.nA;
+  [chartA, chartB].forEach((ch, i) => {
+    const c = i === 0 ? A : B;
+    ch.options.scales.x.title.text = M.g1.charAt(0).toUpperCase() + M.g1.slice(1);
+    ch.options.scales.y.title.text = M.g2.charAt(0).toUpperCase() + M.g2.slice(1);
+    ch.options.scales.x.max = Math.ceil(max1(c) * 1.3 / 10) * 10; ch.options.scales.y.max = Math.ceil(max2(c) * 1.3 / 100) * 100;
+  });
+}
+
+function state() {
+  const A = M.A, B = M.B;
+  const pA1 = Math.min(v('pA'), max1(A)), pB1 = Math.min(v('pB'), max1(B));
+  const pA2 = (A.L - pA1 * A.h1) / A.h2, pB2 = (B.L - pB1 * B.h1) / B.h2;
+  let x = v('x'), y = v('y');
+  x = Math.min(x, pA2); y = Math.min(y, pB1);           // cannot export more than you produce
+  const cons = { A: [pA1 + y, pA2 - x], B: [pB1 - y, pB2 + x] };
+  const nt = { A: [max1(A) / 2, max2(A) / 2], B: [max1(B) / 2, max2(B) / 2] };
+  return { pA1, pA2, pB1, pB2, x, y, cons, nt };
+}
+
+function render() {
+  const A = M.A, B = M.B, s = state();
+  document.getElementById('x').max = Math.max(0, Math.floor(s.pA2)); document.getElementById('x').step = 1;
+  document.getElementById('y').max = Math.max(0, Math.floor(s.pB1)); document.getElementById('y').step = 1;
+  document.getElementById('x').value = s.x; document.getElementById('y').value = s.y;
+  document.getElementById('pAVal').textContent = fmt(s.pA1) + ' ' + M.g1 + ' + ' + fmt(s.pA2) + ' ' + M.g2;
+  document.getElementById('pBVal').textContent = fmt(s.pB1) + ' ' + M.g1 + ' + ' + fmt(s.pB2) + ' ' + M.g2;
+  document.getElementById('lblPA').textContent = M.nA + ' produces'; document.getElementById('lblPB').textContent = M.nB + ' produces';
+  document.getElementById('xVal').textContent = fmt(s.x); document.getElementById('yVal').textContent = fmt(s.y);
+
+  const draw = (ch, c, p1, p2, cons, nt) => {
+    ch.data.datasets[0].data = [{ x: 0, y: max2(c) }, { x: max1(c), y: 0 }];
+    ch.data.datasets[1].data = [{ x: nt[0], y: nt[1] }];
+    ch.data.datasets[2].data = [{ x: p1, y: p2 }];
+    const trading = s.x > 0 || s.y > 0;
+    ch.data.datasets[3].data = trading ? [{ x: cons[0], y: cons[1] }] : [];
+    ch.data.datasets[4].data = trading ? [{ x: p1, y: p2 }, { x: cons[0], y: cons[1] }] : [];
+    ch.update();
+  };
+  draw(chartA, A, s.pA1, s.pA2, s.cons.A, s.nt.A);
+  draw(chartB, B, s.pB1, s.pB2, s.cons.B, s.nt.B);
+
+  // gains table
+  const row = (lab, a1, a2, b1, b2, cls) => '<tr><td class="lab">' + lab + '</td><td' + cls(a1) + '>' + sign(a1, cls) + '</td><td' + cls(a2) + '>' + sign(a2, cls) + '</td><td' + cls(b1) + '>' + sign(b1, cls) + '</td><td' + cls(b2) + '>' + sign(b2, cls) + '</td></tr>';
+  const plain = () => '', gainCls = n => n > 0.01 ? ' class="win"' : n < -0.01 ? ' class="lose"' : '';
+  const sign = (n, cls) => cls === gainCls ? (n > 0.01 ? '+' : '') + fmt(n) : fmt(n);
+  let html = '<tr><th></th><th colspan="2" class="cA">' + M.nA + '</th><th colspan="2" class="cB">' + M.nB + '</th></tr><tr><th></th><th>' + M.g1 + '</th><th>' + M.g2 + '</th><th>' + M.g1 + '</th><th>' + M.g2 + '</th></tr>';
+  html += row('Produced', s.pA1, s.pA2, s.pB1, s.pB2, plain);
+  html += row('+ Imported', s.y, 0, 0, s.x, plain);
+  html += row('− Exported', 0, s.x, s.y, 0, plain);
+  html += row('= Consumed', s.cons.A[0], s.cons.A[1], s.cons.B[0], s.cons.B[1], plain);
+  html += row('Consumed without trade', s.nt.A[0], s.nt.A[1], s.nt.B[0], s.nt.B[1], plain);
+  html += row('Gains from trade', s.cons.A[0] - s.nt.A[0], s.cons.A[1] - s.nt.A[1], s.cons.B[0] - s.nt.B[0], s.cons.B[1] - s.nt.B[1], gainCls);
+  document.getElementById('gainsTable').innerHTML = html;
+
+  // trade note
+  const gA = [s.cons.A[0] - s.nt.A[0], s.cons.A[1] - s.nt.A[1]], gB = [s.cons.B[0] - s.nt.B[0], s.cons.B[1] - s.nt.B[1]];
+  const better = g => g[0] > 0.01 && g[1] > 0.01, worse = g => g[0] < -0.01 || g[1] < -0.01;
+  let note = [];
+  const totalNT1 = s.nt.A[0] + s.nt.B[0], totalNT2 = s.nt.A[1] + s.nt.B[1], tot1 = s.pA1 + s.pB1, tot2 = s.pA2 + s.pB2;
+  note.push('<b>World production:</b> ' + fmt(tot1) + ' ' + M.g1 + ' and ' + fmt(tot2) + ' ' + M.g2 + ' (without trade: ' + fmt(totalNT1) + ' and ' + fmt(totalNT2) + '). ' + (tot1 >= totalNT1 - 0.01 && tot2 >= totalNT2 - 0.01 && (tot1 > totalNT1 + 0.01 || tot2 > totalNT2 + 0.01) ? 'Specialization has made the economic pie bigger.' : tot1 < totalNT1 - 0.01 || tot2 < totalNT2 - 0.01 ? 'The pie is not bigger in both goods; try moving each country toward the good where it has the comparative advantage.' : 'Same as without trade.'));
+  if (s.x > 0 && s.y > 0) {
+    const price = s.x / s.y, lo = Math.min(oc1(A), oc1(B)), hi = Math.max(oc1(A), oc1(B));
+    note.push('<b>Price of trade:</b> ' + fmt1(price) + ' ' + M.g2 + ' per ' + M.g1s + ' (equivalently ' + fmt1(1 / price) + ' ' + M.g1 + ' per ' + M.g2s + '). Opportunity costs of a ' + M.g1s + ': ' + M.nA + ' ' + fmt1(oc1(A)) + ', ' + M.nB + ' ' + fmt1(oc1(B)) + '. ' + (price > lo && price < hi ? 'The price lies <b>between</b> the two opportunity costs, so both countries can gain.' : '<span class="warn">The price is outside the range between the two opportunity costs, so one country is paying more than it would cost to make the good itself.</span>'));
+  } else if (s.x > 0 || s.y > 0) note.push('<span class="warn">Only one country is sending goods. Set both sliders to make an exchange.</span>');
+  else note.push('No trade yet. Choose production points, then set the two trade sliders (or click "Use the chapter\'s trade").');
+  if (s.x > 0 && s.y > 0) note.push((better(gA) ? '<b class="cA">' + M.nA + '</b> consumes more of both goods than without trade. ' : worse(gA) ? '<span class="warn">' + M.nA + ' ends up with less of at least one good than without trade.</span> ' : '') + (better(gB) ? '<b class="cB">' + M.nB + '</b> consumes more of both goods than without trade.' : worse(gB) ? '<span class="warn">' + M.nB + ' ends up with less of at least one good than without trade.</span>' : '') + (better(gA) && better(gB) ? ' Both consumption points lie outside their PPFs: trade makes both countries better off.' : ''));
+  document.getElementById('tradeNote').innerHTML = note.join('<br><br>');
+
+  // advantage table
+  const abs1 = A.h1 < B.h1 ? 'A' : A.h1 > B.h1 ? 'B' : 'none', abs2 = A.h2 < B.h2 ? 'A' : A.h2 > B.h2 ? 'B' : 'none';
+  const ca1 = oc1(A) < oc1(B) ? 'A' : oc1(A) > oc1(B) ? 'B' : 'none', ca2 = oc2(A) < oc2(B) ? 'A' : oc2(A) > oc2(B) ? 'B' : 'none';
+  const badge = w => '<span class="badge ' + w + '">' + (w === 'A' ? M.nA : w === 'B' ? M.nB : 'neither') + '</span>';
+  document.getElementById('advTable').innerHTML =
+    '<tr><th></th><th class="cA">' + M.nA + '</th><th class="cB">' + M.nB + '</th><th>Absolute advantage<br><small>fewer hours</small></th><th>Comparative advantage<br><small>lower opp. cost</small></th></tr>' +
+    '<tr><td class="lab">Hours per ' + M.g1s + '</td><td>' + A.h1 + '</td><td>' + B.h1 + '</td><td rowspan="2">' + badge(abs1) + '</td><td rowspan="2">' + badge(ca1) + '</td></tr>' +
+    '<tr><td class="lab">Opp. cost of 1 ' + M.g1s + ' (in ' + M.g2 + ')</td><td>' + fmt1(oc1(A)) + '</td><td>' + fmt1(oc1(B)) + '</td></tr>' +
+    '<tr><td class="lab">Hours per ' + M.g2s + '</td><td>' + A.h2 + '</td><td>' + B.h2 + '</td><td rowspan="2">' + badge(abs2) + '</td><td rowspan="2">' + badge(ca2) + '</td></tr>' +
+    '<tr><td class="lab">Opp. cost of 1 ' + M.g2s + ' (in ' + M.g1 + ')</td><td>' + fmt1(oc2(A)) + '</td><td>' + fmt1(oc2(B)) + '</td></tr>';
+  let adv = 'Opportunity cost of a ' + M.g1s + ' = hours per ' + M.g1s + ' ÷ hours per ' + M.g2s + ' (what those hours could have produced instead). ';
+  if (abs1 === abs2 && abs1 !== 'none') adv += '<b>' + (abs1 === 'A' ? M.nA : M.nB) + ' has the absolute advantage in both goods</b>, yet ';
+  if (ca1 !== 'none') adv += '<b>' + (ca1 === 'A' ? M.nA : M.nB) + ' has the comparative advantage in ' + M.g1 + '</b> and <b>' + (ca2 === 'A' ? M.nA : M.nB) + ' in ' + M.g2 + '</b>. Each should specialize in its comparative-advantage good. The price of trade must fall between ' + fmt1(Math.min(oc1(A), oc1(B))) + ' and ' + fmt1(Math.max(oc1(A), oc1(B))) + ' ' + M.g2 + ' per ' + M.g1s + '.';
+  else adv += 'the two countries have <b>identical opportunity costs</b>, so neither has a comparative advantage and there are no gains from specialization.';
+  document.getElementById('advNote').innerHTML = adv;
+}
+
+/* ================= CONTROLS ================= */
+function loadPreset(name) {
+  currentPreset = name; M = JSON.parse(JSON.stringify(PRESETS[name]));
+  document.getElementById('preUsjp').className = name === 'usjp' ? 'btn-active' : 'btn-secondary';
+  document.getElementById('preArbr').className = name === 'arbr' ? 'btn-active' : 'btn-secondary';
+  document.getElementById('preCustom').className = 'btn-secondary';
+  ['cLA','cH1A','cH2A'].forEach((id, i) => document.getElementById(id).value = [M.A.L, M.A.h1, M.A.h2][i]);
+  ['cLB','cH1B','cH2B'].forEach((id, i) => document.getElementById(id).value = [M.B.L, M.B.h1, M.B.h2][i]);
+  document.getElementById('cNameA').textContent = M.nA; document.getElementById('cNameB').textContent = M.nB;
+  setupSliders(); noTrade();
+}
+function toggleCustom() { const p = document.getElementById('customPanel'); p.style.display = p.style.display === 'none' ? 'block' : 'none'; }
+function applyCustom() {
+  M.A = { L: v('cLA'), h1: v('cH1A'), h2: v('cH2A') }; M.B = { L: v('cLB'), h1: v('cH1B'), h2: v('cH2B') };
+  document.getElementById('preCustom').className = 'btn-active';
+  setupSliders(); noTrade();
+}
+function noTrade() {
+  document.getElementById('pA').value = max1(M.A) / 2; document.getElementById('pB').value = max1(M.B) / 2;
+  document.getElementById('x').value = 0; document.getElementById('y').value = 0; render();
+}
+function chapterTrade() {
+  const t = PRESETS[currentPreset].trade;
+  if (document.getElementById('preCustom').className === 'btn-active') { M = JSON.parse(JSON.stringify(PRESETS[currentPreset])); loadPreset(currentPreset); }
+  document.getElementById('pA').value = t.pA; document.getElementById('pB').value = t.pB;
+  document.getElementById('x').value = t.x; document.getElementById('y').value = t.y; render();
+}
+['pA','pB','x','y'].forEach(id => document.getElementById(id).addEventListener('input', render));
+
+function applyPreset(g) {
+  if (!g) return;
+  loadPreset(g.preset || 'usjp');
+  if (g.pA !== undefined) document.getElementById('pA').value = g.pA;
+  if (g.pB !== undefined) document.getElementById('pB').value = g.pB;
+  render();
+  if (g.x !== undefined) document.getElementById('x').value = g.x;
+  if (g.y !== undefined) document.getElementById('y').value = g.y;
+  render();
+  showTab('sim');
+}
+
+/* ================= TABS ================= */
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.tab-page').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
+  if (name === 'sim') { chartA.resize(); chartB.resize(); }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ================= QUIZ ================= */
+const BANK = (typeof CH3_QUESTIONS !== 'undefined') ? CH3_QUESTIONS : [];
+let round = [], idx = 0, score = 0, answered = false, results = [];
+(function initQuiz() {
+  document.getElementById('bankCount').textContent = BANK.length;
+  const sel = document.getElementById('topicSelect');
+  [...new Set(BANK.map(q => q.cat))].forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c + ' (' + BANK.filter(q => q.cat === c).length + ')'; sel.appendChild(o); });
+})();
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function startRound() {
+  const topic = document.getElementById('topicSelect').value, n = document.getElementById('countSelect').value;
+  let pool = shuffle(topic === 'all' ? BANK.slice() : BANK.filter(q => q.cat === topic));
+  round = n === 'all' ? pool : pool.slice(0, Math.min(parseInt(n), pool.length));
+  idx = 0; score = 0; results = [];
+  document.getElementById('quizSetup').style.display = 'none'; document.getElementById('quizResult').style.display = 'none'; document.getElementById('quizPlay').style.display = 'block';
+  renderQuestion();
+}
+function renderQuestion() {
+  answered = false; const q = round[idx];
+  document.getElementById('qNum').textContent = idx + 1; document.getElementById('qTotal').textContent = round.length; document.getElementById('qScore').textContent = score;
+  document.getElementById('qProgress').style.width = (idx / round.length * 100) + '%';
+  document.getElementById('qCat').textContent = q.cat; document.getElementById('qText').textContent = q.q;
+  const box = document.getElementById('qOpts'); box.innerHTML = '';
+  q._order = shuffle([0, 1, 2, 3]);
+  q._order.forEach((oi, pos) => { const b = document.createElement('button'); b.className = 'quiz-opt'; b.textContent = String.fromCharCode(65 + pos) + '. ' + q.o[oi]; b.onclick = () => answer(oi); box.appendChild(b); });
+  document.getElementById('qFeedback').className = 'quiz-feedback';
+  document.getElementById('btnNext').style.display = 'none'; document.getElementById('btnShowGraph').style.display = 'none';
+}
+function answer(oi) {
+  if (answered) return; answered = true;
+  const q = round[idx], ok = oi === q.a; if (ok) score++;
+  results.push({ q, ok, chosen: oi });
+  document.querySelectorAll('.quiz-opt').forEach((b, pos) => { b.disabled = true; const o = q._order[pos]; if (o === q.a) b.classList.add('correct'); else if (o === oi) b.classList.add('wrong'); });
+  const fb = document.getElementById('qFeedback'); fb.className = 'quiz-feedback show ' + (ok ? 'correct' : 'wrong');
+  document.getElementById('qVerdict').textContent = ok ? 'Correct!' : 'Not quite. The correct answer is: ' + q.o[q.a];
+  document.getElementById('qExplain').textContent = q.e; document.getElementById('qScore').textContent = score;
+  document.getElementById('btnNext').style.display = 'inline-block'; document.getElementById('btnNext').textContent = idx + 1 < round.length ? 'Next question →' : 'See results →';
+  document.getElementById('btnShowGraph').style.display = q.g ? 'inline-block' : 'none';
+}
+function showOnGraph() {
+  const q = round[idx]; applyPreset(q.g);
+  document.getElementById('tradeNote').innerHTML = '<b>Quiz question:</b> ' + q.q + '<br><b>Answer:</b> ' + q.o[q.a] + '<br><br>' + document.getElementById('tradeNote').innerHTML + '<br><br><button class="btn-gold btn-sm" onclick="showTab(\'quiz\')">&larr; Back to quiz</button>';
+}
+function nextQuestion() { idx++; if (idx >= round.length) finishRound(); else renderQuestion(); }
+function quitRound() { if (results.length) finishRound(); else backToSetup(); }
+function backToSetup() { document.getElementById('quizPlay').style.display = 'none'; document.getElementById('quizResult').style.display = 'none'; document.getElementById('quizSetup').style.display = 'block'; }
+function finishRound() {
+  document.getElementById('quizPlay').style.display = 'none'; document.getElementById('quizResult').style.display = 'block';
+  const n = results.length, pct = Math.round(score / n * 100);
+  document.getElementById('resultScore').textContent = score + ' / ' + n + ' (' + pct + '%)';
+  document.getElementById('resultMsg').textContent = pct >= 90 ? 'Excellent. You have this chapter down.' : pct >= 70 ? 'Good work. Review the questions you missed below.' : 'Keep practicing. Read the Chapter Concepts tab, then try another round.';
+  const list = document.getElementById('reviewList'); list.innerHTML = '';
+  results.forEach((r, i) => {
+    const div = document.createElement('div'); div.className = 'review-item';
+    div.innerHTML = '<b>' + (i + 1) + '. ' + r.q.q + '</b><br>' + (r.ok ? '<span class="ok">Correct: ' : '<span class="no">You chose: ' + r.q.o[r.chosen] + '. Correct: ') + r.q.o[r.q.a] + '</span><br>' + r.q.e +
+      (r.q.g ? ' <button class="btn-secondary btn-sm" style="margin-left:0.4rem" onclick="applyPreset(BANK[' + BANK.indexOf(r.q) + '].g)">Show on graph</button>' : '');
+    list.appendChild(div);
+  });
+}
+
+loadPreset('usjp');
+</script>
+</body>
+</html>

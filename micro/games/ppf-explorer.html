@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 2: PPF Explorer &amp; Circular Flow</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, Helvetica, sans-serif; background: #0a0a0a; color: #fff; min-height: 100vh; }
+header { background: #000; border-bottom: 4px solid #D4A843; padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+header h1 { font-size: 1.2rem; color: #D4A843; }
+header h1 small { display: block; font-size: 0.75rem; color: #aaa; font-weight: normal; margin-top: 0.2rem; }
+header a { color: #D4A843; text-decoration: none; font-size: 0.85rem; border: 1px solid #D4A843; padding: 0.35rem 0.75rem; border-radius: 6px; }
+header a:hover { background: #D4A843; color: #000; }
+.container { max-width: 1000px; margin: 0 auto; padding: 1.5rem 1rem; }
+.panel { background: #151515; border: 1px solid #2a2a2a; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.25rem; }
+.panel h3 { font-size: 0.9rem; color: #D4A843; margin-bottom: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.panel p { font-size: 0.88rem; color: #ccc; line-height: 1.6; }
+.panel p b { color: #D4A843; }
+.tabs { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.tab { background: #1a1a1a; border: 1px solid #333; color: #ccc; padding: 0.6rem 1.1rem; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
+.tab.active { background: #D4A843; color: #000; border-color: #D4A843; }
+.tab-page { display: none; } .tab-page.active { display: block; }
+.stat-bar { display: flex; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.stat { flex: 1; min-width: 130px; background: #151515; border: 1px solid #2a2a2a; border-radius: 10px; padding: 0.9rem; text-align: center; }
+.stat .label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 0.3rem; }
+.stat .value { font-size: 1.3rem; font-weight: 700; color: #D4A843; }
+.stat.good .value { color: #4caf50; } .stat.warn .value { color: #ffb74d; } .stat.bad .value { color: #f44336; }
+.chart-wrap { background: #151515; border: 1px solid #2a2a2a; border-radius: 12px; padding: 1rem; margin-bottom: 1.25rem; }
+.chart-wrap canvas { width: 100% !important; max-height: 440px; }
+.chart-title { font-size: 0.85rem; color: #aaa; text-align: center; margin-bottom: 0.4rem; }
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; }
+.shift-group { margin-bottom: 0.85rem; }
+.shift-group label { display: flex; justify-content: space-between; font-size: 0.8rem; color: #bbb; margin-bottom: 0.25rem; }
+.shift-group input[type=range] { width: 100%; accent-color: #D4A843; }
+.range-scale { display: flex; justify-content: space-between; font-size: 0.68rem; color: #666; }
+.range-scale b { color: #D4A843; }
+.num-row { display: flex; gap: 0.6rem; align-items: end; flex-wrap: wrap; }
+.num-row label { font-size: 0.78rem; color: #bbb; display: block; margin-bottom: 0.25rem; }
+.num-row input[type=number] { width: 120px; background: #1a1a1a; color: #fff; border: 1px solid #444; border-radius: 6px; padding: 0.45rem; font-size: 0.9rem; }
+button { font-family: inherit; cursor: pointer; border: none; border-radius: 8px; padding: 0.55rem 1.1rem; font-size: 0.83rem; font-weight: 600; }
+.btn-gold { background: #D4A843; color: #000; } .btn-gold:hover { background: #e6bc5a; }
+.btn-secondary { background: #2a2a2a; color: #fff; border: 1px solid #444; } .btn-secondary:hover { background: #3a3a3a; }
+.btn-active { background: #D4A843; color: #000; border-color: #D4A843; }
+.btn-sm { padding: 0.35rem 0.7rem; font-size: 0.75rem; }
+.btn-row { display: flex; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.mode-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+th, td { padding: 0.45rem 0.5rem; text-align: center; border-bottom: 1px solid #222; }
+th { color: #D4A843; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; }
+tr.hl td { background: rgba(212,168,67,0.15); font-weight: 700; }
+/* circular flow */
+.flow-wrap { background: #151515; border: 1px solid #2a2a2a; border-radius: 12px; padding: 1rem; margin-bottom: 1.25rem; }
+.flow-wrap svg { width: 100%; height: auto; display: block; }
+.slot { cursor: pointer; }
+.slot rect { fill: #1a1a1a; stroke: #555; stroke-width: 1.5; stroke-dasharray: 4 3; }
+.slot.selected rect { stroke: #D4A843; stroke-width: 2.5; stroke-dasharray: none; }
+.slot.filled rect { stroke-dasharray: none; stroke: #888; fill: #222; }
+.slot.right rect { stroke: #4caf50; fill: rgba(76,175,80,0.15); }
+.slot.wrong rect { stroke: #f44336; fill: rgba(244,67,54,0.15); }
+.slot text { fill: #ddd; font-size: 11px; text-anchor: middle; pointer-events: none; }
+.slot text.num { fill: #777; font-size: 9px; }
+.label-bank { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.8rem; }
+.label-chip { background: #1a1a1a; border: 1px solid #444; color: #ddd; padding: 0.45rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: normal; }
+.label-chip:hover { border-color: #D4A843; }
+.label-chip.used { opacity: 0.35; }
+.label-chip.dollar { border-color: #4caf50; }
+.label-chip.real { border-color: #ff7043; }
+/* quiz */
+.quiz-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1rem; }
+.quiz-top .score { font-size: 0.85rem; color: #ccc; } .quiz-top .score b { color: #D4A843; }
+.quiz-cat { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 0.4rem; }
+.quiz-q { font-size: 1rem; color: #fff; font-weight: 600; line-height: 1.5; margin-bottom: 1rem; }
+.quiz-opt { display: block; width: 100%; text-align: left; background: #1a1a1a; border: 1px solid #333; color: #ddd; padding: 0.7rem 0.9rem; border-radius: 8px; margin-bottom: 0.5rem; font-weight: normal; font-size: 0.88rem; line-height: 1.4; }
+.quiz-opt:hover:not(:disabled) { border-color: #D4A843; }
+.quiz-opt.correct { background: rgba(76,175,80,0.18); border-color: #4caf50; color: #fff; }
+.quiz-opt.wrong { background: rgba(244,67,54,0.18); border-color: #f44336; color: #fff; }
+.quiz-opt:disabled { cursor: default; }
+.quiz-feedback { margin-top: 0.9rem; font-size: 0.88rem; line-height: 1.6; padding: 0.8rem; border-radius: 8px; background: #111; display: none; }
+.quiz-feedback.show { display: block; }
+.quiz-feedback .verdict { font-weight: 700; margin-bottom: 0.3rem; }
+.quiz-feedback.correct .verdict { color: #4caf50; } .quiz-feedback.wrong .verdict { color: #f44336; }
+.quiz-actions { display: flex; gap: 0.6rem; margin-top: 0.9rem; flex-wrap: wrap; }
+.progress { height: 6px; background: #222; border-radius: 3px; margin-bottom: 1rem; overflow: hidden; }
+.progress div { height: 100%; background: #D4A843; width: 0; transition: width 0.3s; }
+.quiz-setup { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin-bottom: 1rem; }
+.quiz-setup select { background: #1a1a1a; color: #fff; border: 1px solid #444; border-radius: 6px; padding: 0.45rem; font-size: 0.83rem; }
+.result-big { font-size: 2rem; color: #D4A843; font-weight: 700; margin: 0.5rem 0; }
+.review-item { border-top: 1px solid #222; padding: 0.7rem 0; font-size: 0.83rem; color: #ccc; }
+.review-item b { color: #fff; } .review-item .ok { color: #4caf50; } .review-item .no { color: #f44336; }
+details { border: 1px solid #2a2a2a; border-radius: 8px; margin-bottom: 0.5rem; background: #111; }
+summary { cursor: pointer; padding: 0.7rem 0.9rem; font-size: 0.88rem; font-weight: 600; color: #eee; }
+details .body { padding: 0 0.9rem 0.9rem; font-size: 0.85rem; color: #ccc; line-height: 1.6; }
+details .body ul { margin: 0.4rem 0 0.4rem 1.2rem; }
+details .body table { margin: 0.5rem 0; font-size: 0.8rem; }
+footer { text-align: center; padding: 1.25rem; border-top: 1px solid #222; font-size: 0.78rem; color: #666; }
+@media (max-width: 640px) { header h1 { font-size: 1rem; } .controls { grid-template-columns: 1fr; } .stat .value { font-size: 1.05rem; } .chart-wrap canvas { max-height: 320px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>PPF Explorer &amp; Circular Flow<small>Chapter 2: Thinking Like an Economist</small></h1>
+  <a href="../index.html">&larr; Back to Portal</a>
+</header>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" data-tab="ppf" onclick="showTab('ppf')">PPF Explorer</button>
+    <button class="tab" data-tab="flow" onclick="showTab('flow')">Circular Flow</button>
+    <button class="tab" data-tab="quiz" onclick="showTab('quiz')">Practice Quiz</button>
+    <button class="tab" data-tab="concepts" onclick="showTab('concepts')">Chapter Concepts</button>
+  </div>
+
+  <!-- ================= PPF ================= -->
+  <div class="tab-page active" id="tab-ppf">
+    <div class="mode-row">
+      <button class="btn-active" id="modeStraight" onclick="setMode('ppf')">Computers &amp; wheat (chapter example)</button>
+      <button class="btn-secondary" id="modeBowed" onclick="setMode('bowed')">Bowed-out PPF (cars &amp; wheat)</button>
+      <button class="btn-secondary" id="modeCompare" onclick="setMode('compare')">England vs France</button>
+    </div>
+
+    <div class="stat-bar" id="ppfStats">
+      <div class="stat"><div class="label">Max computers</div><div class="value" id="stMaxC">500</div></div>
+      <div class="stat"><div class="label">Max wheat (tons)</div><div class="value" id="stMaxW">5,000</div></div>
+      <div class="stat"><div class="label">Opp. cost of 1 computer</div><div class="value" id="stOC">10 tons</div></div>
+      <div class="stat" id="stPointBox"><div class="label" id="stPointLabel">Your point</div><div class="value" id="stPoint">none</div></div>
+    </div>
+
+    <div class="chart-wrap">
+      <div class="chart-title" id="chartTitle">Production possibilities frontier: click anywhere on the graph to test a point</div>
+      <canvas id="ppfChart"></canvas>
+    </div>
+
+    <div id="ppfControls">
+      <div class="controls">
+        <div class="panel" style="margin:0">
+          <h3>Test a point</h3>
+          <div class="num-row" style="margin-bottom:0.8rem">
+            <div><label>Computers</label><input type="number" id="ptC" value="100" min="0" step="10"></div>
+            <div><label>Wheat (tons)</label><input type="number" id="ptW" value="3000" min="0" step="100"></div>
+            <button class="btn-gold" onclick="testPoint()">Test</button>
+            <button class="btn-secondary" onclick="clearPoint()">Clear</button>
+          </div>
+          <p style="font-size:0.78rem;color:#999;margin-bottom:0.6rem">Chapter points:</p>
+          <div class="btn-row" id="pointBtns"></div>
+        </div>
+        <div class="panel" style="margin:0">
+          <h3>Resources &amp; technology (growth)</h3>
+          <div class="shift-group">
+            <label><span>Labor hours available</span><b id="LVal" style="color:#D4A843">50,000</b></label>
+            <input type="range" id="L" min="20000" max="100000" value="50000" step="5000">
+            <div class="range-scale"><span>20,000</span><span>100,000</span></div>
+          </div>
+          <div class="shift-group">
+            <label><span>Hours per computer</span><b id="hcVal" style="color:#D4A843">100</b></label>
+            <input type="range" id="hc" min="25" max="200" value="100" step="25">
+            <div class="range-scale"><span>25 (better tech)</span><span>200</span></div>
+          </div>
+          <div class="shift-group">
+            <label><span>Hours per ton of wheat</span><b id="hwVal" style="color:#D4A843">10</b></label>
+            <input type="range" id="hw" min="5" max="25" value="10" step="5">
+            <div class="range-scale"><span>5 (better tech)</span><span>25</span></div>
+          </div>
+          <button class="btn-secondary btn-sm" onclick="resetPPF()">Reset to chapter numbers</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="bowedControls" style="display:none">
+      <div class="panel">
+        <h3>Move along the bowed-out PPF</h3>
+        <div class="shift-group">
+          <label><span>Share of workers growing wheat</span><b id="tVal" style="color:#D4A843">50%</b></label>
+          <input type="range" id="t" min="0" max="100" value="50" step="1">
+          <div class="range-scale"><span>All making cars (point A)</span><span>All growing wheat (point B)</span></div>
+        </div>
+        <p>Workers differ: some are great engineers, some are natural farmers. Moving the first few workers into wheat costs almost no cars. Moving the last few (the best engineers) costs a lot.</p>
+      </div>
+    </div>
+
+    <div id="compareControls" style="display:none">
+      <div class="panel">
+        <h3>Compare two countries</h3>
+        <div class="controls" style="margin-bottom:0.5rem">
+          <div>
+            <div class="shift-group"><label><span>England: max cloth</span><b id="eCVal" style="color:#5c9eff">100</b></label><input type="range" id="eC" min="20" max="150" value="100" step="10"></div>
+            <div class="shift-group"><label><span>England: max wine</span><b id="eWVal" style="color:#5c9eff">50</b></label><input type="range" id="eW" min="20" max="150" value="50" step="10"></div>
+          </div>
+          <div>
+            <div class="shift-group"><label><span>France: max cloth</span><b id="fCVal" style="color:#ff7043">50</b></label><input type="range" id="fC" min="20" max="150" value="50" step="10"></div>
+            <div class="shift-group"><label><span>France: max wine</span><b id="fWVal" style="color:#ff7043">100</b></label><input type="range" id="fW" min="20" max="150" value="100" step="10"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>What's happening?</h3>
+      <p id="ppfExplain"></p>
+    </div>
+
+    <div class="panel" id="schedPanel">
+      <h3>Production schedule (current PPF)</h3>
+      <div style="overflow-x:auto"><table id="schedTable"></table></div>
+    </div>
+  </div>
+
+  <!-- ================= CIRCULAR FLOW ================= -->
+  <div class="tab-page" id="tab-flow">
+    <div class="panel">
+      <h3>Label the circular-flow diagram</h3>
+      <p style="margin-bottom:0.8rem">Click a dashed box on the diagram, then click the label that belongs there. Green labels are flows of <b style="color:#4caf50">dollars</b>; orange labels are flows of <b style="color:#ff7043">goods, services and inputs</b>. Check your answers when all eight are placed.</p>
+      <div class="label-bank" id="labelBank"></div>
+      <div class="btn-row">
+        <button class="btn-gold" onclick="checkFlow()">Check answers</button>
+        <button class="btn-secondary" onclick="resetFlow()">Reset</button>
+        <button class="btn-secondary" onclick="solveFlow()">Show solution</button>
+      </div>
+      <p id="flowResult"></p>
+    </div>
+    <div class="flow-wrap">
+      <svg viewBox="0 0 900 560" id="flowSvg" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4caf50"/></marker>
+          <marker id="arrR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#ff7043"/></marker>
+        </defs>
+        <!-- boxes -->
+        <rect x="330" y="20" width="240" height="70" rx="10" fill="#1d2a3a" stroke="#5c9eff" stroke-width="2"/>
+        <text x="450" y="50" text-anchor="middle" fill="#fff" font-size="15" font-weight="bold">MARKETS FOR</text>
+        <text x="450" y="72" text-anchor="middle" fill="#fff" font-size="15" font-weight="bold">GOODS &amp; SERVICES</text>
+        <rect x="330" y="470" width="240" height="70" rx="10" fill="#1d2a3a" stroke="#5c9eff" stroke-width="2"/>
+        <text x="450" y="500" text-anchor="middle" fill="#fff" font-size="15" font-weight="bold">MARKETS FOR</text>
+        <text x="450" y="522" text-anchor="middle" fill="#fff" font-size="15" font-weight="bold">FACTORS OF PRODUCTION</text>
+        <rect x="20" y="230" width="170" height="100" rx="10" fill="#2a2214" stroke="#D4A843" stroke-width="2"/>
+        <text x="105" y="272" text-anchor="middle" fill="#D4A843" font-size="17" font-weight="bold">FIRMS</text>
+        <text x="105" y="295" text-anchor="middle" fill="#bbb" font-size="11">produce and sell goods</text>
+        <text x="105" y="310" text-anchor="middle" fill="#bbb" font-size="11">hire and use factors</text>
+        <rect x="710" y="230" width="170" height="100" rx="10" fill="#2a2214" stroke="#D4A843" stroke-width="2"/>
+        <text x="795" y="272" text-anchor="middle" fill="#D4A843" font-size="17" font-weight="bold">HOUSEHOLDS</text>
+        <text x="795" y="295" text-anchor="middle" fill="#bbb" font-size="11">buy and consume goods</text>
+        <text x="795" y="310" text-anchor="middle" fill="#bbb" font-size="11">own and sell factors</text>
+        <!-- dollar flows (green): households -> G&S market -> firms -> factor market -> households  (outer loop, clockwise from right top) -->
+        <path d="M795,230 L795,120 L575,120" fill="none" stroke="#4caf50" stroke-width="3" marker-end="url(#arrG)"/>
+        <path d="M325,120 L105,120 L105,225" fill="none" stroke="#4caf50" stroke-width="3" marker-end="url(#arrG)"/>
+        <path d="M105,330 L105,440 L325,440" fill="none" stroke="#4caf50" stroke-width="3" marker-end="url(#arrG)"/>
+        <path d="M575,440 L795,440 L795,335" fill="none" stroke="#4caf50" stroke-width="3" marker-end="url(#arrG)"/>
+        <!-- real flows (orange): firms -> G&S market -> households -> factor market -> firms (inner loop) -->
+        <path d="M190,255 L260,255 L260,170 L410,170 L410,95" fill="none" stroke="#ff7043" stroke-width="3" marker-end="url(#arrR)"/>
+        <path d="M490,95 L490,170 L640,170 L640,255 L705,255" fill="none" stroke="#ff7043" stroke-width="3" marker-end="url(#arrR)"/>
+        <path d="M705,305 L640,305 L640,390 L490,390 L490,465" fill="none" stroke="#ff7043" stroke-width="3" marker-end="url(#arrR)"/>
+        <path d="M410,465 L410,390 L260,390 L260,305 L195,305" fill="none" stroke="#ff7043" stroke-width="3" marker-end="url(#arrR)"/>
+        <!-- slots -->
+        <g class="slot" data-slot="0" transform="translate(600,100)"><rect width="150" height="40" rx="6"/><text x="75" y="17" class="num">1</text><text x="75" y="31"></text></g>
+        <g class="slot" data-slot="1" transform="translate(150,100)"><rect width="150" height="40" rx="6"/><text x="75" y="17" class="num">2</text><text x="75" y="31"></text></g>
+        <g class="slot" data-slot="2" transform="translate(150,420)"><rect width="150" height="40" rx="6"/><text x="75" y="17" class="num">3</text><text x="75" y="31"></text></g>
+        <g class="slot" data-slot="3" transform="translate(600,420)"><rect width="150" height="40" rx="6"/><text x="75" y="17" class="num">4</text><text x="75" y="31"></text></g>
+        <g class="slot" data-slot="4" transform="translate(262,182)"><rect width="140" height="40" rx="6"/><text x="70" y="17" class="num">5</text><text x="70" y="31"></text></g>
+        <g class="slot" data-slot="5" transform="translate(498,182)"><rect width="140" height="40" rx="6"/><text x="70" y="17" class="num">6</text><text x="70" y="31"></text></g>
+        <g class="slot" data-slot="6" transform="translate(498,338)"><rect width="140" height="40" rx="6"/><text x="70" y="17" class="num">7</text><text x="70" y="31"></text></g>
+        <g class="slot" data-slot="7" transform="translate(262,338)"><rect width="140" height="40" rx="6"/><text x="70" y="17" class="num">8</text><text x="70" y="31"></text></g>
+        <text x="450" y="290" text-anchor="middle" fill="#4caf50" font-size="11">green = flow of dollars</text>
+        <text x="450" y="306" text-anchor="middle" fill="#ff7043" font-size="11">orange = flow of goods, services and inputs</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ================= QUIZ ================= -->
+  <div class="tab-page" id="tab-quiz">
+    <div class="panel">
+      <h3>Practice quiz: <span id="bankCount"></span> questions from Chapter 2</h3>
+      <div id="quizSetup">
+        <p style="margin-bottom:0.8rem">Each round gives you 10 random questions. After you answer, use <b>Show on graph</b> to see the scenario on the PPF or the circular-flow diagram.</p>
+        <div class="quiz-setup">
+          <label style="font-size:0.83rem;color:#bbb">Topic:</label>
+          <select id="topicSelect"><option value="all">All topics</option></select>
+          <label style="font-size:0.83rem;color:#bbb">Questions:</label>
+          <select id="countSelect"><option value="10">10</option><option value="20">20</option><option value="all">All</option></select>
+          <button class="btn-gold" onclick="startRound()">Start round</button>
+        </div>
+      </div>
+      <div id="quizPlay" style="display:none">
+        <div class="quiz-top"><span class="score">Question <b id="qNum">1</b> of <b id="qTotal">10</b></span><span class="score">Score: <b id="qScore">0</b></span></div>
+        <div class="progress"><div id="qProgress"></div></div>
+        <div class="quiz-cat" id="qCat"></div>
+        <div class="quiz-q" id="qText"></div>
+        <div id="qOpts"></div>
+        <div class="quiz-feedback" id="qFeedback"><div class="verdict" id="qVerdict"></div><div id="qExplain"></div></div>
+        <div class="quiz-actions">
+          <button class="btn-secondary" id="btnShowGraph" onclick="showOnGraph()" style="display:none">Show on graph</button>
+          <button class="btn-gold" id="btnNext" onclick="nextQuestion()" style="display:none">Next question &rarr;</button>
+          <button class="btn-secondary" onclick="quitRound()">End round</button>
+        </div>
+      </div>
+      <div id="quizResult" style="display:none">
+        <p>Round complete</p>
+        <div class="result-big" id="resultScore"></div>
+        <p id="resultMsg" style="margin-bottom:1rem"></p>
+        <div class="btn-row"><button class="btn-gold" onclick="startRound()">New round</button><button class="btn-secondary" onclick="backToSetup()">Change topic</button></div>
+        <h3 style="margin-top:1rem">Review</h3>
+        <div id="reviewList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= CONCEPTS ================= -->
+  <div class="tab-page" id="tab-concepts">
+    <div class="panel">
+      <h3>Chapter 2 in brief</h3>
+      <p style="margin-bottom:1rem">Economists are scientists: they make appropriate assumptions and build simplified models. Two of the most important models are the circular-flow diagram and the production possibilities frontier.</p>
+      <details open><summary>The circular-flow diagram</summary><div class="body">
+        A visual model of the economy showing how dollars flow through markets among households and firms.
+        <ul><li><b>Two decision makers:</b> firms and households.</li>
+        <li><b>Two markets:</b> the market for goods and services, and the market for factors of production (inputs: labor, land, capital).</li>
+        <li>Households <b>buy</b> goods and services (spending, which is firms' revenue) and <b>sell</b> factors of production (earning income: wages, rent, profit).</li>
+        <li>Firms <b>sell</b> goods and services and <b>buy</b> factors of production.</li>
+        <li>The simple diagram ignores government and international trade.</li></ul></div></details>
+      <details><summary>The production possibilities frontier (PPF)</summary><div class="body">
+        A graph of the combinations of output the economy can possibly produce given its factors of production and technology.
+        Chapter example: two goods (computers and wheat), one resource (labor), 50,000 hours per month, 100 hours per computer, 10 hours per ton of wheat.
+        <table><tr><th>Point</th><th>Hours on computers</th><th>Hours on wheat</th><th>Computers</th><th>Wheat</th></tr>
+        <tr><td>A</td><td>50,000</td><td>0</td><td>500</td><td>0</td></tr><tr><td>B</td><td>40,000</td><td>10,000</td><td>400</td><td>1,000</td></tr>
+        <tr><td>C</td><td>25,000</td><td>25,000</td><td>250</td><td>2,500</td></tr><tr><td>D</td><td>10,000</td><td>40,000</td><td>100</td><td>4,000</td></tr>
+        <tr><td>E</td><td>0</td><td>50,000</td><td>0</td><td>5,000</td></tr></table>
+        <ul><li><b>On the PPF</b> (A to E): possible and efficient, all resources fully used.</li>
+        <li><b>Inside the PPF</b> (like F: 100 computers, 3,000 wheat, only 40,000 hours): possible but inefficient, some resources are idle.</li>
+        <li><b>Outside the PPF</b> (like G: 300 computers, 3,500 wheat, would need 65,000 hours): not possible.</li></ul></div></details>
+      <details><summary>Opportunity cost and the slope</summary><div class="body">
+        Moving along the PPF shifts resources from one good to the other: society faces a tradeoff. The <b>slope</b> of the PPF (rise over run) is the opportunity cost of one good in terms of the other. In the example the slope is −1,000/100 = −10, so the opportunity cost of one computer is 10 tons of wheat (and of one ton of wheat, 1/10 of a computer).
+        Comparing countries: the country whose PPF is <b>flatter</b> (with cloth on the horizontal axis) has the <b>lower</b> opportunity cost of cloth. England's PPF is not as steep as France's, so England's opportunity cost of cloth is lower.</div></details>
+      <details><summary>Economic growth</summary><div class="body">
+        With additional resources or an improvement in technology, the economy can produce more computers, more wheat, or any combination in between: the PPF <b>shifts outward</b>.</div></details>
+      <details><summary>The shape of the PPF</summary><div class="body">
+        <ul><li><b>Straight line:</b> constant opportunity cost (the computers/wheat example).</li>
+        <li><b>Bowed outward:</b> increasing opportunity cost. As more of a good is produced, increasing amounts of the other must be given up. This happens when workers have different skills or land has different uses: at point A (mostly cars) the opportunity cost of wheat is low because the workers who switch are the ones best suited to farming; at point B (mostly wheat) it is high because the only workers left are the best engineers.</li></ul></div></details>
+      <details><summary>Microeconomics vs macroeconomics</summary><div class="body">
+        <b>Microeconomics:</b> how households and firms make decisions and how they interact in markets.<br>
+        <b>Macroeconomics:</b> economy-wide phenomena, including inflation, unemployment and economic growth.<br>
+        The two are closely intertwined: changes in the overall economy arise from the decisions of individual households and firms.</div></details>
+    </div>
+  </div>
+</div>
+
+<footer>Built by Dr. Sanket Kanekar</footer>
+
+<script src="ch2-questions.js"></script>
+<script>
+/* ================= PPF MODEL ================= */
+let mode = 'ppf';
+let testPt = null;   // {c, w}
+const DEF = { L: 50000, hc: 100, hw: 10 };
+const CH_POINTS = [ ['A',500,0], ['B',400,1000], ['C',250,2500], ['D',100,4000], ['E',0,5000], ['F',100,3000], ['G',300,3500] ];
+const v = id => parseFloat(document.getElementById(id).value);
+const fmt = n => Math.round(n).toLocaleString('en-US');
+
+function ppfParams() { return { L: v('L'), hc: v('hc'), hw: v('hw') }; }
+function maxC(p) { return p.L / p.hc; }
+function maxW(p) { return p.L / p.hw; }
+function hoursFor(c, w, p) { return c * p.hc + w * p.hw; }
+
+/* bowed PPF: cars vs wheat, quarter ellipse; parameter t = share of workers in wheat */
+function bowed(t) { const a = Math.PI / 2 * t; return { w: 100 * Math.sin(a), c: 100 * Math.cos(a) }; }
+function bowedSlope(t) { // d(cars)/d(wheat) magnitude = opportunity cost of wheat in cars
+  const a = Math.PI / 2 * t; return Math.tan(a); }
+
+/* ================= CHART ================= */
+const ctx = document.getElementById('ppfChart').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: { datasets: [
+    { label: 'PPF', data: [], borderColor: '#D4A843', borderWidth: 3, pointRadius: 0, tension: 0 },
+    { label: 'Original PPF', data: [], borderColor: 'rgba(212,168,67,0.35)', borderWidth: 1.5, borderDash: [6,4], pointRadius: 0, tension: 0 },
+    { label: 'Chapter points', data: [], borderColor: '#5c9eff', backgroundColor: '#5c9eff', pointRadius: 5, showLine: false },
+    { label: 'Your point', data: [], borderColor: '#fff', backgroundColor: '#fff', pointRadius: 8, showLine: false },
+    { label: 'Second PPF', data: [], borderColor: '#ff7043', borderWidth: 3, pointRadius: 0, tension: 0 }
+  ]},
+  options: {
+    responsive: true, maintainAspectRatio: true, aspectRatio: 1.7, animation: { duration: 150 },
+    onClick: (evt) => {
+      if (mode !== 'ppf') return;
+      const x = chart.scales.x.getValueForPixel(evt.x), y = chart.scales.y.getValueForPixel(evt.y);
+      if (x < 0 || y < 0) return;
+      document.getElementById('ptC').value = Math.round(x / 10) * 10;
+      document.getElementById('ptW').value = Math.round(y / 100) * 100;
+      testPoint();
+    },
+    scales: {
+      x: { type: 'linear', min: 0, max: 600, title: { display: true, text: 'Computers', color: '#aaa' }, ticks: { color: '#888' }, grid: { color: '#222' } },
+      y: { type: 'linear', min: 0, max: 6000, title: { display: true, text: 'Wheat (tons)', color: '#aaa' }, ticks: { color: '#888' }, grid: { color: '#222' } }
+    },
+    plugins: {
+      legend: { labels: { color: '#ccc', usePointStyle: true, padding: 12, filter: i => i.text !== 'Second PPF' || mode === 'compare' } },
+      tooltip: { callbacks: { label: c => (c.raw.lab ? c.raw.lab + ': ' : '') + fmt(c.parsed.x) + ', ' + fmt(c.parsed.y) } }
+    }
+  }
+});
+const ds = chart.data.datasets;
+
+function render() {
+  if (mode === 'ppf') renderPPF();
+  else if (mode === 'bowed') renderBowed();
+  else renderCompare();
+}
+
+function renderPPF() {
+  const p = ppfParams();
+  const mc = maxC(p), mw = maxW(p);
+  const changed = p.L !== DEF.L || p.hc !== DEF.hc || p.hw !== DEF.hw;
+  chart.options.scales.x.max = Math.max(600, Math.ceil(mc / 100) * 100 + 100);
+  chart.options.scales.y.max = Math.max(6000, Math.ceil(mw / 1000) * 1000 + 1000);
+  chart.options.scales.x.title.text = 'Computers'; chart.options.scales.y.title.text = 'Wheat (tons)';
+  ds[0].data = [{ x: 0, y: mw }, { x: mc, y: 0 }];
+  ds[1].data = changed ? [{ x: 0, y: maxW(DEF) }, { x: maxC(DEF), y: 0 }] : [];
+  ds[2].data = changed ? [] : CH_POINTS.map(([lab, c, w]) => ({ x: c, y: w, lab }));
+  ds[3].data = testPt ? [{ x: testPt.c, y: testPt.w, lab: 'Your point' }] : [];
+  ds[4].data = [];
+  chart.update();
+
+  document.getElementById('stMaxC').textContent = fmt(mc);
+  document.getElementById('stMaxW').textContent = fmt(mw);
+  document.getElementById('stOC').textContent = (p.hc / p.hw).toLocaleString('en-US', { maximumFractionDigits: 2 }) + ' tons';
+  document.querySelectorAll('#ppfStats .stat .label')[0].textContent = 'Max computers';
+  document.querySelectorAll('#ppfStats .stat .label')[1].textContent = 'Max wheat (tons)';
+  document.querySelectorAll('#ppfStats .stat .label')[2].textContent = 'Opp. cost of 1 computer';
+
+  const box = document.getElementById('stPointBox');
+  let expl = [];
+  if (changed) {
+    expl.push('<b>The PPF has shifted.</b> With ' + fmt(p.L) + ' hours, ' + p.hc + ' hours per computer and ' + p.hw + ' hours per ton of wheat, the economy can make up to ' + fmt(mc) + ' computers or ' + fmt(mw) + ' tons of wheat. The dashed line is the chapter\'s original PPF. More resources or better technology shift the frontier outward; the opportunity cost of a computer is now ' + (p.hc / p.hw) + ' tons of wheat (hours per computer ÷ hours per ton).');
+  } else {
+    expl.push('This is the chapter\'s economy: 50,000 labor hours, 100 hours per computer, 10 hours per ton of wheat. The PPF runs from A (500 computers) to E (5,000 tons of wheat). Its slope is −10: <b>each computer costs 10 tons of wheat</b>. Click the graph, type a point, or press a lettered button to test whether a combination is efficient, inefficient or impossible.');
+  }
+  if (testPt) {
+    const h = hoursFor(testPt.c, testPt.w, p);
+    const diff = h - p.L;
+    document.getElementById('stPointLabel').textContent = 'Your point uses';
+    document.getElementById('stPoint').textContent = fmt(h) + ' hrs';
+    if (Math.abs(diff) < 0.5) { box.className = 'stat good'; expl.push('<b>(' + fmt(testPt.c) + ' computers, ' + fmt(testPt.w) + ' wheat) is ON the PPF.</b> It uses exactly ' + fmt(h) + ' hours: possible and efficient. Every resource is being used, so getting more of one good means giving up some of the other.'); }
+    else if (diff < 0) { box.className = 'stat warn'; expl.push('<b>(' + fmt(testPt.c) + ' computers, ' + fmt(testPt.w) + ' wheat) is INSIDE the PPF.</b> It needs only ' + fmt(h) + ' of the ' + fmt(p.L) + ' hours; ' + fmt(-diff) + ' hours are idle (unemployed workers, idle factories). Possible but not efficient: the economy could have ' + fmt(-diff / p.hc) + ' more computers or ' + fmt(-diff / p.hw) + ' more tons of wheat without sacrificing anything.'); }
+    else { box.className = 'stat bad'; expl.push('<b>(' + fmt(testPt.c) + ' computers, ' + fmt(testPt.w) + ' wheat) is OUTSIDE the PPF.</b> It would need ' + fmt(h) + ' hours but only ' + fmt(p.L) + ' are available (' + fmt(diff) + ' short). Not possible with current resources and technology.'); }
+  } else {
+    document.getElementById('stPointLabel').textContent = 'Your point';
+    document.getElementById('stPoint').textContent = 'none';
+    box.className = 'stat';
+  }
+  document.getElementById('ppfExplain').innerHTML = expl.join('<br><br>');
+
+  // schedule table
+  let html = '<tr><th>Point</th><th>Hours on computers</th><th>Hours on wheat</th><th>Computers</th><th>Wheat (tons)</th></tr>';
+  const labels = ['A','B','C','D','E'], shares = [1, 0.8, 0.5, 0.2, 0];
+  labels.forEach((lab, i) => {
+    const hC = p.L * shares[i], hW = p.L - hC;
+    const c = hC / p.hc, w = hW / p.hw;
+    const hl = testPt && Math.abs(testPt.c - c) < 0.5 && Math.abs(testPt.w - w) < 0.5 ? 'hl' : '';
+    html += '<tr class="' + hl + '"><td>' + lab + '</td><td>' + fmt(hC) + '</td><td>' + fmt(hW) + '</td><td>' + fmt(c) + '</td><td>' + fmt(w) + '</td></tr>';
+  });
+  document.getElementById('schedTable').innerHTML = html;
+}
+
+function renderBowed() {
+  const t = v('t') / 100;
+  const pts = []; for (let i = 0; i <= 60; i++) { const b = bowed(i / 60); pts.push({ x: b.w, y: b.c }); }
+  chart.options.scales.x.max = 110; chart.options.scales.y.max = 110;
+  chart.options.scales.x.title.text = 'Wheat'; chart.options.scales.y.title.text = 'Cars';
+  ds[0].data = pts; ds[1].data = []; ds[4].data = [];
+  const A = bowed(0.1), B = bowed(0.9);
+  ds[2].data = [{ x: A.w, y: A.c, lab: 'A' }, { x: B.w, y: B.c, lab: 'B' }];
+  const cur = bowed(t);
+  ds[3].data = [{ x: cur.w, y: cur.c, lab: 'Current' }];
+  chart.update();
+  document.getElementById('tVal').textContent = Math.round(t * 100) + '%';
+  const oc = bowedSlope(t);
+  const L = document.querySelectorAll('#ppfStats .stat .label');
+  L[0].textContent = 'Cars produced'; document.getElementById('stMaxC').textContent = fmt(cur.c);
+  L[1].textContent = 'Wheat produced'; document.getElementById('stMaxW').textContent = fmt(cur.w);
+  L[2].textContent = 'Opp. cost of 1 more wheat'; document.getElementById('stOC').textContent = (oc > 50 ? '50+' : oc.toFixed(2)) + ' cars';
+  document.getElementById('stPointLabel').textContent = 'Opp. cost is'; const box = document.getElementById('stPointBox');
+  const lvl = t < 0.33 ? 'LOW' : t < 0.67 ? 'MEDIUM' : 'HIGH';
+  document.getElementById('stPoint').textContent = lvl; box.className = 'stat ' + (t < 0.33 ? 'good' : t < 0.67 ? 'warn' : 'bad');
+  document.getElementById('ppfExplain').innerHTML = '<b>Bowed-out PPF: increasing opportunity cost.</b> The slope of the frontier gets steeper as we move right. ' +
+    (t < 0.33 ? 'Near point A most workers make cars, including people who would be better farmers. Moving them to wheat costs very few cars, so the <b>opportunity cost of wheat is low</b>.' :
+     t < 0.67 ? 'In the middle, workers are sorted reasonably well between the two jobs. Each extra ton of wheat costs a moderate number of cars.' :
+     'Near point B most workers already grow wheat and the few left making cars are the best engineers. Pulling them into farming causes a big drop in car output, so the <b>opportunity cost of wheat is high</b>.') +
+    '<br><br>The PPF is bowed outward whenever different workers (or different types of land) are suited to different goods, so the opportunity cost of one good in terms of the other varies. If every worker were identical, the PPF would be a straight line like the computers/wheat example.';
+  document.getElementById('schedTable').innerHTML = '';
+}
+
+function renderCompare() {
+  const eC = v('eC'), eW = v('eW'), fC = v('fC'), fW = v('fW');
+  ['eC','eW','fC','fW'].forEach(id => document.getElementById(id + 'Val').textContent = v(id));
+  chart.options.scales.x.max = 160; chart.options.scales.y.max = 160;
+  chart.options.scales.x.title.text = 'Cloth'; chart.options.scales.y.title.text = 'Wine';
+  ds[0].data = [{ x: 0, y: eW }, { x: eC, y: 0 }]; ds[0].label = 'England';
+  ds[4].data = [{ x: 0, y: fW }, { x: fC, y: 0 }]; ds[4].label = 'France';
+  ds[1].data = []; ds[2].data = []; ds[3].data = [];
+  chart.update();
+  const ocE = eW / eC, ocF = fW / fC;
+  const L = document.querySelectorAll('#ppfStats .stat .label');
+  L[0].textContent = "England: opp. cost of cloth"; document.getElementById('stMaxC').textContent = ocE.toFixed(2) + ' wine';
+  L[1].textContent = "France: opp. cost of cloth"; document.getElementById('stMaxW').textContent = ocF.toFixed(2) + ' wine';
+  L[2].textContent = 'Lower opp. cost of cloth'; document.getElementById('stOC').textContent = ocE < ocF ? 'England' : ocE > ocF ? 'France' : 'Tie';
+  document.getElementById('stPointLabel').textContent = 'Lower opp. cost of wine'; document.getElementById('stPoint').textContent = ocE > ocF ? 'England' : ocE < ocF ? 'France' : 'Tie';
+  document.getElementById('stPointBox').className = 'stat';
+  document.getElementById('ppfExplain').innerHTML = '<b>Active Learning: in which country is the opportunity cost of cloth lower?</b> Look at the slopes. England gives up ' + ocE.toFixed(2) + ' wine per unit of cloth; France gives up ' + ocF.toFixed(2) + '. ' +
+    (ocE < ocF ? '<b>England</b> has the lower opportunity cost of cloth because its PPF is not as steep as France\'s.' : ocE > ocF ? '<b>France</b> now has the lower opportunity cost of cloth because its PPF is flatter.' : 'Both have the same opportunity cost.') +
+    ' The country with the flatter PPF (cloth on the horizontal axis) sacrifices less wine for each unit of cloth. Chapter 3 builds on this idea: it is called comparative advantage.';
+  document.getElementById('schedTable').innerHTML = '';
+}
+
+/* ================= CONTROLS ================= */
+function setMode(m) {
+  mode = m;
+  ds[0].label = 'PPF'; ds[4].label = 'Second PPF';
+  document.getElementById('modeStraight').className = m === 'ppf' ? 'btn-active' : 'btn-secondary';
+  document.getElementById('modeBowed').className = m === 'bowed' ? 'btn-active' : 'btn-secondary';
+  document.getElementById('modeCompare').className = m === 'compare' ? 'btn-active' : 'btn-secondary';
+  document.getElementById('ppfControls').style.display = m === 'ppf' ? 'block' : 'none';
+  document.getElementById('bowedControls').style.display = m === 'bowed' ? 'block' : 'none';
+  document.getElementById('compareControls').style.display = m === 'compare' ? 'block' : 'none';
+  document.getElementById('schedPanel').style.display = m === 'ppf' ? 'block' : 'none';
+  document.getElementById('chartTitle').textContent = m === 'ppf' ? 'Production possibilities frontier: click anywhere on the graph to test a point' : m === 'bowed' ? 'A bowed-out PPF: cars and wheat' : 'Two straight-line PPFs: cloth and wine';
+  render();
+}
+function testPoint() {
+  const c = Math.max(0, v('ptC') || 0), w = Math.max(0, v('ptW') || 0);
+  testPt = { c, w }; render();
+}
+function clearPoint() { testPt = null; render(); }
+function setPoint(c, w) { document.getElementById('ptC').value = c; document.getElementById('ptW').value = w; testPoint(); }
+function resetPPF() {
+  document.getElementById('L').value = DEF.L; document.getElementById('hc').value = DEF.hc; document.getElementById('hw').value = DEF.hw;
+  syncLabels(); render();
+}
+function syncLabels() {
+  document.getElementById('LVal').textContent = fmt(v('L'));
+  document.getElementById('hcVal').textContent = v('hc');
+  document.getElementById('hwVal').textContent = v('hw');
+}
+['L','hc','hw'].forEach(id => document.getElementById(id).addEventListener('input', () => { syncLabels(); render(); }));
+document.getElementById('t').addEventListener('input', render);
+['eC','eW','fC','fW'].forEach(id => document.getElementById(id).addEventListener('input', render));
+(function buildPointBtns() {
+  const row = document.getElementById('pointBtns');
+  CH_POINTS.forEach(([lab, c, w]) => {
+    const b = document.createElement('button'); b.className = 'btn-secondary btn-sm';
+    b.textContent = lab + ' (' + c + ', ' + fmt(w) + ')'; b.onclick = () => setPoint(c, w); row.appendChild(b);
+  });
+})();
+
+/* apply a quiz preset */
+function applyPreset(g) {
+  if (!g) return;
+  if (g.mode === 'flow') { showTab('flow'); return; }
+  showTab('ppf');
+  if (g.mode === 'bowed') { setMode('bowed'); document.getElementById('t').value = Math.round((g.t ?? 0.5) * 100); render(); return; }
+  if (g.mode === 'compare') { setMode('compare'); return; }
+  resetPPF();
+  if (g.L) document.getElementById('L').value = g.L;
+  if (g.hc) document.getElementById('hc').value = g.hc;
+  if (g.hw) document.getElementById('hw').value = g.hw;
+  syncLabels();
+  testPt = g.point ? { c: g.point[0], w: g.point[1] } : null;
+  if (g.point) { document.getElementById('ptC').value = g.point[0]; document.getElementById('ptW').value = g.point[1]; }
+  setMode('ppf');
+}
+
+/* ================= CIRCULAR FLOW ================= */
+const FLOW_LABELS = [
+  { t: 'Spending', k: 'dollar' }, { t: 'Revenue', k: 'dollar' }, { t: 'Wages, rent, profit', k: 'dollar' }, { t: 'Income', k: 'dollar' },
+  { t: 'Goods & services sold', k: 'real' }, { t: 'Goods & services bought', k: 'real' }, { t: 'Labor, land, capital', k: 'real' }, { t: 'Factors of production', k: 'real' }
+];
+// correct label index for each slot 0..7
+const FLOW_ANSWER = [0, 1, 2, 3, 4, 5, 6, 7];
+let flowState = new Array(8).fill(null), selSlot = null;
+(function initFlow() {
+  const bank = document.getElementById('labelBank');
+  FLOW_LABELS.forEach((l, i) => {
+    const b = document.createElement('button'); b.className = 'label-chip ' + l.k; b.textContent = l.t; b.dataset.i = i;
+    b.onclick = () => placeLabel(i); bank.appendChild(b);
+  });
+  document.querySelectorAll('.slot').forEach(s => s.addEventListener('click', () => selectSlot(parseInt(s.dataset.slot))));
+})();
+function selectSlot(i) {
+  selSlot = i;
+  document.querySelectorAll('.slot').forEach(s => s.classList.toggle('selected', parseInt(s.dataset.slot) === i));
+  document.getElementById('flowResult').textContent = 'Slot ' + (i + 1) + ' selected. Now click a label.';
+}
+function placeLabel(li) {
+  if (selSlot === null) { document.getElementById('flowResult').textContent = 'First click a dashed box on the diagram.'; return; }
+  // remove label from any other slot
+  flowState = flowState.map(x => x === li ? null : x);
+  flowState[selSlot] = li;
+  selSlot = null; drawFlow();
+  document.getElementById('flowResult').textContent = flowState.every(x => x !== null) ? 'All eight placed. Click "Check answers".' : '';
+}
+function drawFlow() {
+  document.querySelectorAll('.slot').forEach(s => {
+    const i = parseInt(s.dataset.slot); const li = flowState[i];
+    s.classList.remove('selected', 'right', 'wrong'); s.classList.toggle('filled', li !== null);
+    s.querySelectorAll('text')[1].textContent = li === null ? '' : FLOW_LABELS[li].t;
+    s.querySelectorAll('text')[1].setAttribute('fill', li === null ? '#ddd' : FLOW_LABELS[li].k === 'dollar' ? '#4caf50' : '#ff7043');
+  });
+  document.querySelectorAll('.label-chip').forEach(c => c.classList.toggle('used', flowState.includes(parseInt(c.dataset.i))));
+}
+function checkFlow() {
+  let ok = 0;
+  document.querySelectorAll('.slot').forEach(s => {
+    const i = parseInt(s.dataset.slot);
+    if (flowState[i] === null) return;
+    const right = flowState[i] === FLOW_ANSWER[i]; if (right) ok++;
+    s.classList.add(right ? 'right' : 'wrong');
+  });
+  document.getElementById('flowResult').innerHTML = ok === 8 ? '<b style="color:#4caf50">All 8 correct!</b> Households spend dollars in the goods market (firms\' revenue) and receive income from the factor market; goods flow from firms to households and factors flow from households to firms.' : '<b style="color:#D4A843">' + ok + ' of 8 correct.</b> Red boxes are wrong. Tip: follow the arrows. Green dollar arrows leave households at the top as spending and return at the bottom as income.';
+}
+function resetFlow() { flowState = new Array(8).fill(null); selSlot = null; drawFlow(); document.getElementById('flowResult').textContent = ''; }
+function solveFlow() { flowState = FLOW_ANSWER.slice(); drawFlow(); checkFlow(); }
+
+/* ================= TABS ================= */
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.tab-page').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
+  if (name === 'ppf') chart.resize();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ================= QUIZ ================= */
+const BANK = (typeof CH2_QUESTIONS !== 'undefined') ? CH2_QUESTIONS : [];
+let round = [], idx = 0, score = 0, answered = false, results = [];
+(function initQuiz() {
+  document.getElementById('bankCount').textContent = BANK.length;
+  const sel = document.getElementById('topicSelect');
+  [...new Set(BANK.map(q => q.cat))].forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c + ' (' + BANK.filter(q => q.cat === c).length + ')'; sel.appendChild(o); });
+})();
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function startRound() {
+  const topic = document.getElementById('topicSelect').value, n = document.getElementById('countSelect').value;
+  let pool = shuffle(topic === 'all' ? BANK.slice() : BANK.filter(q => q.cat === topic));
+  round = n === 'all' ? pool : pool.slice(0, Math.min(parseInt(n), pool.length));
+  idx = 0; score = 0; results = [];
+  document.getElementById('quizSetup').style.display = 'none'; document.getElementById('quizResult').style.display = 'none'; document.getElementById('quizPlay').style.display = 'block';
+  renderQuestion();
+}
+function renderQuestion() {
+  answered = false; const q = round[idx];
+  document.getElementById('qNum').textContent = idx + 1; document.getElementById('qTotal').textContent = round.length; document.getElementById('qScore').textContent = score;
+  document.getElementById('qProgress').style.width = (idx / round.length * 100) + '%';
+  document.getElementById('qCat').textContent = q.cat; document.getElementById('qText').textContent = q.q;
+  const box = document.getElementById('qOpts'); box.innerHTML = '';
+  q._order = shuffle([0, 1, 2, 3]);
+  q._order.forEach((oi, pos) => { const b = document.createElement('button'); b.className = 'quiz-opt'; b.textContent = String.fromCharCode(65 + pos) + '. ' + q.o[oi]; b.onclick = () => answer(oi); box.appendChild(b); });
+  document.getElementById('qFeedback').className = 'quiz-feedback';
+  document.getElementById('btnNext').style.display = 'none'; document.getElementById('btnShowGraph').style.display = 'none';
+}
+function answer(oi) {
+  if (answered) return; answered = true;
+  const q = round[idx], ok = oi === q.a; if (ok) score++;
+  results.push({ q, ok, chosen: oi });
+  document.querySelectorAll('.quiz-opt').forEach((b, pos) => { b.disabled = true; const o = q._order[pos]; if (o === q.a) b.classList.add('correct'); else if (o === oi) b.classList.add('wrong'); });
+  const fb = document.getElementById('qFeedback'); fb.className = 'quiz-feedback show ' + (ok ? 'correct' : 'wrong');
+  document.getElementById('qVerdict').textContent = ok ? 'Correct!' : 'Not quite. The correct answer is: ' + q.o[q.a];
+  document.getElementById('qExplain').textContent = q.e; document.getElementById('qScore').textContent = score;
+  document.getElementById('btnNext').style.display = 'inline-block'; document.getElementById('btnNext').textContent = idx + 1 < round.length ? 'Next question →' : 'See results →';
+  document.getElementById('btnShowGraph').style.display = q.g ? 'inline-block' : 'none';
+}
+function showOnGraph() {
+  const q = round[idx]; applyPreset(q.g);
+  if (q.g.mode !== 'flow') document.getElementById('ppfExplain').innerHTML = '<b>Quiz question:</b> ' + q.q + '<br><b>Answer:</b> ' + q.o[q.a] + '<br><br>' + document.getElementById('ppfExplain').innerHTML + '<br><br><button class="btn-gold btn-sm" onclick="showTab(\'quiz\')">&larr; Back to quiz</button>';
+}
+function nextQuestion() { idx++; if (idx >= round.length) finishRound(); else renderQuestion(); }
+function quitRound() { if (results.length) finishRound(); else backToSetup(); }
+function backToSetup() { document.getElementById('quizPlay').style.display = 'none'; document.getElementById('quizResult').style.display = 'none'; document.getElementById('quizSetup').style.display = 'block'; }
+function finishRound() {
+  document.getElementById('quizPlay').style.display = 'none'; document.getElementById('quizResult').style.display = 'block';
+  const n = results.length, pct = Math.round(score / n * 100);
+  document.getElementById('resultScore').textContent = score + ' / ' + n + ' (' + pct + '%)';
+  document.getElementById('resultMsg').textContent = pct >= 90 ? 'Excellent. You have this chapter down.' : pct >= 70 ? 'Good work. Review the questions you missed below.' : 'Keep practicing. Read the Chapter Concepts tab, then try another round.';
+  const list = document.getElementById('reviewList'); list.innerHTML = '';
+  results.forEach((r, i) => {
+    const div = document.createElement('div'); div.className = 'review-item';
+    div.innerHTML = '<b>' + (i + 1) + '. ' + r.q.q + '</b><br>' + (r.ok ? '<span class="ok">Correct: ' : '<span class="no">You chose: ' + r.q.o[r.chosen] + '. Correct: ') + r.q.o[r.q.a] + '</span><br>' + r.q.e +
+      (r.q.g ? ' <button class="btn-secondary btn-sm" style="margin-left:0.4rem" onclick="applyPreset(BANK[' + BANK.indexOf(r.q) + '].g)">Show on graph</button>' : '');
+    list.appendChild(div);
+  });
+}
+
+syncLabels(); render();
+</script>
+</body>
+</html>
