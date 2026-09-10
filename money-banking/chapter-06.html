@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 6 · Aggregate Supply and Aggregate Demand</title>
+<meta name="description" content="The framework connecting money to output, employment and prices: an interactive AD-AS diagram, the spending multiplier, the output gap and the Phillips relation, all built on live data.">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="brand" href="index.html">Money &amp; Banking <span>with Live Data</span></a>
+    <nav>
+      <a href="chapter-01.html">1</a>
+      <a href="chapter-02.html">2</a>
+      <a href="chapter-03.html">3</a>
+      <a href="chapter-04.html">4</a>
+      <a href="chapter-05.html">5</a>
+      <a href="chapter-06.html" class="here">6</a>
+      <a href="index.html#data">Data sources</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Chapter 6</p>
+    <h1>Aggregate Supply and<br>Aggregate Demand</h1>
+    <p class="lede">Everything so far has been about the price of money. This chapter asks what money does to the rest of the economy: how total spending is determined, what the economy is physically able to produce, and what happens at the place where those two meet.</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="stats" id="stat-strip" style="margin-top:30px">
+    <div class="stat"><div class="label">Nominal GDP</div><div class="value loading" data-stat="gdp">loading…</div><div class="meta" data-stat="gdp-meta">&nbsp;</div></div>
+    <div class="stat"><div class="label">Real GDP growth</div><div class="value loading" data-stat="rgdp">loading…</div><div class="meta" data-stat="rgdp-meta">&nbsp;</div></div>
+    <div class="stat"><div class="label">Consumption share</div><div class="value loading" data-stat="cshare">loading…</div><div class="meta" data-stat="cshare-meta">&nbsp;</div></div>
+    <div class="stat"><div class="label">Unemployment</div><div class="value loading" data-stat="unemp">loading…</div><div class="meta" data-stat="unemp-meta">&nbsp;</div></div>
+    <div class="stat"><div class="label">CPI inflation</div><div class="value loading" data-stat="cpi">loading…</div><div class="meta" data-stat="cpi-meta">&nbsp;</div></div>
+    <div class="stat"><div class="label">M2 growth</div><div class="value loading" data-stat="m2">loading…</div><div class="meta" data-stat="m2-meta">&nbsp;</div></div>
+  </div>
+  <p class="source-line">Live figures, refreshed each time this page loads. Sources: Bureau of Economic Analysis; Bureau of Labor Statistics; Federal Reserve H.6.</p>
+</div>
+
+<div class="wrap">
+<div class="chapter">
+
+  <aside class="toc">
+    <h4>In this chapter</h4>
+    <ol>
+      <li><a href="#s61">6-1 &nbsp;Introduction and Aggregate Demand</a></li>
+      <li><a class="sub" href="#s61a">6-1a &nbsp;Keynes's challenge</a></li>
+      <li><a class="sub" href="#s61b">6-1b &nbsp;The aggregate demand curve</a></li>
+      <li><a href="#s62">6-2 &nbsp;Shifts in Aggregate Demand</a></li>
+      <li><a class="sub" href="#s62a">6-2a to 6-2e &nbsp;The five shifters</a></li>
+      <li><a class="sub" href="#s62f">6-2f &nbsp;The spending multiplier</a></li>
+      <li><a href="#s63">6-3 &nbsp;Aggregate Supply</a></li>
+      <li><a class="sub" href="#s63a">6-3a &nbsp;The original curve</a></li>
+      <li><a class="sub" href="#s63b">6-3b &nbsp;The three-part curve</a></li>
+      <li><a href="#s64">6-4 &nbsp;Rational Expectations</a></li>
+      <li><a class="sub" href="#s64b">6-4b &nbsp;Short run and long run</a></li>
+      <li><a href="#s65">6-5 &nbsp;Business Cycles</a></li>
+      <li><a class="sub" href="#s65a">6-5a &nbsp;Putting it together</a></li>
+      <li><a class="sub" href="#s65b">6-5b &nbsp;How fast do gaps close?</a></li>
+      <li><a href="#s66">6-6 &nbsp;Modern Business Cycle Models</a></li>
+      <li><a href="#s67">6-7 &nbsp;Conclusion</a></li>
+      <li><a href="#data">Data for this chapter</a></li>
+    </ol>
+  </aside>
+
+  <article>
+
+    <!-- ================= 6-1 ================= -->
+    <section class="block" id="s61">
+      <span class="section-num">6-1</span>
+      <h2>Introduction and Keynes's Aggregate Demand</h2>
+      <p>An economy is not one market, and the tools from Chapters 3 and 4 were built for one market at a time. To ask why unemployment rose across every industry at once in 2009, or why prices rose across every category at once in 2022, you need a framework that treats all output as a single good and all prices as a single price level. That framework is aggregate supply and aggregate demand.</p>
+      <p>It is a caricature, and deliberately so. Collapsing millions of goods into one axis discards nearly everything an economy contains. What it buys in return is the ability to ask the two questions that matter most: how much does the economy produce, and what happens to the price level.</p>
+
+      <h3 id="s61a">6-1a &nbsp;Keynes's challenge</h3>
+      <p>Before the 1930s, the dominant view held that a market economy left alone would return to full employment. Wages and prices would fall until every willing worker was hired. Unemployment could be severe, but it was temporary, and the cure was patience.</p>
+      <p>The Depression was a hard fact for that view. Unemployment in the United States exceeded twenty per cent and stayed near there for years. Whatever mechanism was supposed to restore full employment was either absent or unbearably slow.</p>
+      <p>Keynes's argument had two parts. The first was that wages and prices do not in fact fall quickly, for reasons that are institutional rather than mysterious: wages are set in contracts, employers resist cuts because they damage morale and drive away the best workers, and firms adjust output before they adjust prices. The second was that if prices are slow to move, then the level of <em>spending</em> determines the level of <em>production</em>, and there is no guarantee that spending will be enough to employ everyone.</p>
+      <p>That second sentence is the whole of demand-side macroeconomics, and everything in section 6-2 is an elaboration of it.</p>
+
+      <h3 id="s61b">6-1b &nbsp;The aggregate demand curve</h3>
+      <p>Aggregate demand is total planned spending on domestically produced goods at each price level. It has four components, and the identity that adds them up is the same one national accountants use:</p>
+      <pre><code>AD  =  C  +  I  +  G  +  NX</code></pre>
+      <p>Consumption by households, investment by firms, government purchases, and net exports. The curve slopes downward — a higher price level goes with less real spending — but for reasons quite different from an ordinary demand curve, and the difference is worth being precise about, because students who carry over the microeconomic intuition get the shifters wrong.</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Effect</th><th>Mechanism</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Wealth</strong></td><td>A higher price level makes money holdings buy less, so households feel poorer and consume less.</td></tr>
+            <tr><td><strong>Interest rate</strong></td><td>A higher price level raises the demand for money, which pushes interest rates up and investment down. This is the channel that connects this chapter to the previous four.</td></tr>
+            <tr><td><strong>Exchange rate</strong></td><td>A higher domestic price level makes home goods dearer relative to foreign ones, so net exports fall.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Notice that the second channel runs straight through the bond market of Chapter 3. Aggregate demand is not a separate subject from the price of money; it is what the price of money does once you stop looking at bonds and start looking at output.</p>
+      <p>Before the diagram, look at what the four components actually are. The relative sizes surprise people, and they discipline a lot of loose talk about which lever matters.</p>
+
+      <figure class="chart" id="fig-components">
+        <figcaption>What aggregate demand is made of</figcaption>
+        <div class="sub">Consumption, investment, government purchases and net exports, as shares of GDP.</div>
+        <div class="controls">
+          <div class="pair">
+            <span class="lbl">View</span>
+            <div class="grp" data-toggle="view">
+              <button data-value="share" aria-pressed="true">Shares of GDP</button>
+              <button data-value="level">Levels</button>
+            </div>
+          </div>
+          <div class="pair">
+            <span class="lbl">From</span>
+            <div class="grp" data-toggle="from">
+              <button data-value="1947-Q1" aria-pressed="true">1947</button>
+              <button data-value="1990-Q1">1990</button>
+              <button data-value="2015-Q1">2015</button>
+            </div>
+          </div>
+        </div>
+        <div class="canvas-box">
+          <canvas id="cv-components"></canvas>
+          <div class="chart-status">Loading live data…</div>
+        </div>
+        <p class="source-line" id="components-note"></p>
+        <p class="source-line">Bureau of Economic Analysis, National Income and Product Accounts, table 1.1.5, quarterly. FRED equivalents: <a href="https://fred.stlouisfed.org/series/PCEC" target="_blank" rel="noopener">PCEC</a>, <a href="https://fred.stlouisfed.org/series/GPDI" target="_blank" rel="noopener">GPDI</a>, <a href="https://fred.stlouisfed.org/series/GCE" target="_blank" rel="noopener">GCE</a>, <a href="https://fred.stlouisfed.org/series/NETEXP" target="_blank" rel="noopener">NETEXP</a>.</p>
+      </figure>
+
+      <div class="box note">
+        <div class="box-title">Two things this chart settles</div>
+        <p style="margin:0">Consumption is around two thirds of the economy and moves very little, while investment is a small share and moves enormously. That combination is why recessions are mostly investment stories even though consumption is far larger: a third of a small thing swamps a rounding error on a big one. Net exports are small and have been negative in every quarter since 1980, which is a fact about American borrowing from the rest of the world rather than a verdict on competitiveness.</p>
+      </div>
+    </section>
+
+    <!-- ================= 6-2 ================= -->
+    <section class="block" id="s62">
+      <span class="section-num">6-2</span>
+      <h2>Shifts in Aggregate Demand</h2>
+      <p>Something that changes spending <em>at an unchanged price level</em> shifts the curve. There are five such shifters, one for each component plus money.</p>
+
+      <h3 id="s62a">6-2a to 6-2e &nbsp;The five shifters</h3>
+      <ul>
+        <li><strong>Consumption.</strong> Moves with household wealth, expected future income, consumer confidence, taxes and the availability of credit. A stock market crash cuts consumption without any change in the price level.</li>
+        <li><strong>Investment.</strong> Moves with expected profitability, interest rates and business confidence. It is the most volatile component by a wide margin, which the chart above makes plain.</li>
+        <li><strong>Government purchases.</strong> Move by decision. This is the fiscal policy lever, and the only component that can be changed deliberately and quickly.</li>
+        <li><strong>Net exports.</strong> Move with foreign incomes and the exchange rate. A recession abroad reduces demand for exports and shifts the curve left.</li>
+        <li><strong>The money supply.</strong> More money means lower interest rates, which means more investment and more interest-sensitive consumption. This is the monetary policy lever, and it works through the mechanism Chapters 3 and 4 built.</li>
+      </ul>
+      <p>The last of those is the reason a money-and-banking course contains this chapter at all. Everything the central bank does reaches output through the aggregate demand curve.</p>
+
+      <h3 id="s62f">6-2f &nbsp;The spending multiplier</h3>
+      <p>A shift in aggregate demand is larger than the thing that caused it, and the reason is that spending does not stop when it is received.</p>
+      <p>Suppose a state highway agency signs a contract worth ten million dollars to resurface a road. The paving contractor receives the money and does not bury it. Part goes to wages, part to a gravel supplier, part to the firm's owners, part to taxes. Everyone whose income went up now spends some fraction of the increase, and their spending is somebody else's income, and so on.</p>
+      <p>How much of each additional dollar gets passed along is the <strong>marginal propensity to consume</strong>. Call it <em>c</em>. Then the first round is the original spending, the second is <em>c</em> times it, the third <em>c²</em> times it, and the total is a geometric series that sums to</p>
+      <pre><code>multiplier  =  1 / (1 − c)</code></pre>
+      <p>With <em>c</em> = 0.75, the multiplier is 4 and ten million dollars of road resurfacing eventually generates forty million of spending. Watch the rounds pile up.</p>
+
+      <figure class="chart" id="fig-multiplier">
+        <figcaption>The spending multiplier, round by round</figcaption>
+        <div class="sub">One initial injection of spending, and where it goes next.</div>
+        <div class="calc">
+          <div>
+            <div class="field">
+              <label for="m-inject">Initial spending ($ million)</label>
+              <input type="number" id="m-inject" value="10" min="1" step="1">
+            </div>
+            <div class="field">
+              <label for="m-mpc">Marginal propensity to consume: <span id="m-mpc-out">0.75</span></label>
+              <input type="range" id="m-mpc" min="0" max="0.95" step="0.01" value="0.75">
+            </div>
+            <div class="field">
+              <label for="m-rounds">Rounds shown: <span id="m-rounds-out">12</span></label>
+              <input type="range" id="m-rounds" min="3" max="30" step="1" value="12">
+            </div>
+            <div class="readout">
+              <div class="label">Total effect on spending</div>
+              <div class="big" id="m-total">—</div>
+              <div class="small" id="m-detail">&nbsp;</div>
+            </div>
+            <div style="font-size:.85rem;color:var(--ink-soft);margin-top:12px" id="m-note">&nbsp;</div>
+          </div>
+          <div class="canvas-box" style="height:300px">
+            <canvas id="cv-multiplier"></canvas>
+          </div>
+        </div>
+      </figure>
+
+      <div class="box note">
+        <div class="box-title">Why the real multiplier is smaller</div>
+        <p style="margin:0">The formula above assumes every dollar not consumed simply vanishes from the chain, and that nothing else in the economy reacts. Neither is true. Part of each round leaks into taxes and imports, which shrinks the effective propensity. More importantly, the extra borrowing that funds the spending pushes interest rates up, which crowds out private investment — the Chapter 3 mechanism working in the opposite direction. Empirical estimates of government spending multipliers cluster well below the textbook figure, and they are larger in slumps, when there is idle capacity and interest rates are pinned near zero, than in booms. Any single number is wrong; the range and the conditions are the finding.</p>
+      </div>
+
+      <div class="box excel">
+        <div class="box-title">Build the multiplier in Excel</div>
+        <ol class="steps">
+          <li>Put the injection in <code>B1</code> and the marginal propensity to consume in <code>B2</code>.</li>
+          <li>Rounds 1 to 30 down column <code>A</code>. In <code>B5</code> put <code>=$B$1</code>, and in <code>B6</code> put <code>=B5*$B$2</code>, filled down. Column <code>C</code> is the running total: <code>=SUM($B$5:B5)</code>, filled down.</li>
+          <li>Chart column C. It approaches a ceiling. Compare that ceiling with <code>=B1/(1-B2)</code>.</li>
+          <li>Ask how long convergence takes. <code>=MATCH(TRUE,INDEX(C5:C34&gt;=0.9*$B$1/(1-$B$2),0),0)</code> gives the round at which 90% of the total has arrived. Raise the propensity to consume and watch the answer grow — a bigger multiplier is also a slower one, which is a real limitation of fiscal policy that the formula alone hides.</li>
+          <li>Add leakage. Replace <code>$B$2</code> with <code>$B$2*(1-tax rate-import share)</code> and rerun. That is closer to what an applied economist would actually use.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ================= 6-3 ================= -->
+    <section class="block" id="s63">
+      <span class="section-num">6-3</span>
+      <h2>Aggregate Supply</h2>
+      <p>Aggregate demand says what buyers want. Aggregate supply says what producers will deliver at each price level, and the shape of that relationship is where the disagreements in macroeconomics live.</p>
+
+      <h3 id="s63a">6-3a &nbsp;Keynes's original curve</h3>
+      <p>In its starkest form the Keynesian supply curve is horizontal up to full employment and vertical after. Below capacity there are idle workers and idle machines, so any extra demand is met by producing more at unchanged prices. Once everything is in use, extra demand cannot produce anything more and lands entirely on prices.</p>
+      <p>Written as a policy conclusion: in a deep slump, stimulus raises output and does not raise inflation; at full employment, stimulus raises inflation and does not raise output. As a description of 1933 that is not far wrong.</p>
+
+      <h3 id="s63b">6-3b &nbsp;The three-part curve</h3>
+      <p>The corner is too sharp. Economies do not run at exactly full capacity or exactly zero; some industries hit bottlenecks while others still have slack. Softening the corner gives the standard three-part curve:</p>
+      <ul>
+        <li>A <strong>flat range</strong> at low output, where slack is general and extra demand raises quantity, not price.</li>
+        <li>An <strong>upward-sloping range</strong> in between, where some sectors are tight and others are not, so extra demand raises both.</li>
+        <li>A <strong>vertical range</strong> at capacity, where extra demand raises only prices.</li>
+      </ul>
+      <p>The practical consequence is that the effect of any demand policy depends on where the economy currently sits. The same stimulus is nearly costless in the flat range and purely inflationary in the vertical one, and the hard part of policymaking is that nobody knows in real time which range they are in.</p>
+    </section>
+
+    <!-- ================= 6-4 ================= -->
+    <section class="block" id="s64">
+      <span class="section-num">6-4</span>
+      <h2>The Rational Expectations Approach</h2>
+
+      <h3 id="s64a">6-4a &nbsp;Changing the assumptions</h3>
+      <p>The 1970s broke the simple version. Inflation and unemployment rose together, which the demand-side story could not produce, and policies designed to exploit a stable inflation-unemployment trade-off stopped working the moment they were relied upon.</p>
+      <p>The diagnosis was that the framework treated people's expectations as fixed. If workers and firms form expectations by looking backwards, a government can surprise them repeatedly. If they form expectations using everything they know — including their knowledge of what the government is likely to do — then only <em>unanticipated</em> policy has real effects, and anticipated policy is absorbed into prices before it can move output.</p>
+
+      <h3 id="s64b">6-4b &nbsp;Short-run and long-run aggregate supply</h3>
+      <p>What survives is a two-curve treatment that is now standard.</p>
+      <p><strong>Long-run aggregate supply</strong> is vertical at potential output. Potential output is determined by the labour force, the capital stock and productivity — real things. Money does not appear in that list, which is why money is neutral in the long run: doubling the money supply doubles prices and changes nothing real.</p>
+      <p><strong>Short-run aggregate supply</strong> slopes upward, because some prices and wages are fixed by contract in the short term, and because producers can briefly mistake a general rise in prices for a rise in the price of their own product and produce more.</p>
+      <p>The distinction between them does the work. Demand shocks move output away from potential in the short run; over time, wages and expectations adjust, the short-run curve shifts, and output returns to potential with only the price level permanently changed. Use the diagram to run that sequence yourself.</p>
+
+      <figure class="chart" id="fig-adas">
+        <figcaption>Aggregate demand and aggregate supply</figcaption>
+        <div class="sub">Choose a shock, then let expectations adjust and watch where the economy ends up.</div>
+        <div class="controls">
+          <div class="pair">
+            <span class="lbl">Shock</span>
+            <div class="grp" data-toggle="shock" style="flex-wrap:wrap">
+              <button data-value="none" aria-pressed="true">None</button>
+              <button data-value="demandUp">Demand rises</button>
+              <button data-value="demandDown">Demand collapses</button>
+              <button data-value="money">Money supply expands</button>
+              <button data-value="supplyShock">Oil price shock</button>
+              <button data-value="productivity">Productivity improves</button>
+            </div>
+          </div>
+          <div class="pair">
+            <span class="lbl">Run</span>
+            <div class="grp" data-toggle="horizon">
+              <button data-value="short" aria-pressed="true">Short run</button>
+              <button data-value="long">Let it adjust</button>
+            </div>
+          </div>
+        </div>
+        <div class="canvas-box" style="height:360px">
+          <canvas id="cv-adas"></canvas>
+        </div>
+        <div class="box data" style="margin-top:16px">
+          <div class="box-title">What just happened</div>
+          <p style="margin:0;font-size:.94rem" id="adas-text">Pick a shock. The economy starts at potential output with the price level at 100.</p>
+        </div>
+      </figure>
+    </section>
+
+    <!-- ================= 6-5 ================= -->
+    <section class="block" id="s65">
+      <span class="section-num">6-5</span>
+      <h2>Business Cycles</h2>
+
+      <h3 id="s65a">6-5a &nbsp;Putting the three curves together</h3>
+      <p>With aggregate demand, short-run supply and long-run supply on one diagram, a business cycle is a sequence rather than a state.</p>
+      <p>A negative demand shock moves the economy left along the short-run supply curve. Output falls below potential and the gap between them — the <strong>output gap</strong> — is negative. Unemployment rises above its sustainable rate. Over time, weak demand pushes wages and expected inflation down, the short-run curve shifts down and right, and output returns to potential at a lower price level. A boom is the same story with the signs reversed.</p>
+      <p>The output gap is not observed. Actual output is measured; potential is estimated, and every estimate embeds a judgement about what the economy is capable of. The chart below shows the crudest possible version, deliberately: real output against a single constant-growth line fitted to eighty years of its own history. Read the caution underneath before drawing any conclusion from it.</p>
+
+      <figure class="chart" id="fig-gap">
+        <figcaption>Output and its trend</figcaption>
+        <div class="sub">Real GDP against an exponential trend fitted to the whole sample, and the gap between them.</div>
+        <div class="controls">
+          <div class="pair">
+            <span class="lbl">View</span>
+            <div class="grp" data-toggle="view">
+              <button data-value="level" aria-pressed="true">Output and trend</button>
+              <button data-value="gap">The gap</button>
+            </div>
+          </div>
+        </div>
+        <div class="canvas-box">
+          <canvas id="cv-gap"></canvas>
+          <div class="chart-status">Loading live data…</div>
+        </div>
+        <p class="source-line" id="gap-note"></p>
+        <p class="source-line">Bureau of Economic Analysis, real GDP, quarterly, chained dollars. The trend is a least-squares fit to the logarithm of output, which is a constant growth rate. Shaded bands are recessions dated by the National Bureau of Economic Research. FRED equivalent: <a href="https://fred.stlouisfed.org/series/GDPC1" target="_blank" rel="noopener">GDPC1</a>.</p>
+      </figure>
+
+      <div class="box note">
+        <div class="box-title">Do not mistake this for potential output</div>
+        <p style="margin:0">A straight line through log output assumes the economy's capacity grows at one constant rate for eighty years, which it plainly does not: productivity growth was faster in the 1960s than in the 2010s. Official estimates of potential output use far more structure, and they get revised heavily after the fact, which is a polite way of saying that nobody knew the gap at the time. Treat this chart as a way of seeing cycles, not as a measurement of slack. The habit of asking "what does this line assume?" is worth more than the line.</p>
+      </div>
+
+      <h3 id="s65b">6-5b &nbsp;How fast do gaps close?</h3>
+      <p>If the economy self-corrects, the policy question is only about speed. Keynes's answer was that the adjustment is slow enough not to wait for, and the classic reply to those who counselled patience was that in the long run we are all dead.</p>
+      <p>The empirical record supports the concern. Recoveries from deep recessions have taken years, and after 2008 output stayed below its previous trend for a decade. Whether that reflects slow adjustment or a genuine fall in potential is still argued about, and the two are extremely hard to tell apart in real time.</p>
+      <p>The relationship most often used to connect the output gap to inflation is the Phillips curve: when unemployment is low, inflation tends to be higher. The chart below plots it decade by decade, because plotting the whole sample at once hides the thing worth seeing.</p>
+
+      <figure class="chart" id="fig-phillips">
+        <figcaption>Inflation and unemployment, decade by decade</figcaption>
+        <div class="sub">12-month CPI inflation against the unemployment rate, monthly.</div>
+        <div class="controls">
+          <div class="pair">
+            <span class="lbl">Decade</span>
+            <div class="grp" data-toggle="decade" style="flex-wrap:wrap">
+              <button data-value="all" aria-pressed="true">All</button>
+              <button data-value="1950">1950s</button>
+              <button data-value="1960">1960s</button>
+              <button data-value="1970">1970s</button>
+              <button data-value="1980">1980s</button>
+              <button data-value="1990">1990s</button>
+              <button data-value="2000">2000s</button>
+              <button data-value="2010">2010s</button>
+              <button data-value="2020">2020s</button>
+            </div>
+          </div>
+        </div>
+        <div class="canvas-box">
+          <canvas id="cv-phillips"></canvas>
+          <div class="chart-status">Loading live data…</div>
+        </div>
+        <p class="source-line" id="phillips-note"></p>
+        <p class="source-line">Bureau of Labor Statistics: unemployment rate, seasonally adjusted, and CPI-U all items. FRED equivalents: <a href="https://fred.stlouisfed.org/series/UNRATE" target="_blank" rel="noopener">UNRATE</a>, <a href="https://fred.stlouisfed.org/series/CPIAUCSL" target="_blank" rel="noopener">CPIAUCSL</a>.</p>
+      </figure>
+
+      <p>Step through the decades and the honest result is messier than the textbook version, which is why it is worth doing. The 1960s give the picture the theory predicts: a clean downward slope, tight and unmistakable. Then it falls apart. Through the 1970s and 1980s the slope is flat or slightly <em>upward</em> — higher unemployment came with higher inflation, the opposite of the trade-off. The 1990s look upward too. The 2000s slope down again, and so do the 2020s. Put every month since 1948 on one chart and the relationship vanishes entirely into a cloud.</p>
+      <p>That is not a failure of the data; it is the mechanism of section 6-4 showing up exactly where the theory says it should. A short-run trade-off exists <em>for a given state of expected inflation</em>. When expectations move, the whole curve moves with them, and a scatter that pools decades is averaging across a curve that has been sliding around the plane the entire time.</p>
+      <p>The historical episode is worth stating plainly, because it is the most expensive lesson in the subject. Policymakers in the 1960s looked at a scatter like the one this chart draws for that decade and read it as a stable menu: pick a point, accept the inflation, enjoy the employment. Acting on it changed what people expected, the curve shifted up, and the following decade delivered higher inflation <em>and</em> higher unemployment. A relationship estimated while nobody was exploiting it did not survive being exploited — which is a warning that reaches well beyond this one chart.</p>
+    </section>
+
+    <!-- ================= 6-6 ================= -->
+    <section class="block" id="s66">
+      <span class="section-num">6-6</span>
+      <h2>Modern Business Cycle Models</h2>
+
+      <h3 id="s66a">6-6a &nbsp;Real business cycle models</h3>
+      <p>One response to the 1970s was to abandon demand as the driver altogether. Real business cycle models treat fluctuations as the efficient response of a well-functioning economy to real shocks, chiefly to productivity. A bad technology draw makes work less rewarding, people choose to work less, output falls, and nothing has gone wrong that policy should fix.</p>
+      <p>The framework's lasting contribution is methodological rather than substantive: it insisted that macroeconomic models be built from explicit assumptions about how households and firms behave, so that the model does not fall apart when policy changes. Its substantive claim is hard to accept. It requires large negative productivity shocks to explain recessions, and it is difficult to say what technology the economy forgot in 2008.</p>
+
+      <h3 id="s66b">6-6b &nbsp;Dynamic stochastic general equilibrium models</h3>
+      <p>The current workhorse takes the real-business-cycle machinery and adds back the frictions that make demand matter: prices that adjust slowly, wages set in staggered contracts, and financial markets that do not work perfectly. The result is a class of models where monetary policy has real effects in the short run and none in the long run, which is the two-curve story of section 6-4 written down with enough precision to simulate.</p>
+      <p>They are used by every major central bank and they were criticised heavily after 2008, largely for containing a financial sector too simple to break. Most now include one.</p>
+
+      <h3 id="s66c">6-6c &nbsp;Where this is going</h3>
+      <p>Three directions are visible. Models increasingly track the <strong>distribution</strong> of households rather than a single representative one, because a dollar reaching a household with no savings does something different from a dollar reaching one with plenty. They take <strong>financial frictions</strong> seriously as a source of shocks rather than a channel for them. And they increasingly relax <strong>rational expectations</strong> in favour of learning and limited attention, which fits the survey evidence better.</p>
+      <p>None of that changes the diagram in section 6-4. It changes what sits behind each curve, which is where the interesting work has always been.</p>
+    </section>
+
+    <!-- ================= 6-7 ================= -->
+    <section class="block" id="s67">
+      <span class="section-num">6-7</span>
+      <h2>Conclusion</h2>
+      <p><strong>Demand determines output in the short run; supply determines it in the long run.</strong> Everything else in the chapter is a qualification of that sentence.</p>
+      <p><strong>Money reaches output through aggregate demand.</strong> A central bank changes interest rates, which changes investment and interest-sensitive consumption, which moves the curve. The connection to Chapters 3 and 4 is not decorative.</p>
+      <p><strong>Where you are on the supply curve decides what a policy does.</strong> The same stimulus raises output in a slump and prices at capacity, and nobody knows in real time which range they are in.</p>
+      <p><strong>Expectations move the curves.</strong> A relationship estimated under one set of expectations will not survive being exploited, which is the lesson the Phillips scatter teaches better than any argument.</p>
+      <p><strong>Multipliers are real and smaller than the formula.</strong> Leakage and crowding out both bite, and the size depends on the state of the economy and on what interest rates are doing.</p>
+      <p>What this chapter has taken for granted is the institution that sets the interest rate in the first place. Every shift labelled "the money supply expands" was somebody's decision. Part 3 of a money-and-banking course is about who makes it and how.</p>
+    </section>
+
+    <section class="block" id="data">
+      <h2>Data for this chapter</h2>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Series</th><th>Source release</th><th>Frequency</th><th>Download</th></tr></thead>
+          <tbody>
+            <tr><td>Nominal GDP and its components</td><td>BEA, NIPA table 1.1.5</td><td>Quarterly</td><td><a href="https://fred.stlouisfed.org/series/GDP" target="_blank" rel="noopener">GDP</a></td></tr>
+            <tr><td>Real GDP, chained dollars</td><td>BEA, NIPA table 1.1.6</td><td>Quarterly</td><td><a href="https://fred.stlouisfed.org/series/GDPC1" target="_blank" rel="noopener">GDPC1</a></td></tr>
+            <tr><td>Personal consumption expenditures</td><td>BEA, NIPA table 1.1.5</td><td>Quarterly</td><td><a href="https://fred.stlouisfed.org/series/PCEC" target="_blank" rel="noopener">PCEC</a></td></tr>
+            <tr><td>Gross private domestic investment</td><td>BEA, NIPA table 1.1.5</td><td>Quarterly</td><td><a href="https://fred.stlouisfed.org/series/GPDI" target="_blank" rel="noopener">GPDI</a></td></tr>
+            <tr><td>Government consumption and investment</td><td>BEA, NIPA table 1.1.5</td><td>Quarterly</td><td><a href="https://fred.stlouisfed.org/series/GCE" target="_blank" rel="noopener">GCE</a></td></tr>
+            <tr><td>Net exports of goods and services</td><td>BEA, NIPA table 1.1.5</td><td>Quarterly</td><td><a href="https://fred.stlouisfed.org/series/NETEXP" target="_blank" rel="noopener">NETEXP</a></td></tr>
+            <tr><td>Unemployment rate</td><td>BLS, Current Population Survey</td><td>Monthly</td><td><a href="https://fred.stlouisfed.org/series/UNRATE" target="_blank" rel="noopener">UNRATE</a></td></tr>
+            <tr><td>Consumer price index, all items</td><td>BLS, CPI-U</td><td>Monthly</td><td><a href="https://fred.stlouisfed.org/series/CPIAUCSL" target="_blank" rel="noopener">CPIAUCSL</a></td></tr>
+            <tr><td>M2 money stock</td><td>Federal Reserve H.6</td><td>Monthly</td><td><a href="https://fred.stlouisfed.org/series/M2SL" target="_blank" rel="noopener">M2SL</a></td></tr>
+            <tr><td>Recession dates</td><td>National Bureau of Economic Research</td><td>Monthly</td><td><a href="https://www.nber.org/research/business-cycle-dating" target="_blank" rel="noopener">Business cycle dating</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="box excel">
+        <div class="box-title">Two exercises worth doing</div>
+        <ol class="steps">
+          <li><strong>Fit your own trend.</strong> Download <a href="https://fred.stlouisfed.org/series/GDPC1" target="_blank" rel="noopener">GDPC1</a>. Put quarter numbers 1, 2, 3… in <code>C</code> and <code>=LN(B2)</code> in <code>D</code>. Then <code>=SLOPE(D:D,C:C)</code> and <code>=INTERCEPT(D:D,C:C)</code> give a constant growth trend; <code>=EXP(intercept+slope*C2)</code> is the fitted level, and <code>=B2/fitted-1</code> is the gap. Now refit using only data up to 2007 and extend the line forward. The two versions disagree by a great deal after 2009, and the disagreement is the entire debate about whether the crisis destroyed capacity.</li>
+          <li><strong>Rebuild the Phillips scatter.</strong> Download <a href="https://fred.stlouisfed.org/series/UNRATE" target="_blank" rel="noopener">UNRATE</a> and <a href="https://fred.stlouisfed.org/series/CPIAUCSL" target="_blank" rel="noopener">CPIAUCSL</a>. Compute 12-month inflation, then use <code>=INT(YEAR(A2)/10)*10</code> to tag each month with its decade. Make one scatter per decade with <strong>Insert → Scatter</strong> and add a trendline to each. Write down the slope for every decade in a small table. That table is the honest version of the Phillips curve.</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="pager">
+      <a href="chapter-05.html"><span class="dir">Previous</span>5 · Financial Markets through Time</a>
+      <a href="index.html" style="text-align:right"><span class="dir">Back to</span>Contents</a>
+    </div>
+
+  </article>
+</div>
+</div>
+
+<footer class="site">
+  <div class="wrap">
+    <p><strong>Money &amp; Banking with Live Data.</strong> Original explanations and exercises; section headings follow the standard organisation of an undergraduate money-and-banking course. No textbook text is reproduced.</p>
+    <p>Data via the Bureau of Economic Analysis, the Bureau of Labor Statistics and the Federal Reserve Board, retrieved through <a href="https://db.nomics.world/" target="_blank" rel="noopener">DBnomics</a> and the <a href="https://www.bls.gov/developers/" target="_blank" rel="noopener">BLS public API</a>. Charts drawn with <a href="https://www.chartjs.org/" target="_blank" rel="noopener">Chart.js</a>.</p>
+  </div>
+</footer>
+
+<script src="assets/js/chart.umd.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/charts.js"></script>
+<script src="assets/js/ch06.js"></script>
+</body>
+</html>

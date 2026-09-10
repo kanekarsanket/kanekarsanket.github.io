@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 4 · Interest Rates in More Detail</title>
+<meta name="description" content="Why two bonds issued on the same day carry different yields: default risk, inflation, taxes and maturity — with a live yield curve, calculators and Excel walkthroughs.">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="brand" href="index.html">Money &amp; Banking <span>with Live Data</span></a>
+    <nav>
+      <a href="chapter-01.html">1</a>
+      <a href="chapter-02.html">2</a>
+      <a href="chapter-03.html">3</a>
+      <a href="chapter-04.html" class="here">4</a>
+      <a href="chapter-05.html">5</a>
+      <a href="chapter-06.html">6</a>
+      <a href="index.html#data">Data sources</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Chapter 4</p>
+    <h1>Interest Rates<br>in More Detail</h1>
+    <p class="lede">Chapter 3 spoke of "the" interest rate. On any given morning there are thousands, and the differences between them are not noise. Four things explain nearly all of the spread: who is borrowing, what inflation will do, how the interest is taxed, and how long the money is tied up.</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="stats" id="stat-strip" style="margin-top:30px">
+    <div class="stat"><div class="label">3-month Treasury</div><div class="value loading" data-stat="t3m">loading…</div><div class="meta" data-stat="t3m-meta">&nbsp;</div></div>
+    <div class="stat"><div class="label">2-year Treasury</div><div class="value loading" data-stat="t2">loading…</div><div class="meta" data-stat="t2-meta">&nbsp;</div></div>
+    <div class="stat"><div class="label">10-year Treasury</div><div class="value loading" data-stat="t10">loading…</div><div class="meta" data-stat="t10-meta">&nbsp;</div></div>
+    <div class="stat"><div class="label">10y minus 2y</div><div class="value loading" data-stat="sp2">loading…</div><div class="meta" data-stat="sp2-meta">&nbsp;</div></div>
+    <div class="stat"><div class="label">10y minus 3m</div><div class="value loading" data-stat="sp3">loading…</div><div class="meta" data-stat="sp3-meta">&nbsp;</div></div>
+    <div class="stat"><div class="label">Curve shape</div><div class="value loading" data-stat="shape">loading…</div><div class="meta" data-stat="shape-meta">&nbsp;</div></div>
+  </div>
+  <p class="source-line">Live figures, refreshed each time this page loads. Source: Federal Reserve H.15, Selected Interest Rates.</p>
+</div>
+
+<div class="wrap">
+<div class="chapter">
+
+  <aside class="toc">
+    <h4>In this chapter</h4>
+    <ol>
+      <li><a href="#s41">4-1 &nbsp;Default Risk</a></li>
+      <li><a class="sub" href="#s41a">4-1a &nbsp;Default Risk</a></li>
+      <li><a class="sub" href="#s41b">4-1b &nbsp;Calculating the premium</a></li>
+      <li><a class="sub" href="#s41c">4-1c &nbsp;Comparing instruments</a></li>
+      <li><a href="#s42">4-2 &nbsp;Real versus Nominal</a></li>
+      <li><a class="sub" href="#s42a">4-2a &nbsp;Why inflation worries lenders</a></li>
+      <li><a class="sub" href="#s42b">4-2b &nbsp;Real versus nominal rates</a></li>
+      <li><a class="sub" href="#s42c">4-2c &nbsp;Ex ante and ex post</a></li>
+      <li><a href="#s43">4-3 &nbsp;Taxes</a></li>
+      <li><a class="sub" href="#s43a">4-3a &nbsp;Before and after tax</a></li>
+      <li><a class="sub" href="#s43b">4-3b &nbsp;Municipal bonds</a></li>
+      <li><a href="#s44">4-4 &nbsp;Yield Curves</a></li>
+      <li><a class="sub" href="#s44a">4-4a &nbsp;The graph</a></li>
+      <li><a class="sub" href="#s44b">4-4b &nbsp;Three facts to explain</a></li>
+      <li><a class="sub" href="#s44c">4-4c &nbsp;Pure expectations</a></li>
+      <li><a class="sub" href="#s44d">4-4d &nbsp;Term premium</a></li>
+      <li><a class="sub" href="#s44e">4-4e &nbsp;Segmented markets</a></li>
+      <li><a href="#s45">4-5 &nbsp;Yield Curve Applications</a></li>
+      <li><a href="#s46">4-6 &nbsp;Conclusion</a></li>
+      <li><a href="#data">Data for this chapter</a></li>
+    </ol>
+  </aside>
+
+  <article>
+
+    <!-- ================= 4-1 ================= -->
+    <section class="block" id="s41">
+      <span class="section-num">4-1</span>
+      <h2>Interest Rates in More Detail, and Default Risk</h2>
+      <p>Two bonds are issued on the same Tuesday. Both promise $1,000 in five years and $45 a year in the meantime. One is issued by the United States Treasury and the other by a regional hospital system. They do not trade at the same price, and no amount of arithmetic from Chapter 3 explains why, because the arithmetic assumes the payments arrive.</p>
+      <p>The gap between those two prices is the subject of this chapter. It has four sources, and they are worth naming up front so that the sections have somewhere to hang:</p>
+      <ul>
+        <li><strong>Default risk</strong> — the borrower may not pay.</li>
+        <li><strong>Inflation</strong> — the dollars may be worth less when they arrive.</li>
+        <li><strong>Taxes</strong> — the interest may or may not be taken by the tax authority.</li>
+        <li><strong>Maturity</strong> — the money may be tied up for a month or for thirty years.</li>
+      </ul>
+      <p>The first three are the <strong>risk structure</strong> of interest rates: why bonds of the same maturity differ. The fourth is the <strong>term structure</strong>: why bonds from the same issuer differ. Sections 4-1 to 4-3 do the risk structure; 4-4 and 4-5 do the term structure.</p>
+
+      <h3 id="s41a">4-1a &nbsp;Default Risk</h3>
+      <p><strong>Default risk is the possibility that a borrower fails to make a promised payment.</strong> The word "promised" is doing quiet work. A bond's yield to maturity, as computed in Chapter 3, is a <em>promised</em> yield: the return you get if every payment arrives on schedule. Lenders do not care about promised returns. They care about expected ones, and the two diverge whenever default is possible.</p>
+      <p>Because lenders are compensated for bearing that gap, a risky bond must promise more than a safe one to attract the same money. The extra promise is the <strong>default risk premium</strong>:</p>
+      <pre><code>default risk premium  =  yield on the risky bond  −  yield on a comparable safe bond</code></pre>
+      <p>"Comparable" means same maturity, same tax treatment, similar liquidity. Otherwise you are measuring several things at once and calling the total a risk premium, which is the most common mistake in this corner of finance.</p>
+      <p>Treasury securities are the reference point because the federal government borrows in a currency it also issues, so an involuntary default is a policy choice rather than an inability to pay. Their yields are conventionally called risk free, which is accurate about default and, as Chapter 3 showed, wildly inaccurate about price risk.</p>
+
+      <h3 id="s41b">4-1b &nbsp;Calculating the premium</h3>
+      <p>Where does the size of the premium come from? From two numbers a lender has to guess: how likely default is, and how much is recovered if it happens.</p>
+      <p>Take a one-year bond promising $1,000. Suppose there is a 4% chance the issuer fails, and that in failure the lender recovers 40 cents on the dollar. Expected repayment is</p>
+      <pre><code>0.96 × $1,000  +  0.04 × $400  =  $976</code></pre>
+      <p>For the lender to expect the same 4.5% return available on a Treasury bill, the bond has to be priced so that $976 discounted at 4.5% equals the price. Work backwards and the <em>promised</em> yield turns out to be roughly 7% — about two and a half points above the safe rate. That gap is the default risk premium, and it is compensation for an outcome that most of the time does not happen.</p>
+      <p>Try it with your own numbers. Notice how quickly the premium grows once recovery is poor, and how little default probability alone tells you without it.</p>
+
+      <figure class="chart" id="fig-drp">
+        <figcaption>Default risk premium calculator</figcaption>
+        <div class="sub">What a risky borrower must promise to offer the same expected return as a Treasury.</div>
+        <div class="calc">
+          <div>
+            <div class="field">
+              <label for="d-safe">Safe (Treasury) yield: <span id="d-safe-out">4.5%</span></label>
+              <input type="range" id="d-safe" min="0" max="12" step="0.1" value="4.5">
+              <div style="font-size:.76rem;color:var(--ink-faint);margin-top:5px" id="d-safe-note">&nbsp;</div>
+            </div>
+            <div class="field">
+              <label for="d-pd">Chance of default in the year: <span id="d-pd-out">4%</span></label>
+              <input type="range" id="d-pd" min="0" max="40" step="0.5" value="4">
+            </div>
+            <div class="field">
+              <label for="d-rec">Recovered if it defaults: <span id="d-rec-out">40%</span></label>
+              <input type="range" id="d-rec" min="0" max="100" step="5" value="40">
+            </div>
+            <div class="readout">
+              <div class="label">Promised yield required</div>
+              <div class="big" id="d-yield">—</div>
+              <div class="small" id="d-premium">&nbsp;</div>
+            </div>
+            <div style="font-size:.85rem;color:var(--ink-soft);margin-top:12px" id="d-detail">&nbsp;</div>
+          </div>
+          <div class="canvas-box" style="height:300px">
+            <canvas id="cv-drp"></canvas>
+          </div>
+        </div>
+        <p class="source-line">A deliberately simple one-year model: it ignores risk aversion, which pushes the required premium higher still, and it assumes the lender's estimates are right. The safe yield is seeded with the current one-year Treasury.</p>
+      </figure>
+
+      <div class="box note">
+        <div class="box-title">A premium is not a forecast</div>
+        <p style="margin:0">A bond promising three points over Treasuries is not predicting a three-point loss. Most risky bonds pay in full, and the lenders who hold a diversified portfolio of them earn the premium as profit. The premium compensates for a distribution, not an expectation, and the difference between those two ideas is what most of modern finance is about.</p>
+      </div>
+
+      <h3 id="s41c">4-1c &nbsp;Comparing different instruments</h3>
+      <p>Ranking borrowers by default risk is a large industry. Three rating agencies publish letter grades, and the boundary that matters most falls between the top four grades and everything below.</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Grade band</th><th>Meaning</th><th>Who is in it</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Investment grade</strong><br><span style="color:var(--ink-faint);font-size:.88em">the top four notches</span></td><td>Default is unlikely over the life of the bond</td><td>Sovereigns, utilities, most large established firms</td></tr>
+            <tr><td><strong>Speculative grade</strong><br><span style="color:var(--ink-faint);font-size:.88em">informally, junk</span></td><td>Default is a live possibility and the yield says so</td><td>Highly leveraged firms, young firms, firms in trouble</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The line is not merely descriptive. Many pension funds and insurers are required, by mandate or regulation, to hold only investment-grade paper. A downgrade across that boundary forces selling by institutions that would otherwise have held on, which is why the yield gap widens sharply at exactly that point rather than smoothly across the scale.</p>
+      <p>Ratings are opinions, and they lag. They were catastrophically wrong about structured mortgage products before 2008, and they are typically revised after the market has already repriced the bond. Treat a rating as a summary of what is publicly known, not as a measurement.</p>
+
+      <div class="box excel">
+        <div class="box-title">Measure a credit spread in Excel</div>
+        <p style="font-size:.94rem;margin-bottom:12px">Corporate bond yields are not available through the free data services this site's charts use, so this one is a download-and-build exercise. It is worth doing, because the resulting chart is one of the best fear gauges in finance.</p>
+        <ol class="steps">
+          <li>Download <a href="https://fred.stlouisfed.org/series/AAA" target="_blank" rel="noopener">AAA</a> and <a href="https://fred.stlouisfed.org/series/BAA" target="_blank" rel="noopener">BAA</a> from FRED — Moody's seasoned corporate bond yields, monthly back to 1919.</li>
+          <li>Also download <a href="https://fred.stlouisfed.org/series/GS10" target="_blank" rel="noopener">GS10</a>, the 10-year Treasury, as the safe benchmark.</li>
+          <li>Lay them out as <code>A</code> = date, <code>B</code> = Aaa, <code>C</code> = Baa, <code>D</code> = Treasury. In <code>E2</code> write <code>=C2-B2</code>: the extra yield on medium-grade over high-grade corporates. In <code>F2</code> write <code>=C2-D2</code>: the full premium over Treasuries.</li>
+          <li>Chart E and F against the dates. Every episode of financial stress in the last century appears as a spike, and the 1930s spike dwarfs everything since.</li>
+          <li>Compare quietly across regimes: <code>=AVERAGE(E:E)</code> over the 1950s versus the 2000s. The average spread is not a constant of nature.</li>
+          <li>Then test whether spreads lead the cycle. Line up column F against the unemployment rate (<a href="https://fred.stlouisfed.org/series/UNRATE" target="_blank" rel="noopener">UNRATE</a>) shifted forward six months, and run <code>=CORREL()</code> at several different shifts. That is the same lead-lag exercise as Chapter 2's money-and-inflation chart, applied to a different pair.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ================= 4-2 ================= -->
+    <section class="block" id="s42">
+      <span class="section-num">4-2</span>
+      <h2>Real versus Nominal: The Role of Inflation</h2>
+
+      <h3 id="s42a">4-2a &nbsp;Why inflation worries lenders</h3>
+      <p>A lender hands over purchasing power and gets back dollars. If prices have risen in between, the dollars buy less than the purchasing power that was lent, and part of the interest is not income at all but a refund of value that inflation removed.</p>
+      <p>Nothing about this is subtle, and yet it is where most confusion about interest rates lives, because the number quoted on every loan document in the world is the one that ignores it.</p>
+
+      <h3 id="s42b">4-2b &nbsp;Real versus nominal interest rates</h3>
+      <p>The <strong>nominal rate</strong> is what is quoted. The <strong>real rate</strong> is what the lender earns in goods. Chapter 2 gave the approximation and Chapter 3 gave it a name; here is the exact version alongside it.</p>
+      <pre><code>approximate:   r  ≈  i  −  π
+exact:         r  =  (1 + i) / (1 + π)  −  1</code></pre>
+      <p>At ordinary rates the two agree to within a rounding error. At high inflation they do not: with a nominal rate of 60% and inflation of 50%, the approximation says 10% and the exact formula says 6.7%. If you ever work on an economy with serious inflation, use the division.</p>
+
+      <h3 id="s42c">4-2c &nbsp;Ex ante and ex post</h3>
+      <p>Now the distinction that actually matters, and the reason this section exists as its own subsection rather than a footnote.</p>
+      <p>When a loan is agreed, nobody knows what inflation will be. The lender and borrower bargain over a nominal rate using the inflation they <em>expect</em>. That gives the <strong>ex ante</strong> real rate — the one both sides thought they were agreeing to:</p>
+      <pre><code>ex ante real rate  =  nominal rate  −  expected inflation</code></pre>
+      <p>Later, the inflation that actually happened is known, and the <strong>ex post</strong> real rate is whatever the lender in fact earned:</p>
+      <pre><code>ex post real rate  =  nominal rate  −  realised inflation</code></pre>
+      <p>These are different numbers, and the gap between them is the entire economics of unexpected inflation. When inflation comes in above what was expected, borrowers win and lenders lose, by exactly the size of the surprise. No policy decision transfers wealth between debtors and creditors as efficiently, or as quietly, as an inflation surprise.</p>
+      <p>The chart below shows all three series at once. The ex ante real rate is read off the inflation-protected Treasury market, as Chapter 3 explained; the ex post one is computed after the fact. Where they diverge, someone was wrong.</p>
+
+      <figure class="chart" id="fig-exante">
+        <figcaption>The real interest rate, before and after the fact</figcaption>
+        <div class="sub">The nominal 10-year Treasury yield, the real yield the market expected, and the real return that inflation actually delivered.</div>
+        <div class="controls">
+          <div class="pair">
+            <span class="lbl">Show</span>
+            <div class="grp" data-toggle="view">
+              <button data-value="all" aria-pressed="true">All three</button>
+              <button data-value="gap">The surprise only</button>
+            </div>
+          </div>
+        </div>
+        <div class="canvas-box">
+          <canvas id="cv-exante"></canvas>
+          <div class="chart-status">Loading live data…</div>
+        </div>
+        <p class="source-line">Nominal and inflation-indexed 10-year Treasury constant maturities, Federal Reserve H.15. Realised inflation is the 12-month change in CPI-U, all items, seasonally adjusted. The ex-post real rate here compares a ten-year yield with a one-year inflation outcome, which is a rough but standard shorthand; a strict comparison would wait ten years. FRED equivalents: <a href="https://fred.stlouisfed.org/series/GS10" target="_blank" rel="noopener">GS10</a>, <a href="https://fred.stlouisfed.org/series/FII10" target="_blank" rel="noopener">FII10</a>, <a href="https://fred.stlouisfed.org/series/CPIAUCSL" target="_blank" rel="noopener">CPIAUCSL</a>.</p>
+      </figure>
+
+      <p>Switch to the surprise view and look at 2021 and 2022. The ex post real return on a ten-year Treasury went several points negative: lenders who bought at the prevailing nominal yield were repaid in dollars that had lost far more value than the market had priced in. Nobody defaulted. Every payment arrived on schedule. The loss came entirely from the gap between expected and realised inflation, which is the point of the section.</p>
+    </section>
+
+    <!-- ================= 4-3 ================= -->
+    <section class="block" id="s43">
+      <span class="section-num">4-3</span>
+      <h2>Taxes</h2>
+
+      <h3 id="s43a">4-3a &nbsp;Before- and after-tax returns</h3>
+      <p>Interest is income, and income is taxed. A lender in a 32% federal bracket earning 5% keeps 3.4%. The quoted yield is a before-tax number; the only one that buys anything is the after-tax number.</p>
+      <pre><code>after-tax yield  =  yield × (1 − tax rate)</code></pre>
+      <p>This looks trivial and is not, because different bonds are taxed differently, so a comparison of quoted yields can point the wrong way.</p>
+
+      <h3 id="s43b">4-3b &nbsp;Municipal bonds and taxes</h3>
+      <p>Interest on bonds issued by states and localities is generally exempt from federal income tax, and often from state tax for residents of the issuing state. The water authority from Chapter 3 was issuing exactly this kind of bond.</p>
+      <p>The consequence is that a municipal bond can pay a visibly lower yield than a corporate bond and still leave the lender better off. The comparison is made through the <strong>tax-equivalent yield</strong>: what a taxable bond would have to pay to match a given tax-free one.</p>
+      <pre><code>tax-equivalent yield  =  muni yield / (1 − tax rate)</code></pre>
+      <p>A 3.5% municipal bond, to an investor in a 35% bracket, is worth the same as a taxable bond paying 5.38%. To an investor who pays no tax at all — a pension fund, say — it is worth 3.5% and nothing more, which is why pension funds do not buy municipal bonds. <strong>The value of a tax exemption depends entirely on the bracket of whoever is holding it</strong>, and that single fact explains most of who owns what in the bond market.</p>
+
+      <figure class="chart" id="fig-tax">
+        <figcaption>Tax-equivalent yield</figcaption>
+        <div class="sub">What a taxable bond must pay to leave you as well off as a tax-free municipal bond.</div>
+        <div class="calc">
+          <div>
+            <div class="field">
+              <label for="t-muni">Municipal bond yield: <span id="t-muni-out">3.50%</span></label>
+              <input type="range" id="t-muni" min="0.5" max="8" step="0.05" value="3.5">
+            </div>
+            <div class="field">
+              <label for="t-rate">Your marginal tax rate: <span id="t-rate-out">35%</span></label>
+              <input type="range" id="t-rate" min="0" max="55" step="1" value="35">
+            </div>
+            <div class="field">
+              <label for="t-corp">A taxable bond is offering: <span id="t-corp-out">5.00%</span></label>
+              <input type="range" id="t-corp" min="0.5" max="12" step="0.05" value="5">
+            </div>
+            <div class="readout">
+              <div class="label">Tax-equivalent yield of the muni</div>
+              <div class="big" id="t-teq">—</div>
+              <div class="small" id="t-verdict">&nbsp;</div>
+            </div>
+          </div>
+          <div class="canvas-box" style="height:300px">
+            <canvas id="cv-tax"></canvas>
+          </div>
+        </div>
+        <p class="source-line">Federal marginal rates only; state and local treatment varies and can widen the advantage further. This is an illustration of the arithmetic, not tax advice.</p>
+      </figure>
+
+      <div class="box excel">
+        <div class="box-title">Do it in Excel</div>
+        <ol class="steps">
+          <li>Put the muni yield as a decimal in <code>B1</code> and your marginal rate in <code>B2</code>. The tax-equivalent yield is <code>=B1/(1-B2)</code>.</li>
+          <li>Build the whole table at once: brackets 0%, 12%, 22%, 24%, 32%, 35%, 37% down column <code>D</code>, and in <code>E1</code> write <code>=$B$1/(1-D1)</code>, filled down. One glance shows who the exemption is worth something to.</li>
+          <li>Reverse it. Given a taxable yield in <code>B3</code>, the break-even tax rate at which you should switch is <code>=1-B1/B3</code>. Below that rate take the taxable bond; above it take the muni.</li>
+          <li>Then add default risk back in. A municipal bond is not a Treasury, so subtract a plausible risk premium from the tax-equivalent yield before declaring a winner. The habit of adjusting for one thing at a time, in order, is most of what this chapter teaches.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ================= 4-4 ================= -->
+    <section class="block" id="s44">
+      <span class="section-num">4-4</span>
+      <h2>Yield Curves</h2>
+      <p>Hold the issuer, the tax treatment and the default risk fixed, and vary only the maturity. What is left is the term structure of interest rates, and its picture is the yield curve.</p>
+
+      <h3 id="s44a">4-4a &nbsp;The yield curve graph</h3>
+      <p>Maturity on the horizontal axis, yield on the vertical, one dot per available maturity, joined up. The Treasury market supplies eleven points from one month to thirty years, all from the same issuer with the same tax treatment and the same default risk, which is what makes it the cleanest term structure available anywhere.</p>
+      <p>Drag the slider below through the last forty years and watch the shape change. It is worth spending real time on this figure; almost everything in the rest of the chapter is a claim about what you are seeing.</p>
+
+      <figure class="chart" id="fig-curve">
+        <figcaption>The Treasury yield curve, on a date of your choosing</figcaption>
+        <div class="sub">Yields on U.S. Treasury securities from one month to thirty years, monthly averages.</div>
+        <div style="margin-bottom:8px">
+          <label for="c-date" style="display:block;font-size:.76rem;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin-bottom:5px">Month shown: <span id="c-date-out">—</span></label>
+          <input type="range" id="c-date" min="0" max="100" step="1" value="100" style="width:100%;accent-color:var(--accent)">
+        </div>
+        <div class="controls">
+          <div class="pair">
+            <span class="lbl">Compare with</span>
+            <div class="grp" data-toggle="compare">
+              <button data-value="none" aria-pressed="true">Nothing</button>
+              <button data-value="latest">Latest</button>
+              <button data-value="year">A year earlier</button>
+            </div>
+          </div>
+          <div class="pair">
+            <span class="lbl">Jump to</span>
+            <div class="grp" data-toggle="jump">
+              <button data-value="2000-05">2000</button>
+              <button data-value="2006-11">2006</button>
+              <button data-value="2012-01">2012</button>
+              <button data-value="2019-08">2019</button>
+              <button data-value="2023-07">2023</button>
+            </div>
+          </div>
+        </div>
+        <div class="canvas-box">
+          <canvas id="cv-curve"></canvas>
+          <div class="chart-status">Loading live data…</div>
+        </div>
+        <p class="source-line" id="curve-note"></p>
+        <p class="source-line">Federal Reserve H.15, Treasury constant maturities. Short maturities begin later than long ones: the 1-month series starts in 2001 and the 3- and 6-month in 1981, so early curves have fewer points. FRED equivalents: <a href="https://fred.stlouisfed.org/series/GS1M" target="_blank" rel="noopener">GS1M</a> through <a href="https://fred.stlouisfed.org/series/GS30" target="_blank" rel="noopener">GS30</a>.</p>
+      </figure>
+
+      <h3 id="s44b">4-4b &nbsp;Three facts a theory has to explain</h3>
+      <p>Play with the slider long enough and three regularities emerge. Any theory of the term structure has to account for all three, and the reason there are competing theories is that each one struggles with a different member of the list.</p>
+      <ul>
+        <li><strong>Rates at different maturities move together.</strong> When short rates rise, long rates usually rise too. The curve shifts more often than it twists.</li>
+        <li><strong>The curve usually slopes upward.</strong> Long yields exceed short ones most of the time, and the exceptions are rare and brief.</li>
+        <li><strong>When short rates are unusually low, the curve is steep; when they are unusually high, it is flat or inverted.</strong> The long end moves less than the short end.</li>
+      </ul>
+
+      <h3 id="s44c">4-4c &nbsp;Pure expectations theory</h3>
+      <p>The first explanation is the simplest: <strong>a long rate is an average of the short rates people expect over the same period.</strong></p>
+      <p>The argument is an arbitrage. If you have money for two years, you can buy a two-year bond, or buy a one-year bond and roll it into another one-year bond next year. If investors are indifferent between the two — which is the assumption doing all the work — the two strategies must offer the same expected return, so</p>
+      <pre><code>(1 + i₂)²  =  (1 + i₁) × (1 + expected i₁ next year)</code></pre>
+      <p>Rearranged, that says a two-year rate is roughly the average of this year's one-year rate and next year's expected one. The implication is remarkable: <strong>the yield curve contains the market's forecast of future short rates, and you can extract it.</strong> The calculator below does exactly that with live data.</p>
+
+      <figure class="chart" id="fig-forward">
+        <figcaption>What the curve implies about next year</figcaption>
+        <div class="sub">Under pure expectations, today's one- and two-year yields pin down the one-year rate the market expects a year from now.</div>
+        <div class="calc">
+          <div>
+            <div class="field">
+              <label for="f-i1">1-year yield today: <span id="f-i1-out">—</span></label>
+              <input type="range" id="f-i1" min="0" max="15" step="0.05" value="4">
+            </div>
+            <div class="field">
+              <label for="f-i2">2-year yield today: <span id="f-i2-out">—</span></label>
+              <input type="range" id="f-i2" min="0" max="15" step="0.05" value="4.2">
+              <div style="font-size:.76rem;color:var(--ink-faint);margin-top:5px" id="f-note">&nbsp;</div>
+            </div>
+            <div class="readout">
+              <div class="label">Implied 1-year rate, a year from now</div>
+              <div class="big" id="f-fwd">—</div>
+              <div class="small" id="f-verdict">&nbsp;</div>
+            </div>
+          </div>
+          <div class="canvas-box" style="height:300px">
+            <canvas id="cv-forward"></canvas>
+          </div>
+        </div>
+        <p class="source-line">Seeded with the latest 1-year and 2-year Treasury constant maturities from Federal Reserve H.15. The chart shows the two strategies the arbitrage compares: buy and hold for two years, or roll a one-year bond twice.</p>
+      </figure>
+
+      <p>Pure expectations explains fact one beautifully — if long rates are averages of short rates, everything moves together — and it explains fact three. It fails badly on fact two. If the curve were purely an average of expected short rates, it would slope up only when rates were expected to rise, which cannot be true most of the time. Something else is adding a persistent upward tilt.</p>
+
+      <h3 id="s44d">4-4d &nbsp;Term premium theory</h3>
+      <p>That something else is compensation for risk. Chapter 3 showed that a long bond's price moves violently when yields change; a lender who might need the money back early bears that risk, and wants paying for it. So a long rate is the expected average of short rates <em>plus a term premium</em> that grows with maturity.</p>
+      <pre><code>long rate  =  average of expected short rates  +  term premium</code></pre>
+      <p>This is the workhorse view, because it keeps everything pure expectations got right and adds the upward tilt that fact two demands. It also carries a warning that section 4-5 will need: an upward-sloping curve does <em>not</em> mean the market expects rates to rise. It may simply mean the term premium is positive, which it usually is.</p>
+
+      <h3 id="s44e">4-4e &nbsp;Segmented market theory</h3>
+      <p>A third view drops the arbitrage assumption altogether. Some investors are structurally short-horizon — a company parking cash for a quarter — and some are structurally long — a pension fund matching liabilities forty years out. If they do not switch between maturities in response to small yield differences, each maturity has its own supply and demand, and its own price.</p>
+      <p>In its pure form this is too strong: it predicts that yields at different maturities need not move together, and they plainly do. Its milder cousin, the preferred-habitat view, says investors have a favoured maturity but can be bribed out of it, which is really term premium theory with a supply-and-demand story for where the premium comes from. That milder version has real explanatory power: it is why large-scale central bank purchases of long bonds move long yields at all.</p>
+    </section>
+
+    <!-- ================= 4-5 ================= -->
+    <section class="block" id="s45">
+      <span class="section-num">4-5</span>
+      <h2>Yield Curve Applications</h2>
+      <p>Shapes have names, and each name is a claim about what the market expects.</p>
+
+      <h3 id="s45a">4-5a &nbsp;The inverted curve</h3>
+      <p>An <strong>inverted</strong> curve has short yields above long ones. Under the expectations logic this says the market expects short rates to fall, and short rates fall when the central bank cuts, and the central bank cuts when the economy weakens. So an inversion is, in effect, the bond market pricing in a downturn.</p>
+      <p>Its record as a signal is genuinely striking, and the chart below shows why it has the reputation it does.</p>
+
+      <figure class="chart" id="fig-spread">
+        <figcaption>Two measures of curve shape</figcaption>
+        <div class="sub">10-year minus 2-year, and 10-year minus 3-month, monthly. Shaded bands are recessions as dated by the National Bureau of Economic Research.</div>
+        <div class="canvas-box">
+          <canvas id="cv-spread"></canvas>
+          <div class="chart-status">Loading live data…</div>
+        </div>
+        <p class="source-line" id="spread-note"></p>
+        <p class="source-line">Federal Reserve H.15; recession dating by the National Bureau of Economic Research. FRED equivalents: <a href="https://fred.stlouisfed.org/series/T10Y2Y" target="_blank" rel="noopener">T10Y2Y</a>, <a href="https://fred.stlouisfed.org/series/T10Y3M" target="_blank" rel="noopener">T10Y3M</a>.</p>
+      </figure>
+
+      <div class="box note">
+        <div class="box-title">Before you rely on it</div>
+        <p style="margin-bottom:10px">Four cautions, in rising order of seriousness.</p>
+        <ul style="margin:0;font-size:.94rem">
+          <li>The sample is small. There have been a handful of inversions in the modern era, not hundreds.</li>
+          <li>The lag is long and irregular. Months to years have passed between inversion and recession, which makes the signal close to useless for timing anything.</li>
+          <li>Term premium contaminates it. If the premium falls for reasons unrelated to expectations — heavy central bank buying of long bonds, or foreign demand for safe assets — the curve flattens without anyone forecasting a slump.</li>
+          <li>The signal is now famous. A relationship watched by every central banker and analyst on earth is one that policy responds to, and a signal that changes behaviour can stop predicting the thing it used to predict.</li>
+        </ul>
+      </div>
+
+      <h3 id="s45b">4-5b &nbsp;The steep curve</h3>
+      <p>A <strong>steep</strong> curve has long yields far above short ones. It typically appears at the bottom of a cycle: short rates have been cut to the floor, and the market expects them to be higher once recovery arrives. It is also profitable for banks, which borrow short and lend long, so a steep curve tends to loosen credit and help the recovery it was anticipating.</p>
+
+      <h3 id="s45c">4-5c &nbsp;The flat curve</h3>
+      <p>A <strong>flat</strong> curve is the ambiguous one, and it is where careful people separate themselves from confident ones. It can mean the market expects short rates to fall by roughly the term premium, in which case it is a mild inversion warning. Or it can mean the term premium itself has compressed, in which case it means very little. The two look identical on the chart and require additional evidence to tell apart. Anyone who reads a flat curve confidently in either direction is guessing.</p>
+
+      <div class="box excel">
+        <div class="box-title">Build the yield curve in Excel</div>
+        <ol class="steps">
+          <li>Download the maturities you want from FRED as CSV: <code>GS1M</code>, <code>GS3M</code>, <code>GS6M</code>, <code>GS1</code>, <code>GS2</code>, <code>GS3</code>, <code>GS5</code>, <code>GS7</code>, <code>GS10</code>, <code>GS20</code>, <code>GS30</code>. Put dates in <code>A</code> and each series in its own column.</li>
+          <li>In a spare row, put the maturities <em>in years</em> as numbers: 0.083, 0.25, 0.5, 1, 2, 3, 5, 7, 10, 20, 30. Those numbers are the x-axis; using the column headings instead spaces a one-month gap the same as a ten-year one.</li>
+          <li>Pick a date's row, select it with the maturity row, and <strong>Insert → Scatter with straight lines and markers</strong>. That is one yield curve.</li>
+          <li>Make it movable. Put a row number in <code>Z1</code>, then use <code>=INDEX(B:B,$Z$1)</code> across a helper row to pull that date's yields. Change <code>Z1</code> and the chart redraws. Add a scroll bar from the <strong>Developer</strong> tab linked to <code>Z1</code> if you want the slider from the figure above.</li>
+          <li>Add a second helper row for a comparison date, and chart both. Nearly every interesting question about the curve is a comparison of two dates.</li>
+          <li><strong>Extract a forward rate.</strong> With the 1-year in <code>E</code> and the 2-year in <code>F</code>, write <code>=((1+F2/100)^2/(1+E2/100)-1)*100</code>. That column is the market's implied one-year rate, one year ahead, for every month in your sample.</li>
+          <li><strong>Then check it.</strong> Compare each implied forward with the one-year yield that actually turned up twelve months later. Correlate them. The result is humbling, and it is the single most useful thing in this chapter: the curve tells you what the market expects, and what the market expects is often wrong.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ================= 4-6 ================= -->
+    <section class="block" id="s46">
+      <span class="section-num">4-6</span>
+      <h2>Conclusion</h2>
+      <p>The chapter is one sentence long, if you want it that way: <strong>the yield on a bond is a safe real rate plus compensation for everything else that could go wrong.</strong> Unpacked, that is</p>
+      <pre><code>nominal yield  =  real rate
+                +  expected inflation
+                +  default risk premium
+                +  term premium
+                −  the value of any tax exemption</code></pre>
+      <p>Four working conclusions follow.</p>
+      <p><strong>Adjust one thing at a time.</strong> A yield gap between two bonds is only a default risk premium if maturity, tax treatment and liquidity are already matched. Most bad comparisons in finance skip this step.</p>
+      <p><strong>Expectations and outcomes are different objects.</strong> The ex ante real rate is what was agreed; the ex post one is what happened. Unexpected inflation is the difference, and it transfers real wealth from lenders to borrowers without anyone signing anything.</p>
+      <p><strong>An exemption is worth your bracket.</strong> A tax-free yield means nothing until you say who is holding it.</p>
+      <p><strong>The curve forecasts, but not reliably.</strong> It contains the market's view of future short rates, contaminated by a term premium that moves for its own reasons. Extracting the forecast is easy arithmetic; trusting it is a judgement call, and the record says be careful.</p>
+      <p>Chapters 2 to 4 have now built the price of money from the ground up. What has been missing throughout is the institution that sets the short end of that curve on purpose. That is where the rest of the book goes.</p>
+    </section>
+
+    <section class="block" id="data">
+      <h2>Data for this chapter</h2>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Series</th><th>Source release</th><th>Frequency</th><th>Download</th></tr></thead>
+          <tbody>
+            <tr><td>Treasury constant maturities, 1 month to 30 years</td><td>Federal Reserve H.15</td><td>Monthly</td><td><a href="https://fred.stlouisfed.org/series/GS10" target="_blank" rel="noopener">GS10</a> and siblings</td></tr>
+            <tr><td>10-year Treasury, inflation indexed</td><td>Federal Reserve H.15</td><td>Monthly, from 2003</td><td><a href="https://fred.stlouisfed.org/series/FII10" target="_blank" rel="noopener">FII10</a></td></tr>
+            <tr><td>Consumer price index, all items</td><td>BLS CPI-U</td><td>Monthly</td><td><a href="https://fred.stlouisfed.org/series/CPIAUCSL" target="_blank" rel="noopener">CPIAUCSL</a></td></tr>
+            <tr><td>Moody's seasoned Aaa corporate bond yield</td><td>Moody's, via FRED</td><td>Monthly, from 1919</td><td><a href="https://fred.stlouisfed.org/series/AAA" target="_blank" rel="noopener">AAA</a></td></tr>
+            <tr><td>Moody's seasoned Baa corporate bond yield</td><td>Moody's, via FRED</td><td>Monthly, from 1919</td><td><a href="https://fred.stlouisfed.org/series/BAA" target="_blank" rel="noopener">BAA</a></td></tr>
+            <tr><td>Recession dates</td><td>National Bureau of Economic Research</td><td>Monthly</td><td><a href="https://www.nber.org/research/business-cycle-dating" target="_blank" rel="noopener">Business cycle dating</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:.88rem;color:var(--ink-faint)">The two Moody's series are not drawn live on this page. They are not carried by the free, key-free services these charts use, so the credit-spread exercise in section 4-1c is a download-and-build one.</p>
+    </section>
+
+    <div class="pager">
+      <a href="chapter-03.html"><span class="dir">Previous</span>3 · Bonds and Loanable Funds</a>
+      <a href="chapter-05.html" style="text-align:right"><span class="dir">Next</span>5 · Financial Markets through Time</a>
+    </div>
+
+  </article>
+</div>
+</div>
+
+<footer class="site">
+  <div class="wrap">
+    <p><strong>Money &amp; Banking with Live Data.</strong> Original explanations and exercises; section headings follow the standard organisation of an undergraduate money-and-banking course. No textbook text is reproduced.</p>
+    <p>Data via the Federal Reserve Board and the Bureau of Labor Statistics, retrieved through <a href="https://db.nomics.world/" target="_blank" rel="noopener">DBnomics</a> and the <a href="https://www.bls.gov/developers/" target="_blank" rel="noopener">BLS public API</a>. Charts drawn with <a href="https://www.chartjs.org/" target="_blank" rel="noopener">Chart.js</a>.</p>
+  </div>
+</footer>
+
+<script src="assets/js/chart.umd.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/charts.js"></script>
+<script src="assets/js/ch04.js"></script>
+</body>
+</html>

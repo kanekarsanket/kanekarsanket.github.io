@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 3 · Bonds and Loanable Funds</title>
+<meta name="description" content="What a bond is, how its price and its yield are two ways of saying the same thing, and the two markets that between them set the interest rate — with live charts, a bond calculator and Excel walkthroughs.">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="brand" href="index.html">Money &amp; Banking <span>with Live Data</span></a>
+    <nav>
+      <a href="chapter-01.html">1</a>
+      <a href="chapter-02.html">2</a>
+      <a href="chapter-03.html" class="here">3</a>
+      <a href="chapter-04.html">4</a>
+      <a href="chapter-05.html">5</a>
+      <a href="chapter-06.html">6</a>
+      <a href="index.html#data">Data sources</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Chapter 3</p>
+    <h1>Bonds and<br>Loanable Funds</h1>
+    <p class="lede">A bond is a promise to pay on a schedule. Chapter 2 showed how to value a payment that arrives later; this chapter applies that one tool to a whole schedule, discovers that a bond's price and its yield are the same fact stated two ways, and then asks what sets that yield in the first place.</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="stats" id="stat-strip" style="margin-top:30px">
+    <div class="stat"><div class="label">2-year Treasury</div><div class="value loading" data-stat="t2">loading…</div><div class="meta" data-stat="t2-meta">&nbsp;</div></div>
+    <div class="stat"><div class="label">10-year Treasury</div><div class="value loading" data-stat="t10">loading…</div><div class="meta" data-stat="t10-meta">&nbsp;</div></div>
+    <div class="stat"><div class="label">30-year Treasury</div><div class="value loading" data-stat="t30">loading…</div><div class="meta" data-stat="t30-meta">&nbsp;</div></div>
+    <div class="stat"><div class="label">10-year real yield</div><div class="value loading" data-stat="tips">loading…</div><div class="meta" data-stat="tips-meta">&nbsp;</div></div>
+    <div class="stat"><div class="label">Breakeven inflation</div><div class="value loading" data-stat="be">loading…</div><div class="meta" data-stat="be-meta">&nbsp;</div></div>
+    <div class="stat"><div class="label">Debt held by the public</div><div class="value loading" data-stat="debt">loading…</div><div class="meta" data-stat="debt-meta">&nbsp;</div></div>
+  </div>
+  <p class="source-line">Live figures, refreshed each time this page loads. Sources: Federal Reserve H.15; U.S. Treasury, Fiscal Data.</p>
+</div>
+
+<div class="wrap">
+<div class="chapter">
+
+  <aside class="toc">
+    <h4>In this chapter</h4>
+    <ol>
+      <li><a href="#s31">3-1 &nbsp;Bonds Defined and Explained</a></li>
+      <li><a class="sub" href="#s31a">3-1a &nbsp;Bonds Defined</a></li>
+      <li><a href="#s32">3-2 &nbsp;Bond Prices and Yields</a></li>
+      <li><a class="sub" href="#s32a">3-2a &nbsp;Price of Bonds</a></li>
+      <li><a class="sub" href="#s32b">Yield to maturity</a></li>
+      <li><a class="sub" href="#s32c">Why the see-saw must hold</a></li>
+      <li><a class="sub" href="#s32d">Interest-rate risk</a></li>
+      <li><a href="#s33">3-3 &nbsp;Supply and Demand for Bonds</a></li>
+      <li><a class="sub" href="#s33a">3-3a &nbsp;The Supply of Bonds</a></li>
+      <li><a class="sub" href="#s33b">3-3b &nbsp;Change in the Supply</a></li>
+      <li><a class="sub" href="#s33c">3-3c &nbsp;The Demand for Bonds</a></li>
+      <li><a class="sub" href="#s33d">3-3d &nbsp;Change in the Demand</a></li>
+      <li><a class="sub" href="#s33e">3-3e &nbsp;Equilibrium</a></li>
+      <li><a href="#s34">3-4 &nbsp;Supply and Demand for Loanable Funds</a></li>
+      <li><a href="#s35">3-5 &nbsp;The Two Markets Compared</a></li>
+      <li><a class="sub" href="#s35a">3-5a &nbsp;The Fisher Effect</a></li>
+      <li><a class="sub" href="#s35b">3-5b &nbsp;Business Cycles and Confidence</a></li>
+      <li><a href="#s36">3-6 &nbsp;Conclusion</a></li>
+      <li><a href="#data">Data for this chapter</a></li>
+    </ol>
+  </aside>
+
+  <article>
+
+    <!-- ================= 3-1 ================= -->
+    <section class="block" id="s31">
+      <span class="section-num">3-1</span>
+      <h2>Bonds Defined and Explained</h2>
+      <p>A city water authority needs to replace forty miles of ageing pipe. The work costs two hundred million dollars and will last half a century; the authority's annual budget is nowhere near that. It has two ways out. It can find someone willing to own a share of the water system, which is not really on offer, or it can borrow the money and repay it out of water bills over the next twenty years.</p>
+      <p>Borrowing two hundred million from a single lender is difficult. Borrowing two thousand dollars from a hundred thousand different lenders is easy, provided each lender receives a standardised, transferable receipt setting out exactly what they are owed and when. That receipt is a bond.</p>
+
+      <h3 id="s31a">3-1a &nbsp;Bonds Defined</h3>
+      <p><strong>A bond is a transferable promise to pay stated amounts on stated dates.</strong> Four pieces of information define one completely.</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Term</th><th>What it means</th><th>In the water authority's bond</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Issuer</strong></td><td>Who owes the money, and therefore whose finances you are betting on</td><td>The city water authority</td></tr>
+            <tr><td><strong>Face value</strong><br><span style="color:var(--ink-faint);font-size:.88em">also par, or principal</span></td><td>The lump sum repaid on the final date</td><td>$1,000 per bond</td></tr>
+            <tr><td><strong>Coupon rate</strong></td><td>A fixed percentage of face value paid each year until then</td><td>4%, so $40 a year</td></tr>
+            <tr><td><strong>Maturity</strong></td><td>The date the face value comes back and the bond ends</td><td>20 years from issue</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Notice what is <em>not</em> on that list: the price. The four terms are printed on the bond and never change. The price changes every day, because the bond can be sold to somebody else and the terms of the sale are whatever the two parties agree. Almost everything in this chapter follows from that one asymmetry — <strong>fixed promises, floating price.</strong></p>
+
+      <h4>Coupon bonds and zeros</h4>
+      <p>Most bonds pay a coupon. A <strong>zero-coupon bond</strong> pays nothing along the way and repays face value at the end; the lender's whole return comes from buying it below face. A Treasury bill works this way. A zero is just the Chapter 2 present-value formula with one payment in it, which makes it the easiest bond to price and a useful thing to keep in mind whenever a coupon bond gets confusing: a coupon bond is nothing more than a bundle of zeros, one per payment date.</p>
+
+      <h4>Who issues bonds</h4>
+      <ul>
+        <li><strong>The federal government.</strong> Treasury bills, notes and bonds, distinguished only by original maturity. The largest and most heavily traded bond market on earth, and the reference against which everything else is priced.</li>
+        <li><strong>States and localities.</strong> Municipal bonds, like the water authority's. Interest is typically exempt from federal income tax, which lets them offer lower yields than a corporate bond of similar risk. Chapter 4 takes up why.</li>
+        <li><strong>Corporations.</strong> Companies borrowing for equipment, acquisitions or refinancing. Riskier than governments, therefore priced to yield more.</li>
+        <li><strong>Federal agencies and government-sponsored enterprises</strong>, mostly in support of housing finance.</li>
+      </ul>
+
+      <p>Build one below and look at what you are actually buying: not a number, but a shape.</p>
+
+      <figure class="chart" id="fig-builder">
+        <figcaption>Build a bond</figcaption>
+        <div class="sub">Set the terms and see the payment schedule, then what the market would pay for it today.</div>
+        <div class="calc">
+          <div>
+            <div class="field">
+              <label for="b-face">Face value ($)</label>
+              <input type="number" id="b-face" value="1000" min="100" step="100">
+            </div>
+            <div class="field">
+              <label for="b-coupon">Coupon rate: <span id="b-coupon-out">4.0%</span></label>
+              <input type="range" id="b-coupon" min="0" max="12" step="0.25" value="4">
+            </div>
+            <div class="field">
+              <label for="b-years">Years to maturity: <span id="b-years-out">10</span></label>
+              <input type="range" id="b-years" min="1" max="30" step="1" value="10">
+            </div>
+            <div class="field">
+              <label for="b-ytm">Market yield: <span id="b-ytm-out">6.0%</span></label>
+              <input type="range" id="b-ytm" min="0" max="15" step="0.1" value="6">
+              <div style="font-size:.76rem;color:var(--ink-faint);margin-top:5px" id="b-ytm-note">&nbsp;</div>
+            </div>
+            <div class="readout">
+              <div class="label">Price today</div>
+              <div class="big" id="b-price">—</div>
+              <div class="small" id="b-verdict">&nbsp;</div>
+            </div>
+            <div style="font-size:.85rem;color:var(--ink-soft);margin-top:12px" id="b-detail">&nbsp;</div>
+          </div>
+          <div>
+            <div class="controls" style="margin-bottom:10px">
+              <div class="pair">
+                <span class="lbl">Show</span>
+                <div class="grp" data-toggle="view">
+                  <button data-value="flows" aria-pressed="true">Payment schedule</button>
+                  <button data-value="curve">Price against yield</button>
+                </div>
+              </div>
+            </div>
+            <div class="canvas-box" style="height:300px">
+              <canvas id="cv-builder"></canvas>
+            </div>
+          </div>
+        </div>
+        <p class="source-line">Coupons are treated as annual here to keep the arithmetic visible. Real Treasury notes and most corporate bonds pay twice a year, which changes the price by less than a dollar on a ten-year bond and none of the logic.</p>
+      </figure>
+    </section>
+
+    <!-- ================= 3-2 ================= -->
+    <section class="block" id="s32">
+      <span class="section-num">3-2</span>
+      <h2>Bond Prices and Yields</h2>
+
+      <h3 id="s32a">3-2a &nbsp;Price of Bonds</h3>
+      <p>What is the water authority's bond worth? It is worth whatever its payments are worth, and Chapter 2 already gave the rule for valuing a payment that arrives later: divide by <code>(1 + r)</code> once for each year of waiting. A bond has several payments, so do it several times and add up.</p>
+      <pre><code>Price = C/(1+y) + C/(1+y)² + … + C/(1+y)ⁿ + F/(1+y)ⁿ</code></pre>
+      <p>Here <em>C</em> is the annual coupon in dollars, <em>F</em> the face value, <em>n</em> the years remaining, and <em>y</em> the rate the market currently demands on bonds of this kind. That last term is the one doing all the work, and it is worth being clear about where it comes from: <strong>the market sets <em>y</em>, and the price follows.</strong> Not the other way round.</p>
+      <p>Take a bond with $1,000 face, a 4% coupon and ten years left, and run the arithmetic at three different market yields.</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>If the market demands</th><th class="num">The bond is worth</th><th>Because</th></tr></thead>
+          <tbody>
+            <tr><td>2%</td><td class="num">$1,179.65</td><td>Its 4% coupon beats what new bonds pay, so buyers bid it above face</td></tr>
+            <tr><td>4%</td><td class="num">$1,000.00</td><td>Its coupon matches the market exactly; nothing to adjust</td></tr>
+            <tr><td>6%</td><td class="num">$852.80</td><td>Its 4% coupon lags the market, so it only sells at a discount</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The three cases have names. A bond trading above face is at a <strong>premium</strong>, one below face at a <strong>discount</strong>, and one exactly at face is <strong>at par</strong>. The rule connecting them is worth memorising because it saves you from ever having to reason it out again:</p>
+      <div class="box note">
+        <div class="box-title">The par rule</div>
+        <p style="margin:0">Coupon rate above the market yield → the bond trades at a <strong>premium</strong>. Coupon rate below the market yield → a <strong>discount</strong>. Equal → <strong>par</strong>. The coupon is frozen at issue; the price is what moves to make an old bond competitive with new ones.</p>
+      </div>
+
+      <h3 id="s32b">Yield to maturity</h3>
+      <p>Turn the question round. You are quoted a price. What return would you earn holding the bond to the end? That number is the <strong>yield to maturity</strong>: the single discount rate at which the formula above reproduces the quoted price. It is the internal rate of return on the purchase, and it is what people mean by "the yield" without qualification.</p>
+      <p>There is no algebraic solution for <em>y</em> — you cannot rearrange the equation to isolate it. Software finds it by guessing, checking, and narrowing, which is exactly what Excel's Goal Seek does and what the calculator above does invisibly. That is not a flaw in the method; it is a property of polynomials of degree ten.</p>
+      <p>One near-miss worth naming so you can avoid it. The <strong>current yield</strong> is the annual coupon divided by the price: on the $852.80 bond, $40 / $852.80 = 4.7%. It is quick, it is quoted, and it is wrong as a measure of return, because it ignores the $147.20 of capital gain the holder collects when the bond matures at face. The true yield to maturity on that bond is 6%. Current yield understates the return on a discount bond and overstates it on a premium bond, and the further from par, the worse the error.</p>
+
+      <h3 id="s32c">Why the see-saw must hold</h3>
+      <p>Bond prices and bond yields move in opposite directions. This is stated so often that it can start to sound like a market convention rather than a fact of arithmetic, so here is the argument in one paragraph.</p>
+      <p>A bond's future payments are fixed. Nothing the market does can change the $40 a year and the $1,000 at the end. So the only way for a buyer to earn a higher return on that unchanging stream is to pay less for it. Higher return, lower price. Lower return, higher price. There is no third option, and no news about interest rates can arrive without moving the price of every existing bond, in the opposite direction, that same instant.</p>
+      <p>The chart below makes this concrete with real numbers. It takes a plain ten-year bond with a 4% coupon and prices it, month by month, at whatever the ten-year Treasury yield actually was in that month. The yield line and the price line are the same information twice.</p>
+
+      <figure class="chart" id="fig-seesaw">
+        <figcaption>The same fact, drawn twice</figcaption>
+        <div class="sub">The 10-year Treasury yield, and what a 10-year bond with a fixed 4% coupon would have been worth at that yield.</div>
+        <div class="controls">
+          <div class="pair">
+            <span class="lbl">From</span>
+            <div class="grp" data-toggle="from">
+              <button data-value="1962-01">1962</button>
+              <button data-value="1990-01" aria-pressed="true">1990</button>
+              <button data-value="2015-01">2015</button>
+            </div>
+          </div>
+        </div>
+        <div class="canvas-box">
+          <canvas id="cv-seesaw"></canvas>
+          <div class="chart-status">Loading live data…</div>
+        </div>
+        <p class="source-line">Yield: Federal Reserve H.15, 10-year Treasury constant maturity, monthly. Price: computed here from that yield for a hypothetical $1,000 bond with a 4% annual coupon and ten years remaining. FRED equivalent: <a href="https://fred.stlouisfed.org/series/GS10" target="_blank" rel="noopener">GS10</a>.</p>
+      </figure>
+
+      <p>Two things are worth pausing on. The lines are perfect mirrors, because one is computed from the other; that is the design of the figure, not a discovery. And the swings are large. Across the range of yields shown on the longer views, this bond's value moves by well over a third, which means an investor who bought near the bottom of the yield range and sold near the top would have taken a severe loss on an asset universally described as safe. Safe from default is not the same as safe from loss, and confusing the two is how a bank ends up in trouble holding nothing but Treasuries.</p>
+
+      <h3 id="s32d">Interest-rate risk</h3>
+      <p>How large that loss is depends on how long you have to wait. A bond maturing next year returns your money almost immediately, so a change in market rates has little time to matter. A thirty-year bond locks you into an out-of-date coupon for three decades, and its price has to fall far enough to compensate a buyer for all of them.</p>
+      <p>This sensitivity is called <strong>interest-rate risk</strong>, and the formal measure of it is duration, which Chapter 4 develops. For now, move the slider and watch the pattern: the same change in yield does very different things to bonds of different length.</p>
+
+      <figure class="chart" id="fig-risk">
+        <figcaption>What a change in yields does, by maturity</figcaption>
+        <div class="sub">Percent change in the price of a bond issued at par with a 4% coupon, when the market yield moves.</div>
+        <div style="max-width:420px;margin-bottom:6px">
+          <label for="r-shock" style="display:block;font-size:.76rem;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin-bottom:5px">Market yield moves by <span id="r-shock-out">+1.00 points</span></label>
+          <input type="range" id="r-shock" min="-3" max="3" step="0.25" value="1" style="width:100%;accent-color:var(--accent)">
+        </div>
+        <div class="canvas-box" style="height:300px">
+          <canvas id="cv-risk"></canvas>
+        </div>
+        <p class="source-line" id="risk-note"></p>
+      </figure>
+
+      <div class="box note">
+        <div class="box-title">Notice the asymmetry</div>
+        <p style="margin:0">Push the slider to +2 points, then to −2. The gain from falling yields is larger than the loss from rising ones, and the gap widens with maturity. Prices are convex in yield: the price–yield curve in the bond builder bends rather than sloping straight. Long bonds are not simply riskier, they are risky in a lopsided way that favours the holder.</p>
+      </div>
+
+      <div class="box excel">
+        <div class="box-title">Price a bond in Excel</div>
+        <ol class="steps">
+          <li>Lay out the terms: face value in <code>B1</code> (1000), coupon rate in <code>B2</code> (0.04), years in <code>B3</code> (10), market yield in <code>B4</code> (0.06).</li>
+          <li>The direct way, so you can see the machinery: put years 1 to 10 down <code>A8:A17</code>. In <code>B8</code> write <code>=IF(A8=$B$3,$B$1*$B$2+$B$1,$B$1*$B$2)</code> and fill down — that is the coupon each year plus the face value in the final year. In <code>C8</code> write <code>=B8/(1+$B$4)^A8</code> and fill down. Sum column C with <code>=SUM(C8:C17)</code>. You should get <strong>852.80</strong>.</li>
+          <li>The one-line way: <code>=NPV(B4,B8:B17)</code> on the same payment column. NPV assumes the first payment is one period away, which is exactly right here.</li>
+          <li>The built-in way: <code>=PV(B4,B3,-B1*B2,-B1)</code>. The minus signs are Excel's convention for money coming in. All three agree, and seeing that they do is the point of doing it three ways once.</li>
+          <li><strong>Go the other direction.</strong> Type a price of 900 in <code>B6</code>. Open <strong>Data → What-If Analysis → Goal Seek</strong>, set your NPV cell to 900 by changing <code>B4</code>. Excel hunts for the yield that produces that price. That is a yield-to-maturity calculation, and Goal Seek is doing the same guess-and-narrow the market does.</li>
+          <li>Or skip the hunt with <code>=RATE(B3,B1*B2,-900,B1)</code>, which solves for the yield directly.</li>
+          <li><strong>Build the price–yield curve.</strong> Put yields 0% to 15% in steps of 0.5% down column E. In <code>F1</code> write <code>=PV($E1,$B$3,-$B$1*$B$2,-$B$1)</code> and fill down. Chart F against E. The curve bends: that is convexity.</li>
+          <li><strong>Measure interest-rate risk.</strong> Repeat step 7 for maturities of 2, 5, 10 and 30 years in four columns, then compute each column's percentage change between a 4% and a 5% yield. You should recover roughly −1.9%, −4.3%, −7.7% and −15.4%.</li>
+        </ol>
+        <p style="font-size:.9rem;margin:14px 0 0;color:var(--ink-soft)">For real bonds that pay twice a year and settle mid-period, Excel has <code>PRICE()</code> and <code>YIELD()</code>, which take actual settlement and maturity dates and a day-count convention. Worth knowing they exist; not worth reaching for until the simple version is second nature.</p>
+      </div>
+    </section>
+
+    <!-- ================= 3-3 ================= -->
+    <section class="block" id="s33">
+      <span class="section-num">3-3</span>
+      <h2>Supply and Demand for Bonds</h2>
+      <p>So far the market yield has been an input handed down from somewhere. Where does it come from? From the same place every price comes from: the quantity people want to sell and the quantity people want to buy.</p>
+      <p>The wrinkle is what goes on the axes. In the bond market the good being traded is the bond itself, so the vertical axis is the <strong>price of a bond</strong> and the horizontal axis is the <strong>quantity of bonds</strong>. Because price and yield are locked together by the see-saw, the same diagram carries an interest rate on its vertical axis too — running the other way. Both are marked on the left-hand panel of the diagram further down.</p>
+
+      <h3 id="s33a">3-3a &nbsp;The Supply of Bonds</h3>
+      <p>Bonds are supplied by borrowers: firms that want to build something, governments that want to spend more than they collect, households when they take out a mortgage that ends up inside a bond. To supply a bond is to borrow.</p>
+      <p>Why does the curve slope up? Because a high bond price is a cheap loan. If the water authority can sell a $1,000 bond promising $40 a year for $1,150, it is borrowing at well under 4%. At that price it will happily fund the pipe replacement and the pumping station too. If the same bond only fetches $850, borrowing has become expensive and the pumping station waits. <strong>Higher bond price, more bonds supplied.</strong> Read in yield terms this is the ordinary statement that people borrow more when interest rates are low.</p>
+
+      <h3 id="s33b">3-3b &nbsp;Change in the Supply of Bonds</h3>
+      <p>The curve shifts when borrowers want more or less credit <em>at any given price</em>. Three shifters do most of the work.</p>
+      <ul>
+        <li><strong>Expected profitability of investment.</strong> When firms see projects worth funding, they issue more bonds at every price and supply shifts right. In a downturn, when the projects look doubtful, it shifts left. This is why bond supply is procyclical.</li>
+        <li><strong>Government borrowing.</strong> A deficit is financed by selling bonds, and the Treasury sells them regardless of price. Bigger deficits push supply right.</li>
+        <li><strong>Expected inflation.</strong> A borrower who expects the dollar to lose value is delighted to repay in cheaper future dollars. Higher expected inflation makes borrowing more attractive at every price and pushes supply right. Hold that thought — the lenders have the opposite reaction, and section 3-5a is where the two meet.</li>
+      </ul>
+      <p>The government-borrowing channel is the one with the cleanest data, so it is worth looking at directly before trusting it.</p>
+
+      <figure class="chart" id="fig-debt">
+        <figcaption>Government borrowing and the long-term interest rate</figcaption>
+        <div class="sub">Federal debt held by the public against the 10-year Treasury yield, monthly.</div>
+        <div class="canvas-box">
+          <canvas id="cv-debt"></canvas>
+          <div class="chart-status">Loading live data…</div>
+        </div>
+        <p class="source-line">Debt: U.S. Treasury, Fiscal Data, "Debt to the Penny", thinned to one observation a month; the series for debt held by the public begins in September 1997. Yield: Federal Reserve H.15. FRED equivalents: <a href="https://fred.stlouisfed.org/series/FYGFDPUN" target="_blank" rel="noopener">FYGFDPUN</a>, <a href="https://fred.stlouisfed.org/series/GS10" target="_blank" rel="noopener">GS10</a>.</p>
+      </figure>
+
+      <div class="box note">
+        <div class="box-title">Read this one carefully</div>
+        <p style="margin:0">The theory says more government borrowing pushes bond supply right, which lowers bond prices and raises yields. The chart shows debt climbing relentlessly while yields fell for most of two decades and then rose. That is not a refutation; it is a reminder that a supply curve shifting is one thing happening among many. Over this period demand for Treasuries was also shifting right, hard, as foreign central banks accumulated reserves and the Federal Reserve bought bonds outright. A diagram tells you what one force does <em>holding the others fixed</em>, and the world never holds anything fixed. Testing the government-borrowing channel properly needs the other shifters controlled for, which is econometrics rather than a chart.</p>
+      </div>
+
+      <h3 id="s33c">3-3c &nbsp;The Demand for Bonds</h3>
+      <p>Bonds are demanded by savers: pension funds, insurers, foreign central banks, anyone with money set aside and a preference for a promise over a punt. To demand a bond is to lend.</p>
+      <p>The curve slopes down for the reason the see-saw exists. A low price on a fixed stream of payments is a high return, so cheap bonds attract buyers. An expensive bond offers a thin return and attracts few. <strong>Lower bond price, more bonds demanded.</strong></p>
+
+      <h3 id="s33d">3-3d &nbsp;Change in the Demand for Bonds</h3>
+      <p>Demand shifts when savers want to hold more or fewer bonds at any given price.</p>
+      <ul>
+        <li><strong>Wealth.</strong> Richer savers buy more of nearly every asset, bonds included. Demand shifts right.</li>
+        <li><strong>Expected return on the alternatives.</strong> Bonds compete with equities, property and cash. When shares look likely to do well, money leaves bonds and demand shifts left.</li>
+        <li><strong>Risk.</strong> Two opposite effects, and which one applies depends on whose risk changed. If the <em>bond issuer</em> becomes more likely to default, demand for its bonds falls. If the <em>rest of the world</em> becomes riskier, demand for safe bonds rises — the flight to quality that shows up in every financial panic.</li>
+        <li><strong>Liquidity.</strong> A bond that can be sold quickly at a fair price is worth more than one that cannot. Treasuries are the most liquid securities in existence and are priced accordingly.</li>
+        <li><strong>Expected inflation.</strong> Lenders are the mirror image of borrowers here. Expected inflation eats the real value of a fixed stream, so higher expected inflation shifts bond demand left.</li>
+      </ul>
+
+      <h3 id="s33e">3-3e &nbsp;Equilibrium, and what moves it</h3>
+      <p>Equilibrium is the price at which the quantity of bonds savers want to hold equals the quantity borrowers want to sell. Above it, unsold bonds pile up and the price is bid down; below it, buyers compete and the price is bid up. Standard machinery.</p>
+      <p>What makes the bond market worth a diagram of its own is section 3-5's punchline, so the diagram below shows both markets at once. Work through the left panel now and come back to the right one after section 3-4.</p>
+
+      <figure class="chart" id="fig-market">
+        <figcaption>Two markets, one story</figcaption>
+        <div class="sub">The bond market and the loanable funds market, responding to the same shock at the same time.</div>
+        <div class="controls">
+          <div class="pair">
+            <span class="lbl">Shock</span>
+            <div class="grp" data-toggle="shock" style="flex-wrap:wrap">
+              <button data-value="none" aria-pressed="true">None</button>
+              <button data-value="deficit">Government borrows more</button>
+              <button data-value="inflation">Expected inflation rises</button>
+              <button data-value="wealth">Savers get wealthier</button>
+              <button data-value="recession">Recession</button>
+              <button data-value="risk">Default risk rises</button>
+            </div>
+          </div>
+        </div>
+        <div class="twin">
+          <div>
+            <div class="twin-title">Bond market</div>
+            <div class="canvas-box" style="height:300px"><canvas id="cv-bond"></canvas></div>
+          </div>
+          <div>
+            <div class="twin-title">Loanable funds market</div>
+            <div class="canvas-box" style="height:300px"><canvas id="cv-lf"></canvas></div>
+          </div>
+        </div>
+        <div class="box data" id="shock-note" style="margin-top:16px">
+          <div class="box-title">What just happened</div>
+          <p style="margin:0;font-size:.94rem" id="shock-text">Pick a shock above. Both panels move together, because they are two descriptions of one market.</p>
+        </div>
+      </figure>
+
+      <p>The left panel is the bond market. Its vertical axis is the price of a bond, and because price and yield are inverses, the interest rate rises as you move <em>down</em> the axis. That inversion is the only genuinely awkward thing about the bond-market diagram, and it is precisely what the loanable funds version exists to avoid.</p>
+    </section>
+
+    <!-- ================= 3-4 ================= -->
+    <section class="block" id="s34">
+      <span class="section-num">3-4</span>
+      <h2>Supply and Demand for Loanable Funds</h2>
+      <p>Same transactions, different bookkeeping. Instead of counting pieces of paper changing hands, count the dollars flowing through them, and put the interest rate on the vertical axis where an economist expects to find a price.</p>
+
+      <h3 id="s34a">3-4a &nbsp;The Supply of Loanable Funds</h3>
+      <p>Funds are supplied by savers — the same people who were <em>demanding</em> bonds a moment ago. The curve slopes up because a higher interest rate is a better reward for postponing consumption, so more is lent at every level of income. Households, firms retaining earnings, governments running surpluses and foreigners buying domestic assets all sit on this curve.</p>
+
+      <h3 id="s34b">3-4b &nbsp;The Demand for Loanable Funds</h3>
+      <p>Funds are demanded by borrowers — the same people who were <em>supplying</em> bonds. The curve slopes down because the interest rate is the cost of a project's finance. Rank every possible investment by its expected return and fund the ones that clear the hurdle; lower the hurdle and more projects clear it. Firms building capacity, households buying houses and governments covering deficits are all on this curve.</p>
+      <div class="box note">
+        <div class="box-title">The translation table</div>
+        <div class="table-scroll" style="margin:0">
+          <table style="margin:0">
+            <thead><tr><th>In the bond market</th><th>In the loanable funds market</th></tr></thead>
+            <tbody>
+              <tr><td>Supply of bonds (borrowers issuing)</td><td>Demand for funds</td></tr>
+              <tr><td>Demand for bonds (savers buying)</td><td>Supply of funds</td></tr>
+              <tr><td>Vertical axis: bond price</td><td>Vertical axis: interest rate</td></tr>
+              <tr><td>Price rises</td><td>Interest rate falls</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p>Every row of that table is a relabelling, not a new claim. Anything true in one column is true in the other, which is why the diagram above moves both panels from a single set of assumptions.</p>
+
+      <h3 id="s34c">3-4c &nbsp;New equilibrium</h3>
+      <p>Go back to the twin diagram and step through the shocks with the translation table beside you. Two are worth doing slowly.</p>
+      <p><strong>Government borrows more.</strong> Bond supply shifts right; funds demand shifts right. Bond prices fall, the interest rate rises, and private borrowers who would have funded projects at the old rate no longer do. That last sentence is the crowding-out argument, and the diagram is where it lives.</p>
+      <p><strong>Recession.</strong> Firms stop issuing, so bond supply shifts left and funds demand shifts left. Savers simultaneously want safety, so bond demand shifts right and funds supply shifts right. Both moves push the interest rate down, which is why rates fall in slumps without anyone deciding they should.</p>
+    </section>
+
+    <!-- ================= 3-5 ================= -->
+    <section class="block" id="s35">
+      <span class="section-num">3-5</span>
+      <h2>The Bond Market and Loanable Funds Market Compared</h2>
+      <p>If the two models say the same thing, why keep both? Because each makes a different question easy.</p>
+      <p>The bond market view puts the <em>price</em> of an asset on the axis, which is the right frame when you care about what happens to the value of a portfolio. Anyone holding bonds when rates move cares about the left panel.</p>
+      <p>The loanable funds view puts the <em>interest rate</em> on the axis, which is the right frame when you care about how much borrowing and lending happens in the economy. Anyone asking whether a deficit crowds out investment, or what a saving glut does, wants the right panel.</p>
+      <p>Use whichever puts your question on the vertical axis. Neither is more fundamental.</p>
+
+      <h3 id="s35a">3-5a &nbsp;The Fisher Effect</h3>
+      <p>Here is the payoff for keeping track of expected inflation on both sides of the market.</p>
+      <p>Suppose everyone comes to expect prices to rise two points faster than they had assumed. Borrowers are pleased, since they will repay in cheaper dollars: bond supply shifts right. Lenders are displeased for the same reason: bond demand shifts left. Both shifts push bond prices down and the interest rate up, and they reinforce rather than offset each other. The quantity of borrowing barely moves; the rate does almost all the adjusting.</p>
+      <p>Push it to the limit and you get the <strong>Fisher effect</strong>: a change in expected inflation passes one-for-one into the nominal interest rate, leaving the real rate where it was.</p>
+      <pre><code>nominal rate  =  real rate  +  expected inflation</code></pre>
+      <p>Chapter 2 used this identity backwards, subtracting realised inflation from a nominal yield to get a realised real return. The version here is forward-looking and far more useful, because it is about the inflation people <em>expect</em> — and, unlike Chapter 2's version, it is directly observable.</p>
+      <p>It is observable because the Treasury sells two kinds of ten-year bond. An ordinary one promises fixed dollars. An inflation-protected one, a TIPS, promises fixed purchasing power by adjusting its principal with the consumer price index. The ordinary bond's yield is a nominal rate; the TIPS yield is a real rate. Subtract, and what remains is the market's own forecast of average inflation over the next decade, known as the <strong>breakeven rate</strong>. No survey, no model: a number two live markets agree on.</p>
+
+      <figure class="chart" id="fig-fisher">
+        <figcaption>The Fisher equation, in market prices</figcaption>
+        <div class="sub">The nominal 10-year Treasury yield, the 10-year inflation-protected yield, and the gap between them.</div>
+        <div class="controls">
+          <div class="pair">
+            <span class="lbl">Show</span>
+            <div class="grp" data-toggle="view">
+              <button data-value="all" aria-pressed="true">All three</button>
+              <button data-value="breakeven">Breakeven only</button>
+            </div>
+          </div>
+        </div>
+        <div class="canvas-box">
+          <canvas id="cv-fisher"></canvas>
+          <div class="chart-status">Loading live data…</div>
+        </div>
+        <p class="source-line">Federal Reserve H.15, 10-year Treasury constant maturity, nominal and inflation-indexed, monthly since 2003. The breakeven rate is the difference, and also carries a small premium for the insurance value of the protected bond, so it slightly overstates pure expected inflation. FRED equivalents: <a href="https://fred.stlouisfed.org/series/GS10" target="_blank" rel="noopener">GS10</a>, <a href="https://fred.stlouisfed.org/series/FII10" target="_blank" rel="noopener">FII10</a>, <a href="https://fred.stlouisfed.org/series/T10YIE" target="_blank" rel="noopener">T10YIE</a>.</p>
+      </figure>
+
+      <p>Switch to the breakeven view and notice how still it is. Through two decades containing a financial crisis, a pandemic and the sharpest burst of inflation in forty years, the ten-year breakeven has spent nearly all of its time between roughly one and a half and two and a half percent. Measured inflation over the same months ranged from below zero to nine percent and was several times more variable. What the chart shows is not a forecast of next year but a market judgement about the average of the next ten, and that judgement has barely moved. This is what anchored expectations look like, and protecting the anchor is most of what a central bank does.</p>
+      <p>Two moments break the pattern, and both are worth knowing. The breakeven fell close to zero at the end of 2008, and it dropped sharply again in March 2020. In each case markets were briefly pricing in something near deflation for a decade. That is what a slipping anchor looks like, and it explains why both episodes alarmed policymakers more than the headline numbers of the moment suggested they should. Notice also what did <em>not</em> happen in 2022: measured inflation reached its highest level in forty years while the ten-year breakeven barely left its usual range. The market was saying the burst would pass. It is a useful reminder that expected and realised inflation are different objects, and that only one of them is what the Fisher equation is about.</p>
+
+      <h3 id="s35b">3-5b &nbsp;Business Cycles and Confidence</h3>
+      <p>Both curves in both panels move with the business cycle, and mostly in the same direction, which makes the cycle a useful test of whether you have the model straight.</p>
+      <p>In an expansion, firms have projects worth funding, so bond supply and funds demand shift right and push rates up. Savers also have more income, shifting bond demand and funds supply right, which pushes rates down. The first effect usually wins, so interest rates rise in booms and fall in slumps. Usually. Because the two effects work against each other, the net movement is smaller than either force alone, and in unusual cycles the ordering can reverse.</p>
+      <p>Confidence works the same way but faster. A market that turns fearful bids up safe bonds and shuns risky ones, so Treasury yields fall and corporate yields rise in the same week without any change in the volume of saving.</p>
+      <p>One summary number tracks this better than any single yield: the gap between long and short Treasury yields. It is normally positive, because lenders want compensation for tying money up. It narrows and sometimes turns negative when markets expect short rates to fall — which is to say, when they expect trouble.</p>
+
+      <figure class="chart" id="fig-spread">
+        <figcaption>The gap between long and short Treasury yields</figcaption>
+        <div class="sub">10-year yield minus 2-year yield, monthly. Shaded bands mark recessions as dated by the National Bureau of Economic Research.</div>
+        <div class="canvas-box">
+          <canvas id="cv-spread"></canvas>
+          <div class="chart-status">Loading live data…</div>
+        </div>
+        <p class="source-line">Federal Reserve H.15, Treasury constant maturities. Recession dating: National Bureau of Economic Research. FRED equivalents: <a href="https://fred.stlouisfed.org/series/GS10" target="_blank" rel="noopener">GS10</a>, <a href="https://fred.stlouisfed.org/series/GS2" target="_blank" rel="noopener">GS2</a>, <a href="https://fred.stlouisfed.org/series/T10Y2Y" target="_blank" rel="noopener">T10Y2Y</a>.</p>
+      </figure>
+
+      <p>Every dip below zero on that chart has been followed by a recession, usually within a year or two, which is a striking record for a single number and has made it famous. Be careful with it anyway. The sample contains a handful of episodes, the lag between signal and slump is long and irregular, and a relationship this well known is one that policymakers now actively respond to, which can undo it. Chapter 4 takes the yield curve apart properly and asks what, if anything, the inversions are telling us.</p>
+
+      <div class="box excel">
+        <div class="box-title">Do the Chapter 3 data work in Excel</div>
+        <ol class="steps">
+          <li><strong>Build the see-saw yourself.</strong> Download <a href="https://fred.stlouisfed.org/series/GS10" target="_blank" rel="noopener">GS10</a> as CSV. With dates in <code>A</code> and yields in percent in <code>B</code>, put <code>=PV(B2/100,10,-40,-1000)</code> in <code>C2</code> and fill down. Chart B and C on the same plot using a secondary axis for C, and you have reproduced the figure in section 3-2c.</li>
+          <li><strong>Check the mirror.</strong> <code>=CORREL(B2:B999,C2:C999)</code> should return almost exactly −1. It is not quite −1, because the relationship is convex rather than straight.</li>
+          <li><strong>Compute the breakeven rate.</strong> Download <a href="https://fred.stlouisfed.org/series/GS10" target="_blank" rel="noopener">GS10</a> and <a href="https://fred.stlouisfed.org/series/FII10" target="_blank" rel="noopener">FII10</a>. Line them up as <code>B</code> and <code>C</code>, then <code>=B2-C2</code> in <code>D2</code>. That column is the market's ten-year inflation forecast.</li>
+          <li><strong>Test how anchored it is.</strong> <code>=STDEV.S(D2:D999)</code> for the breakeven, then the same for actual 12-month CPI inflation over the same months. The forecast is several times less variable than the outcome.</li>
+          <li><strong>Build the term spread.</strong> Download <a href="https://fred.stlouisfed.org/series/GS2" target="_blank" rel="noopener">GS2</a> alongside GS10 and subtract. Count the inverted months with <code>=COUNTIF(D2:D999,"&lt;0")</code>.</li>
+          <li><strong>Then look at each one.</strong> <code>=INDEX(A2:A999,MATCH(MIN(D2:D999),D2:D999,0))</code> gives the date of the deepest inversion. Write down what happened in the following two years. Six or seven episodes is a small sample, and handling them one at a time keeps that fact in view.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ================= 3-6 ================= -->
+    <section class="block" id="s36">
+      <span class="section-num">3-6</span>
+      <h2>Conclusion</h2>
+      <p>Five things to carry into Chapter 4.</p>
+      <p><strong>A bond is a schedule, and a price is a present value.</strong> Nothing in this chapter needed a tool that Chapter 2 did not already supply. Pricing a bond is discounting, done several times and added up.</p>
+      <p><strong>Price and yield are one fact.</strong> The payments are fixed, so a higher return can only be bought by paying less. Every statement about bond prices has an exact translation into yields, and vice versa.</p>
+      <p><strong>Length is risk.</strong> The same move in market rates barely touches a two-year bond and reprices a thirty-year one severely. Safe from default and safe from loss are different properties, and government bonds have only the first.</p>
+      <p><strong>Two diagrams, one market.</strong> Supply of bonds is demand for funds; demand for bonds is supply of funds; bond prices rise exactly when interest rates fall. Choose whichever puts your question on the vertical axis.</p>
+      <p><strong>Expected inflation moves the nominal rate, not the real one.</strong> It pushes borrowers and lenders in reinforcing directions, so it lands on the rate rather than on the quantity borrowed. Two Treasury markets let you read the market's own forecast straight off a screen.</p>
+      <p>What this chapter has quietly assumed is that there is such a thing as <em>the</em> interest rate. There is not. Bonds of different length, different issuers and different tax treatment carry different yields on the same day. Chapter 4 is about those differences.</p>
+    </section>
+
+    <section class="block" id="data">
+      <h2>Data for this chapter</h2>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Series</th><th>Source release</th><th>Frequency</th><th>Download</th></tr></thead>
+          <tbody>
+            <tr><td>2-year Treasury, constant maturity</td><td>Federal Reserve H.15</td><td>Monthly</td><td><a href="https://fred.stlouisfed.org/series/GS2" target="_blank" rel="noopener">GS2</a></td></tr>
+            <tr><td>5-year Treasury, constant maturity</td><td>Federal Reserve H.15</td><td>Monthly</td><td><a href="https://fred.stlouisfed.org/series/GS5" target="_blank" rel="noopener">GS5</a></td></tr>
+            <tr><td>10-year Treasury, constant maturity</td><td>Federal Reserve H.15</td><td>Monthly</td><td><a href="https://fred.stlouisfed.org/series/GS10" target="_blank" rel="noopener">GS10</a></td></tr>
+            <tr><td>30-year Treasury, constant maturity</td><td>Federal Reserve H.15</td><td>Monthly</td><td><a href="https://fred.stlouisfed.org/series/GS30" target="_blank" rel="noopener">GS30</a></td></tr>
+            <tr><td>10-year Treasury, inflation indexed</td><td>Federal Reserve H.15</td><td>Monthly, from 2003</td><td><a href="https://fred.stlouisfed.org/series/FII10" target="_blank" rel="noopener">FII10</a></td></tr>
+            <tr><td>5-year Treasury, inflation indexed</td><td>Federal Reserve H.15</td><td>Monthly, from 2003</td><td><a href="https://fred.stlouisfed.org/series/FII5" target="_blank" rel="noopener">FII5</a></td></tr>
+            <tr><td>Federal debt held by the public</td><td>U.S. Treasury, Fiscal Data</td><td>Daily, from Sept 1997</td><td><a href="https://fiscaldata.treasury.gov/datasets/debt-to-the-penny/" target="_blank" rel="noopener">Debt to the Penny</a></td></tr>
+            <tr><td>Recession dates</td><td>National Bureau of Economic Research</td><td>Monthly</td><td><a href="https://www.nber.org/research/business-cycle-dating" target="_blank" rel="noopener">Business cycle dating</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="pager">
+      <a href="chapter-02.html"><span class="dir">Previous</span>2 · Money, Money Supply, and Interest</a>
+      <a href="chapter-04.html" style="text-align:right"><span class="dir">Next</span>4 · Interest Rates in More Detail</a>
+    </div>
+
+  </article>
+</div>
+</div>
+
+<footer class="site">
+  <div class="wrap">
+    <p><strong>Money &amp; Banking with Live Data.</strong> Original explanations and exercises; section headings follow the standard organisation of an undergraduate money-and-banking course. No textbook text is reproduced.</p>
+    <p>Data via the Federal Reserve Board and the U.S. Treasury, retrieved through <a href="https://db.nomics.world/" target="_blank" rel="noopener">DBnomics</a> and <a href="https://fiscaldata.treasury.gov/" target="_blank" rel="noopener">Fiscal Data</a>. Charts drawn with <a href="https://www.chartjs.org/" target="_blank" rel="noopener">Chart.js</a>.</p>
+  </div>
+</footer>
+
+<script src="assets/js/chart.umd.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/charts.js"></script>
+<script src="assets/js/ch03.js"></script>
+</body>
+</html>
