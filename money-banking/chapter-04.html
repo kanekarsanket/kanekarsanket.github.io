@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Chapter 4 · Interest Rates in More Detail</title>
-<meta name="description" content="Why two bonds issued on the same day carry different yields: default risk, inflation, taxes and maturity — with a live yield curve, calculators and Excel walkthroughs.">
+<meta name="description" content="Why two bonds issued on the same day carry different yields: default risk, inflation, taxes and maturity, with a live yield curve, calculators and Excel walkthroughs.">
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>">
 </head>
@@ -83,10 +83,10 @@
       <p>Two bonds are issued on the same Tuesday. Both promise $1,000 in five years and $45 a year in the meantime. One is issued by the United States Treasury and the other by a regional hospital system. They do not trade at the same price, and no amount of arithmetic from Chapter 3 explains why, because the arithmetic assumes the payments arrive.</p>
       <p>The gap between those two prices is the subject of this chapter. It has four sources, and they are worth naming up front so that the sections have somewhere to hang:</p>
       <ul>
-        <li><strong>Default risk</strong> — the borrower may not pay.</li>
-        <li><strong>Inflation</strong> — the dollars may be worth less when they arrive.</li>
-        <li><strong>Taxes</strong> — the interest may or may not be taken by the tax authority.</li>
-        <li><strong>Maturity</strong> — the money may be tied up for a month or for thirty years.</li>
+        <li><strong>Default risk.</strong> The borrower may not pay.</li>
+        <li><strong>Inflation.</strong> The dollars may be worth less when they arrive.</li>
+        <li><strong>Taxes.</strong> The interest may or may not be taken by the tax authority.</li>
+        <li><strong>Maturity.</strong> The money may be tied up for a month or for thirty years.</li>
       </ul>
       <p>The first three are the <strong>risk structure</strong> of interest rates: why bonds of the same maturity differ. The fourth is the <strong>term structure</strong>: why bonds from the same issuer differ. Sections 4-1 to 4-3 do the risk structure; 4-4 and 4-5 do the term structure.</p>
 
@@ -101,7 +101,7 @@
       <p>Where does the size of the premium come from? From two numbers a lender has to guess: how likely default is, and how much is recovered if it happens.</p>
       <p>Take a one-year bond promising $1,000. Suppose there is a 4% chance the issuer fails, and that in failure the lender recovers 40 cents on the dollar. Expected repayment is</p>
       <pre><code>0.96 × $1,000  +  0.04 × $400  =  $976</code></pre>
-      <p>For the lender to expect the same 4.5% return available on a Treasury bill, the bond has to be priced so that $976 discounted at 4.5% equals the price. Work backwards and the <em>promised</em> yield turns out to be roughly 7% — about two and a half points above the safe rate. That gap is the default risk premium, and it is compensation for an outcome that most of the time does not happen.</p>
+      <p>For the lender to expect the same 4.5% return available on a Treasury bill, the bond has to be priced so that $976 discounted at 4.5% equals the price. Work backwards and the <em>promised</em> yield turns out to be roughly 7%, about two and a half points above the safe rate. That gap is the default risk premium, and it is compensation for an outcome that most of the time does not happen.</p>
       <p>Try it with your own numbers. Notice how quickly the premium grows once recovery is poor, and how little default probability alone tells you without it.</p>
 
       <figure class="chart" id="fig-drp">
@@ -159,7 +159,7 @@
         <div class="box-title">Measure a credit spread in Excel</div>
         <p style="font-size:.94rem;margin-bottom:12px">Corporate bond yields are not available through the free data services this site's charts use, so this one is a download-and-build exercise. It is worth doing, because the resulting chart is one of the best fear gauges in finance.</p>
         <ol class="steps">
-          <li>Download <a href="https://fred.stlouisfed.org/series/AAA" target="_blank" rel="noopener">AAA</a> and <a href="https://fred.stlouisfed.org/series/BAA" target="_blank" rel="noopener">BAA</a> from FRED — Moody's seasoned corporate bond yields, monthly back to 1919.</li>
+          <li>Download <a href="https://fred.stlouisfed.org/series/AAA" target="_blank" rel="noopener">AAA</a> and <a href="https://fred.stlouisfed.org/series/BAA" target="_blank" rel="noopener">BAA</a> from FRED. These are Moody's seasoned corporate bond yields, monthly back to 1919.</li>
           <li>Also download <a href="https://fred.stlouisfed.org/series/GS10" target="_blank" rel="noopener">GS10</a>, the 10-year Treasury, as the safe benchmark.</li>
           <li>Lay them out as <code>A</code> = date, <code>B</code> = Aaa, <code>C</code> = Baa, <code>D</code> = Treasury. In <code>E2</code> write <code>=C2-B2</code>: the extra yield on medium-grade over high-grade corporates. In <code>F2</code> write <code>=C2-D2</code>: the full premium over Treasuries.</li>
           <li>Chart E and F against the dates. Every episode of financial stress in the last century appears as a spike, and the 1930s spike dwarfs everything since.</li>
@@ -186,7 +186,7 @@ exact:         r  =  (1 + i) / (1 + π)  −  1</code></pre>
 
       <h3 id="s42c">4-2c &nbsp;Ex ante and ex post</h3>
       <p>Now the distinction that actually matters, and the reason this section exists as its own subsection rather than a footnote.</p>
-      <p>When a loan is agreed, nobody knows what inflation will be. The lender and borrower bargain over a nominal rate using the inflation they <em>expect</em>. That gives the <strong>ex ante</strong> real rate — the one both sides thought they were agreeing to:</p>
+      <p>When a loan is agreed, nobody knows what inflation will be. The lender and borrower bargain over a nominal rate using the inflation they <em>expect</em>. That gives the <strong>ex ante</strong> real rate, the one both sides thought they were agreeing to:</p>
       <pre><code>ex ante real rate  =  nominal rate  −  expected inflation</code></pre>
       <p>Later, the inflation that actually happened is known, and the <strong>ex post</strong> real rate is whatever the lender in fact earned:</p>
       <pre><code>ex post real rate  =  nominal rate  −  realised inflation</code></pre>
@@ -229,7 +229,7 @@ exact:         r  =  (1 + i) / (1 + π)  −  1</code></pre>
       <p>Interest on bonds issued by states and localities is generally exempt from federal income tax, and often from state tax for residents of the issuing state. The water authority from Chapter 3 was issuing exactly this kind of bond.</p>
       <p>The consequence is that a municipal bond can pay a visibly lower yield than a corporate bond and still leave the lender better off. The comparison is made through the <strong>tax-equivalent yield</strong>: what a taxable bond would have to pay to match a given tax-free one.</p>
       <pre><code>tax-equivalent yield  =  muni yield / (1 − tax rate)</code></pre>
-      <p>A 3.5% municipal bond, to an investor in a 35% bracket, is worth the same as a taxable bond paying 5.38%. To an investor who pays no tax at all — a pension fund, say — it is worth 3.5% and nothing more, which is why pension funds do not buy municipal bonds. <strong>The value of a tax exemption depends entirely on the bracket of whoever is holding it</strong>, and that single fact explains most of who owns what in the bond market.</p>
+      <p>A 3.5% municipal bond, to an investor in a 35% bracket, is worth the same as a taxable bond paying 5.38%. To an investor who pays no tax at all, a pension fund for instance, it is worth 3.5% and nothing more, which is why pension funds do not buy municipal bonds. <strong>The value of a tax exemption depends entirely on the bracket of whoever is holding it</strong>, and that single fact explains most of who owns what in the bond market.</p>
 
       <figure class="chart" id="fig-tax">
         <figcaption>Tax-equivalent yield</figcaption>
@@ -327,7 +327,7 @@ exact:         r  =  (1 + i) / (1 + π)  −  1</code></pre>
 
       <h3 id="s44c">4-4c &nbsp;Pure expectations theory</h3>
       <p>The first explanation is the simplest: <strong>a long rate is an average of the short rates people expect over the same period.</strong></p>
-      <p>The argument is an arbitrage. If you have money for two years, you can buy a two-year bond, or buy a one-year bond and roll it into another one-year bond next year. If investors are indifferent between the two — which is the assumption doing all the work — the two strategies must offer the same expected return, so</p>
+      <p>The argument is an arbitrage. If you have money for two years, you can buy a two-year bond, or buy a one-year bond and roll it into another one-year bond next year. If investors are indifferent between the two, and that indifference is the assumption carrying all the weight, then both strategies must offer the same expected return, so</p>
       <pre><code>(1 + i₂)²  =  (1 + i₁) × (1 + expected i₁ next year)</code></pre>
       <p>Rearranged, that says a two-year rate is roughly the average of this year's one-year rate and next year's expected one. The implication is remarkable: <strong>the yield curve contains the market's forecast of future short rates, and you can extract it.</strong> The calculator below does exactly that with live data.</p>
 
@@ -358,7 +358,7 @@ exact:         r  =  (1 + i) / (1 + π)  −  1</code></pre>
         <p class="source-line">Seeded with the latest 1-year and 2-year Treasury constant maturities from Federal Reserve H.15. The chart shows the two strategies the arbitrage compares: buy and hold for two years, or roll a one-year bond twice.</p>
       </figure>
 
-      <p>Pure expectations explains fact one beautifully — if long rates are averages of short rates, everything moves together — and it explains fact three. It fails badly on fact two. If the curve were purely an average of expected short rates, it would slope up only when rates were expected to rise, which cannot be true most of the time. Something else is adding a persistent upward tilt.</p>
+      <p>Pure expectations explains fact one beautifully, since long rates that are averages of short rates have to move together, and it explains fact three. It fails badly on fact two. If the curve were purely an average of expected short rates, it would slope up only when rates were expected to rise, which cannot be true most of the time. Something else is adding a persistent upward tilt.</p>
 
       <h3 id="s44d">4-4d &nbsp;Term premium theory</h3>
       <p>That something else is compensation for risk. Chapter 3 showed that a long bond's price moves violently when yields change; a lender who might need the money back early bears that risk, and wants paying for it. So a long rate is the expected average of short rates <em>plus a term premium</em> that grows with maturity.</p>
@@ -366,7 +366,7 @@ exact:         r  =  (1 + i) / (1 + π)  −  1</code></pre>
       <p>This is the workhorse view, because it keeps everything pure expectations got right and adds the upward tilt that fact two demands. It also carries a warning that section 4-5 will need: an upward-sloping curve does <em>not</em> mean the market expects rates to rise. It may simply mean the term premium is positive, which it usually is.</p>
 
       <h3 id="s44e">4-4e &nbsp;Segmented market theory</h3>
-      <p>A third view drops the arbitrage assumption altogether. Some investors are structurally short-horizon — a company parking cash for a quarter — and some are structurally long — a pension fund matching liabilities forty years out. If they do not switch between maturities in response to small yield differences, each maturity has its own supply and demand, and its own price.</p>
+      <p>A third view drops the arbitrage assumption altogether. Some investors are structurally short-horizon, such as a company parking cash for a quarter, and some are structurally long, such as a pension fund matching liabilities forty years out. If they do not switch between maturities in response to small yield differences, each maturity has its own supply and demand, and its own price.</p>
       <p>In its pure form this is too strong: it predicts that yields at different maturities need not move together, and they plainly do. Its milder cousin, the preferred-habitat view, says investors have a favoured maturity but can be bribed out of it, which is really term premium theory with a supply-and-demand story for where the premium comes from. That milder version has real explanatory power: it is why large-scale central bank purchases of long bonds move long yields at all.</p>
     </section>
 
@@ -397,7 +397,7 @@ exact:         r  =  (1 + i) / (1 + π)  −  1</code></pre>
         <ul style="margin:0;font-size:.94rem">
           <li>The sample is small. There have been a handful of inversions in the modern era, not hundreds.</li>
           <li>The lag is long and irregular. Months to years have passed between inversion and recession, which makes the signal close to useless for timing anything.</li>
-          <li>Term premium contaminates it. If the premium falls for reasons unrelated to expectations — heavy central bank buying of long bonds, or foreign demand for safe assets — the curve flattens without anyone forecasting a slump.</li>
+          <li>Term premium contaminates it. If the premium falls for reasons unrelated to expectations, say heavy central bank buying of long bonds or foreign demand for safe assets, the curve flattens without anyone forecasting a slump.</li>
           <li>The signal is now famous. A relationship watched by every central banker and analyst on earth is one that policy responds to, and a signal that changes behaviour can stop predicting the thing it used to predict.</li>
         </ul>
       </div>
@@ -426,7 +426,7 @@ exact:         r  =  (1 + i) / (1 + π)  −  1</code></pre>
     <section class="block" id="s46">
       <span class="section-num">4-6</span>
       <h2>Conclusion</h2>
-      <p>The chapter is one sentence long, if you want it that way: <strong>the yield on a bond is a safe real rate plus compensation for everything else that could go wrong.</strong> Unpacked, that is</p>
+      <p>The chapter is one sentence long, if you want it that way: <strong>the yield on a bond is a safe real rate plus compensation for everything else that could go wrong.</strong> Written out in full, that is</p>
       <pre><code>nominal yield  =  real rate
                 +  expected inflation
                 +  default risk premium

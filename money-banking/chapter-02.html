@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Chapter 2 · Money, Money Supply, and Interest</title>
-<meta name="description" content="What money is, how much of it there is, how the official measures are constructed, and what it costs to borrow it — with live charts and Excel walkthroughs.">
+<meta name="description" content="What money is, how much of it there is, how the official measures are constructed, and what it costs to borrow it, with live charts and Excel walkthroughs.">
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>">
 </head>
@@ -85,9 +85,9 @@
 
       <h3 id="s21b">2-1b &nbsp;Functions of Money</h3>
       <p>Rather than test candidates against a definition, it is more useful to ask what work money does. Three jobs, in descending order of importance.</p>
-      <p><strong>A medium of exchange.</strong> This is the job that makes money worth inventing. Without it, trade requires a double coincidence of wants: to eat, the economist must find someone with surplus food who happens to want a lecture on monetary policy. Money breaks the barter problem into two easy halves — sell your output to whoever wants it, buy your inputs from whoever has them. Everything about a modern division of labour rests on that.</p>
+      <p><strong>A medium of exchange.</strong> This is the job that makes money worth inventing. Without it, trade requires a double coincidence of wants: to eat, the economist must find someone with surplus food who happens to want a lecture on monetary policy. Money breaks the barter problem into two easy halves. Sell your output to whoever wants it, then buy your inputs from whoever has them. Everything about a modern division of labour rests on that.</p>
       <p><strong>A unit of account.</strong> Prices are quoted in one common measure, so comparisons take one step instead of many. In an economy with 1,000 goods and no money, there are 499,500 separate exchange rates to know. With money there are 1,000 prices. The saving is not a detail; it is the difference between a market that can function and one that cannot.</p>
-      <p><strong>A store of value.</strong> Money carries purchasing power forward in time, letting you sell today and buy next year. It is a mediocre store of value — inflation erodes it, and other assets pay a return while cash does not — but it is unrivalled for being instantly spendable. That is the trade the rest of this chapter is about.</p>
+      <p><strong>A store of value.</strong> Money carries purchasing power forward in time, letting you sell today and buy next year. It is a mediocre store of value, since inflation erodes it and other assets pay a return while cash does not, but it is unrivalled for being instantly spendable. That is the trade the rest of this chapter is about.</p>
 
       <div class="box note">
         <div class="box-title">Test yourself</div>
@@ -137,9 +137,9 @@
       </figure>
 
       <p>The result is the most useful thing in this chapter, and it is not the tidy one. Set the horizon to twelve months with no lag and the scatter is a cloud: over the whole postwar record the correlation between this month's money growth and this month's inflation is close to zero. On that evidence alone you would conclude that money has nothing to do with prices.</p>
-      <p>Then start turning the dials. Give money a two-year lead and the correlation climbs sharply. Stretch the horizon to five years and it climbs again. At ten-year averages with a two-year lead, the relationship is strong and the slope is not far from one — which is what the quantity theory predicts: over the long haul, an extra percentage point of money growth comes with roughly an extra percentage point of inflation.</p>
+      <p>Then start turning the dials. Give money a two-year lead and the correlation climbs sharply. Stretch the horizon to five years and it climbs again. At ten-year averages with a two-year lead, the relationship is strong and the slope is not far from one. That is what the quantity theory predicts: over the long haul, an extra percentage point of money growth comes with roughly an extra percentage point of inflation.</p>
       <p>That pattern is the finding, and it is worth stating carefully because it is so often stated badly. <strong>Money growth is a strong statement about the average rate of inflation over a decade and a nearly useless one about next quarter.</strong> Friedman's phrase for the gap was that monetary policy operates with long and variable lags. The dials above are that phrase, made checkable.</p>
-      <p>Two honest caveats. Correlation at low frequency is not proof of direction — prices and money can respond to each other and to a third thing. And <em>V</em> is not the constant the simple story needs; the 2010s, when M2 grew steadily and inflation stayed below target, are the standing counterexample. Both facts are visible in the chart if you look for them.</p>
+      <p>Two honest caveats. Correlation at low frequency is not proof of direction, because prices and money can respond to each other and to a third thing. And <em>V</em> is not the constant the simple story needs; the 2010s, when M2 grew steadily and inflation stayed below target, are the standing counterexample. Both facts are visible in the chart if you look for them.</p>
 
       <div class="box excel">
         <div class="box-title">Build this in Excel</div>
@@ -151,16 +151,16 @@
           <li><strong>Add the lag.</strong> In <code>F38</code> type <code>=CORREL(D14:D975,E38:E999)</code>. Both ranges are the same length, but the inflation range starts 24 rows later, so this correlates money growth with inflation two years afterwards. Compare it with step 4.</li>
           <li><strong>Stretch the horizon.</strong> In <code>G122</code> type <code>=(B122/B2)^(12/120)-1</code> and in <code>H122</code> type <code>=(C122/C2)^(12/120)-1</code>, then fill both down. These are average annual growth rates over the previous ten years. Correlate them: <code>=CORREL(G122:G999,H122:H999)</code>.</li>
           <li><strong>Draw it.</strong> Highlight G and H, <strong>Insert → Scatter</strong>, then right-click a point, <strong>Add Trendline</strong>, and tick <em>Display Equation</em> and <em>Display R-squared</em>. The coefficient on <em>x</em> is how many points of inflation come with one extra point of money growth.</li>
-          <li><strong>Compare.</strong> Put the four correlations — 12-month, 12-month lagged two years, 10-year, 10-year lagged two years — in a small table. That table is the chapter's empirical claim in four numbers.</li>
+          <li><strong>Compare.</strong> Put the four correlations in a small table: 12-month, 12-month lagged two years, 10-year, and 10-year lagged two years. That table is the chapter's empirical claim in four numbers.</li>
         </ol>
       </div>
 
       <h3 id="s22b">2-2b &nbsp;Money through Time</h3>
       <p>The forms money has taken follow a single direction of travel: from things valuable in themselves toward pure record-keeping.</p>
-      <p><strong>Commodity money</strong> is a good that would be worth holding even if nobody used it for payment — gold, silver, salt, cattle. Its value is anchored by its own usefulness, which limits how badly it can be debased, and by its own scarcity, which limits how fast the money stock can grow. That constraint is both the attraction and the flaw: an economy on a gold standard cannot expand its money supply when it needs to.</p>
+      <p><strong>Commodity money</strong> is a good that would be worth holding even if nobody used it for payment. Gold, silver, salt and cattle have all served. Its value is anchored by its own usefulness, which limits how badly it can be debased, and by its own scarcity, which limits how fast the money stock can grow. That constraint is both the attraction and the flaw: an economy on a gold standard cannot expand its money supply when it needs to.</p>
       <p><strong>Representative money</strong> is a claim on a commodity: paper redeemable for a fixed weight of metal. It keeps the anchor while making the money portable. It also introduces the temptation that eventually ends every such system, which is to issue more claims than there is metal.</p>
       <p><strong>Fiat money</strong> is money by declaration, backed by nothing but the issuing government's word and the public's expectation that others will take it. Every major currency today is fiat. It sounds precarious and is in fact more stable than commodity money in practice, provided the issuing central bank behaves. When it does not, the result is the hyperinflations that make the case for central bank independence better than any argument can.</p>
-      <p><strong>Bank money</strong> — deposits — is where most of the stock now lives. It is not issued by the government at all. It is created by commercial banks in the act of lending, a mechanism taken up in Chapter 7. The chart below makes the scale of this plain: physical currency is a small minority of the money in the economy, and has been for the whole modern record.</p>
+      <p><strong>Bank money</strong>, meaning deposits, is where most of the stock now lives. It is not issued by the government at all. It is created by commercial banks in the act of lending, a mechanism taken up in Chapter 7. The chart below makes the scale of this plain: physical currency is a small minority of the money in the economy, and has been for the whole modern record.</p>
 
       <figure class="chart" id="fig-cash">
         <figcaption>How much of the money supply is actually cash?</figcaption>
@@ -179,7 +179,7 @@
         <p class="source-line">Federal Reserve H.6, seasonally adjusted. FRED equivalents: <a href="https://fred.stlouisfed.org/series/CURRSL" target="_blank" rel="noopener">CURRSL</a>, <a href="https://fred.stlouisfed.org/series/M2SL" target="_blank" rel="noopener">M2SL</a>.</p>
       </figure>
 
-      <p>Two features of the share series repay attention. It fell for decades as chequing and then card payments spread, which is what you would expect. It then stopped falling and turned up around 2008, which is not — electronic payment kept spreading, yet cash holdings grew. The usual explanations are a flight to physical currency during financial panics, the very low interest rates that made holding non-interest-bearing cash nearly costless, and foreign demand for dollar notes, a large share of which circulate outside the United States.</p>
+      <p>Two features of the share series repay attention. It fell for decades as chequing and then card payments spread, which is what you would expect. It then stopped falling and turned up around 2008, which is not. Electronic payment kept spreading, yet cash holdings grew. The usual explanations are a flight to physical currency during financial panics, the very low interest rates that made holding non-interest-bearing cash nearly costless, and foreign demand for dollar notes, a large share of which circulate outside the United States.</p>
 
       <div class="box excel">
         <div class="box-title">Build this in Excel</div>
@@ -187,7 +187,7 @@
           <li>Download <a href="https://fred.stlouisfed.org/series/CURRSL" target="_blank" rel="noopener">CURRSL</a> and <a href="https://fred.stlouisfed.org/series/M2SL" target="_blank" rel="noopener">M2SL</a> as CSV and put them in one sheet: <code>A</code> = date, <code>B</code> = currency, <code>C</code> = M2.</li>
           <li>In <code>D2</code> type <code>=B2/C2</code> and fill down. Format column D as a percentage.</li>
           <li>Chart column D against the dates. You now have the share view.</li>
-          <li>To see it as your students will feel it, put <code>=C2-B2</code> in <code>E2</code> and fill down — that is all the money that is not cash — then make a <strong>stacked area</strong> chart of columns B and E.</li>
+          <li>To see it as your students will feel it, put <code>=C2-B2</code> in <code>E2</code> and fill down, which gives all the money that is not cash, then make a <strong>stacked area</strong> chart of columns B and E.</li>
           <li>Find the minimum of the share and the date it happened: <code>=MIN(D2:D999)</code> and <code>=INDEX(A2:A999,MATCH(MIN(D2:D999),D2:D999,0))</code>.</li>
         </ol>
       </div>
@@ -195,7 +195,7 @@
       <h3 id="s22c">2-2c &nbsp;The Future of Money?</h3>
       <p>The direction of travel suggests the next step, and several candidates are competing for it.</p>
       <p><strong>Cryptocurrencies</strong> such as Bitcoin were designed as money and function poorly as it. They are volatile, which disqualifies them as a unit of account; slow and expensive to settle in, which hurts as a medium of exchange; and mostly held in the hope of price appreciation, which is the behaviour of an asset, not of cash. Judge them against the three functions and they fail on two.</p>
-      <p><strong>Stablecoins</strong> pin their value to a currency and are, in structure, representative money for the digital age: a claim on a reserve of dollars. The old question applies unchanged — are the reserves really there, and who checks?</p>
+      <p><strong>Stablecoins</strong> pin their value to a currency and are, in structure, representative money for the digital age: a claim on a reserve of dollars. The old question applies unchanged: are the reserves really there, and who checks?</p>
       <p><strong>Central bank digital currency</strong> would be a direct claim on the central bank held by the public, in effect electronic cash. It would be unambiguously money by any definition. What it would do to commercial banks, which fund themselves with the deposits it would compete against, is the live policy question.</p>
       <p>Whatever wins, the three functions in 2-1b are the yardstick. They have outlasted cowrie shells, gold and the gold standard, and they will outlast whatever is currently being announced.</p>
     </section>
@@ -266,7 +266,7 @@
     <section class="block" id="s24">
       <span class="section-num">2-4</span>
       <h2>The Price of Money: Interest Rates</h2>
-      <p>Money, like anything else, has a price. Its price is not what a dollar buys — that is the price <em>level</em>. The price of money is what you pay to have some of it now rather than later, and it is quoted as an interest rate.</p>
+      <p>Money, like anything else, has a price. Its price is not what a dollar buys, which is the price <em>level</em>. The price of money is what you pay to have some of it now rather than later, and it is quoted as an interest rate.</p>
       <p>There is no single one. There are many, differing by how long the loan runs, how likely the borrower is to repay, and how the interest is taxed. Chapters 3 and 4 take those differences apart. For now, look at how they move.</p>
 
       <figure class="chart" id="fig-rates">
@@ -290,7 +290,7 @@
       <p>Three things are visible without any theory. The rates move together, because they are all prices for the same underlying thing. They are ordered, with short and safe below long and less safe, most of the time. And "most of the time" is doing real work: the gaps narrow, and occasionally the order reverses. Those reversals are the subject of Chapter 4 and among the most watched numbers in finance.</p>
 
       <h3 id="s24a">2-4a &nbsp;Time Value of Money</h3>
-      <p>Behind every interest rate is one idea: <strong>a dollar today is worth more than a dollar a year from now.</strong> Not because of inflation — this is true even with perfectly stable prices — but because a dollar today can be put to work, and because certainty beats waiting.</p>
+      <p>Behind every interest rate is one idea: <strong>a dollar today is worth more than a dollar a year from now.</strong> Not because of inflation, since this holds even when prices are perfectly stable, but because a dollar today can be put to work, and because certainty beats waiting.</p>
       <p>Formalise it and the arithmetic falls out. Lend $100 at 5% and next year you have $105. In two years, $105 grows to $110.25, not $110, because the second year's interest is earned on the first year's interest too. In general the future value of an amount <em>PV</em> after <em>n</em> years at rate <em>r</em> is</p>
       <pre><code>FV = PV × (1 + r)^n</code></pre>
       <p>Compounding is why small differences in rate turn into large differences in outcome over long horizons, and why the interest rate is the most consequential single number in finance.</p>
@@ -321,7 +321,7 @@
         <ol class="steps">
           <li>Download <a href="https://fred.stlouisfed.org/series/GS10" target="_blank" rel="noopener">GS10</a> and <a href="https://fred.stlouisfed.org/series/CPIAUCSL" target="_blank" rel="noopener">CPIAUCSL</a> and lay them out as <code>A</code> = date, <code>B</code> = 10-year yield in percent, <code>C</code> = CPI index.</li>
           <li>In <code>D14</code> compute inflation: <code>=(C14/C2-1)*100</code>, and fill down.</li>
-          <li>In <code>E14</code> compute the approximate real rate: <code>=B14-D14</code>. In <code>F14</code> compute the exact one: <code>=((1+B14/100)/(1+D14/100)-1)*100</code>. Compare the two columns — they differ by very little, which is why the approximation survives.</li>
+          <li>In <code>E14</code> compute the approximate real rate: <code>=B14-D14</code>. In <code>F14</code> compute the exact one: <code>=((1+B14/100)/(1+D14/100)-1)*100</code>. Compare the two columns. They differ by very little, which is why the approximation survives.</li>
           <li>Chart columns B, D and E against the dates.</li>
           <li>Count how often the real rate was negative: <code>=COUNTIF(E14:E999,"&lt;0")/COUNT(E14:E999)</code>, formatted as a percentage.</li>
         </ol>
@@ -371,7 +371,7 @@
           <li>Or use the built-in function: <code>=PV(B2,B3,0,-B1)</code>. The zero is the annual payment, and the minus sign is Excel's sign convention for cash going out. Both give the same answer, and it is worth seeing that they do.</li>
           <li>For a stream of payments rather than one, list the amounts in <code>C1:C10</code> and use <code>=NPV(B2,C1:C10)</code>. This is exactly how a bond gets priced in Chapter 3.</li>
           <li>Build the decay curve: put years 1 to 40 down column E, then in <code>F1</code> write <code>=$B$1/(1+$B$2)^E1</code> and fill down. The dollar signs lock the reference. Chart F against E.</li>
-          <li>To reverse the question — what rate makes a price fair — use <strong>Data → What-If Analysis → Goal Seek</strong>, setting the present-value cell to your target by changing the rate cell. That is a yield calculation, which is Chapter 3's main event.</li>
+          <li>To reverse the question and ask what rate makes a price fair, use <strong>Data → What-If Analysis → Goal Seek</strong>, setting the present-value cell to your target by changing the rate cell. That is a yield calculation, which is Chapter 3's main event.</li>
         </ol>
       </div>
     </section>

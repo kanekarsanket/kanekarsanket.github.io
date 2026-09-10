@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Chapter 3 · Bonds and Loanable Funds</title>
-<meta name="description" content="What a bond is, how its price and its yield are two ways of saying the same thing, and the two markets that between them set the interest rate — with live charts, a bond calculator and Excel walkthroughs.">
+<meta name="description" content="What a bond is, how its price and its yield are two ways of saying the same thing, and the two markets that between them set the interest rate, with live charts, a bond calculator and Excel walkthroughs.">
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>">
 </head>
@@ -95,7 +95,7 @@
           </tbody>
         </table>
       </div>
-      <p>Notice what is <em>not</em> on that list: the price. The four terms are printed on the bond and never change. The price changes every day, because the bond can be sold to somebody else and the terms of the sale are whatever the two parties agree. Almost everything in this chapter follows from that one asymmetry — <strong>fixed promises, floating price.</strong></p>
+      <p>Notice what is <em>not</em> on that list: the price. The four terms are printed on the bond and never change. The price changes every day, because the bond can be sold to somebody else and the terms of the sale are whatever the two parties agree. Almost everything in this chapter follows from that one asymmetry: <strong>fixed promises, floating price.</strong></p>
 
       <h4>Coupon bonds and zeros</h4>
       <p>Most bonds pay a coupon. A <strong>zero-coupon bond</strong> pays nothing along the way and repays face value at the end; the lender's whole return comes from buying it below face. A Treasury bill works this way. A zero is just the Chapter 2 present-value formula with one payment in it, which makes it the easiest bond to price and a useful thing to keep in mind whenever a coupon bond gets confusing: a coupon bond is nothing more than a bundle of zeros, one per payment date.</p>
@@ -186,7 +186,7 @@
 
       <h3 id="s32b">Yield to maturity</h3>
       <p>Turn the question round. You are quoted a price. What return would you earn holding the bond to the end? That number is the <strong>yield to maturity</strong>: the single discount rate at which the formula above reproduces the quoted price. It is the internal rate of return on the purchase, and it is what people mean by "the yield" without qualification.</p>
-      <p>There is no algebraic solution for <em>y</em> — you cannot rearrange the equation to isolate it. Software finds it by guessing, checking, and narrowing, which is exactly what Excel's Goal Seek does and what the calculator above does invisibly. That is not a flaw in the method; it is a property of polynomials of degree ten.</p>
+      <p>There is no algebraic solution for <em>y</em>, because you cannot rearrange the equation to isolate it. Software finds it by guessing, checking, and narrowing, which is exactly what Excel's Goal Seek does and what the calculator above does invisibly. That is not a flaw in the method; it is a property of polynomials of degree ten.</p>
       <p>One near-miss worth naming so you can avoid it. The <strong>current yield</strong> is the annual coupon divided by the price: on the $852.80 bond, $40 / $852.80 = 4.7%. It is quick, it is quoted, and it is wrong as a measure of return, because it ignores the $147.20 of capital gain the holder collects when the bond matures at face. The true yield to maturity on that bond is 6%. Current yield understates the return on a discount bond and overstates it on a premium bond, and the further from par, the worse the error.</p>
 
       <h3 id="s32c">Why the see-saw must hold</h3>
@@ -242,7 +242,7 @@
         <div class="box-title">Price a bond in Excel</div>
         <ol class="steps">
           <li>Lay out the terms: face value in <code>B1</code> (1000), coupon rate in <code>B2</code> (0.04), years in <code>B3</code> (10), market yield in <code>B4</code> (0.06).</li>
-          <li>The direct way, so you can see the machinery: put years 1 to 10 down <code>A8:A17</code>. In <code>B8</code> write <code>=IF(A8=$B$3,$B$1*$B$2+$B$1,$B$1*$B$2)</code> and fill down — that is the coupon each year plus the face value in the final year. In <code>C8</code> write <code>=B8/(1+$B$4)^A8</code> and fill down. Sum column C with <code>=SUM(C8:C17)</code>. You should get <strong>852.80</strong>.</li>
+          <li>The direct way, so you can see the machinery: put years 1 to 10 down <code>A8:A17</code>. In <code>B8</code> write <code>=IF(A8=$B$3,$B$1*$B$2+$B$1,$B$1*$B$2)</code> and fill down. That is the coupon each year plus the face value in the final year. In <code>C8</code> write <code>=B8/(1+$B$4)^A8</code> and fill down. Sum column C with <code>=SUM(C8:C17)</code>. You should get <strong>852.80</strong>.</li>
           <li>The one-line way: <code>=NPV(B4,B8:B17)</code> on the same payment column. NPV assumes the first payment is one period away, which is exactly right here.</li>
           <li>The built-in way: <code>=PV(B4,B3,-B1*B2,-B1)</code>. The minus signs are Excel's convention for money coming in. All three agree, and seeing that they do is the point of doing it three ways once.</li>
           <li><strong>Go the other direction.</strong> Type a price of 900 in <code>B6</code>. Open <strong>Data → What-If Analysis → Goal Seek</strong>, set your NPV cell to 900 by changing <code>B4</code>. Excel hunts for the yield that produces that price. That is a yield-to-maturity calculation, and Goal Seek is doing the same guess-and-narrow the market does.</li>
@@ -259,7 +259,7 @@
       <span class="section-num">3-3</span>
       <h2>Supply and Demand for Bonds</h2>
       <p>So far the market yield has been an input handed down from somewhere. Where does it come from? From the same place every price comes from: the quantity people want to sell and the quantity people want to buy.</p>
-      <p>The wrinkle is what goes on the axes. In the bond market the good being traded is the bond itself, so the vertical axis is the <strong>price of a bond</strong> and the horizontal axis is the <strong>quantity of bonds</strong>. Because price and yield are locked together by the see-saw, the same diagram carries an interest rate on its vertical axis too — running the other way. Both are marked on the left-hand panel of the diagram further down.</p>
+      <p>The wrinkle is what goes on the axes. In the bond market the good being traded is the bond itself, so the vertical axis is the <strong>price of a bond</strong> and the horizontal axis is the <strong>quantity of bonds</strong>. Because price and yield are locked together by the see-saw, the same diagram carries an interest rate on its vertical axis too, running the other way. Both are marked on the left-hand panel of the diagram further down.</p>
 
       <h3 id="s33a">3-3a &nbsp;The Supply of Bonds</h3>
       <p>Bonds are supplied by borrowers: firms that want to build something, governments that want to spend more than they collect, households when they take out a mortgage that ends up inside a bond. To supply a bond is to borrow.</p>
@@ -270,7 +270,7 @@
       <ul>
         <li><strong>Expected profitability of investment.</strong> When firms see projects worth funding, they issue more bonds at every price and supply shifts right. In a downturn, when the projects look doubtful, it shifts left. This is why bond supply is procyclical.</li>
         <li><strong>Government borrowing.</strong> A deficit is financed by selling bonds, and the Treasury sells them regardless of price. Bigger deficits push supply right.</li>
-        <li><strong>Expected inflation.</strong> A borrower who expects the dollar to lose value is delighted to repay in cheaper future dollars. Higher expected inflation makes borrowing more attractive at every price and pushes supply right. Hold that thought — the lenders have the opposite reaction, and section 3-5a is where the two meet.</li>
+        <li><strong>Expected inflation.</strong> A borrower who expects the dollar to lose value is delighted to repay in cheaper future dollars. Higher expected inflation makes borrowing more attractive at every price and pushes supply right. Hold that thought: the lenders have the opposite reaction, and section 3-5a is where the two meet.</li>
       </ul>
       <p>The government-borrowing channel is the one with the cleanest data, so it is worth looking at directly before trusting it.</p>
 
@@ -298,7 +298,7 @@
       <ul>
         <li><strong>Wealth.</strong> Richer savers buy more of nearly every asset, bonds included. Demand shifts right.</li>
         <li><strong>Expected return on the alternatives.</strong> Bonds compete with equities, property and cash. When shares look likely to do well, money leaves bonds and demand shifts left.</li>
-        <li><strong>Risk.</strong> Two opposite effects, and which one applies depends on whose risk changed. If the <em>bond issuer</em> becomes more likely to default, demand for its bonds falls. If the <em>rest of the world</em> becomes riskier, demand for safe bonds rises — the flight to quality that shows up in every financial panic.</li>
+        <li><strong>Risk.</strong> Two opposite effects, and which one applies depends on whose risk changed. If the <em>bond issuer</em> becomes more likely to default, demand for its bonds falls. If the <em>rest of the world</em> becomes riskier, demand for safe bonds rises. This is the flight to quality that shows up in every financial panic.</li>
         <li><strong>Liquidity.</strong> A bond that can be sold quickly at a fair price is worth more than one that cannot. Treasuries are the most liquid securities in existence and are priced accordingly.</li>
         <li><strong>Expected inflation.</strong> Lenders are the mirror image of borrowers here. Expected inflation eats the real value of a fixed stream, so higher expected inflation shifts bond demand left.</li>
       </ul>
@@ -349,10 +349,10 @@
       <p>Same transactions, different bookkeeping. Instead of counting pieces of paper changing hands, count the dollars flowing through them, and put the interest rate on the vertical axis where an economist expects to find a price.</p>
 
       <h3 id="s34a">3-4a &nbsp;The Supply of Loanable Funds</h3>
-      <p>Funds are supplied by savers — the same people who were <em>demanding</em> bonds a moment ago. The curve slopes up because a higher interest rate is a better reward for postponing consumption, so more is lent at every level of income. Households, firms retaining earnings, governments running surpluses and foreigners buying domestic assets all sit on this curve.</p>
+      <p>Funds are supplied by savers, the same people who were <em>demanding</em> bonds a moment ago. The curve slopes up because a higher interest rate is a better reward for postponing consumption, so more is lent at every level of income. Households, firms retaining earnings, governments running surpluses and foreigners buying domestic assets all sit on this curve.</p>
 
       <h3 id="s34b">3-4b &nbsp;The Demand for Loanable Funds</h3>
-      <p>Funds are demanded by borrowers — the same people who were <em>supplying</em> bonds. The curve slopes down because the interest rate is the cost of a project's finance. Rank every possible investment by its expected return and fund the ones that clear the hurdle; lower the hurdle and more projects clear it. Firms building capacity, households buying houses and governments covering deficits are all on this curve.</p>
+      <p>Funds are demanded by borrowers, the same people who were <em>supplying</em> bonds. The curve slopes down because the interest rate is the cost of a project's finance. Rank every possible investment by its expected return and fund the ones that clear the hurdle; lower the hurdle and more projects clear it. Firms building capacity, households buying houses and governments covering deficits are all on this curve.</p>
       <div class="box note">
         <div class="box-title">The translation table</div>
         <div class="table-scroll" style="margin:0">
@@ -389,7 +389,7 @@
       <p>Suppose everyone comes to expect prices to rise two points faster than they had assumed. Borrowers are pleased, since they will repay in cheaper dollars: bond supply shifts right. Lenders are displeased for the same reason: bond demand shifts left. Both shifts push bond prices down and the interest rate up, and they reinforce rather than offset each other. The quantity of borrowing barely moves; the rate does almost all the adjusting.</p>
       <p>Push it to the limit and you get the <strong>Fisher effect</strong>: a change in expected inflation passes one-for-one into the nominal interest rate, leaving the real rate where it was.</p>
       <pre><code>nominal rate  =  real rate  +  expected inflation</code></pre>
-      <p>Chapter 2 used this identity backwards, subtracting realised inflation from a nominal yield to get a realised real return. The version here is forward-looking and far more useful, because it is about the inflation people <em>expect</em> — and, unlike Chapter 2's version, it is directly observable.</p>
+      <p>Chapter 2 used this identity backwards, subtracting realised inflation from a nominal yield to get a realised real return. The version here is forward-looking and far more useful, because it is about the inflation people <em>expect</em>, and, unlike Chapter 2's version, it is directly observable.</p>
       <p>It is observable because the Treasury sells two kinds of ten-year bond. An ordinary one promises fixed dollars. An inflation-protected one, a TIPS, promises fixed purchasing power by adjusting its principal with the consumer price index. The ordinary bond's yield is a nominal rate; the TIPS yield is a real rate. Subtract, and what remains is the market's own forecast of average inflation over the next decade, known as the <strong>breakeven rate</strong>. No survey, no model: a number two live markets agree on.</p>
 
       <figure class="chart" id="fig-fisher">
@@ -418,7 +418,7 @@
       <p>Both curves in both panels move with the business cycle, and mostly in the same direction, which makes the cycle a useful test of whether you have the model straight.</p>
       <p>In an expansion, firms have projects worth funding, so bond supply and funds demand shift right and push rates up. Savers also have more income, shifting bond demand and funds supply right, which pushes rates down. The first effect usually wins, so interest rates rise in booms and fall in slumps. Usually. Because the two effects work against each other, the net movement is smaller than either force alone, and in unusual cycles the ordering can reverse.</p>
       <p>Confidence works the same way but faster. A market that turns fearful bids up safe bonds and shuns risky ones, so Treasury yields fall and corporate yields rise in the same week without any change in the volume of saving.</p>
-      <p>One summary number tracks this better than any single yield: the gap between long and short Treasury yields. It is normally positive, because lenders want compensation for tying money up. It narrows and sometimes turns negative when markets expect short rates to fall — which is to say, when they expect trouble.</p>
+      <p>One summary number tracks this better than any single yield: the gap between long and short Treasury yields. It is normally positive, because lenders want compensation for tying money up. It narrows and sometimes turns negative when markets expect short rates to fall, which is to say when they expect trouble.</p>
 
       <figure class="chart" id="fig-spread">
         <figcaption>The gap between long and short Treasury yields</figcaption>

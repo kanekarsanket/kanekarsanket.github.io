@@ -89,7 +89,7 @@
       <h3 id="s61b">6-1b &nbsp;The aggregate demand curve</h3>
       <p>Aggregate demand is total planned spending on domestically produced goods at each price level. It has four components, and the identity that adds them up is the same one national accountants use:</p>
       <pre><code>AD  =  C  +  I  +  G  +  NX</code></pre>
-      <p>Consumption by households, investment by firms, government purchases, and net exports. The curve slopes downward — a higher price level goes with less real spending — but for reasons quite different from an ordinary demand curve, and the difference is worth being precise about, because students who carry over the microeconomic intuition get the shifters wrong.</p>
+      <p>Consumption by households, investment by firms, government purchases, and net exports. The curve slopes downward, so a higher price level goes with less real spending, but it does so for reasons quite different from an ordinary demand curve, and the difference is worth being precise about, because students who carry over the microeconomic intuition get the shifters wrong.</p>
       <div class="table-scroll">
         <table>
           <thead><tr><th>Effect</th><th>Mechanism</th></tr></thead>
@@ -133,7 +133,7 @@
 
       <div class="box note">
         <div class="box-title">Two things this chart settles</div>
-        <p style="margin:0">Consumption is around two thirds of the economy and moves very little, while investment is a small share and moves enormously. That combination is why recessions are mostly investment stories even though consumption is far larger: a third of a small thing swamps a rounding error on a big one. Net exports are small and have been negative in every quarter since 1980, which is a fact about American borrowing from the rest of the world rather than a verdict on competitiveness.</p>
+        <p style="margin:0">Consumption is <span data-live="cshare" title="Computed from the latest BEA release each time this page loads">around two thirds</span> of the economy and moves very little, while investment is <span data-live="ishare" title="Computed from the latest BEA release each time this page loads">a much smaller share</span> and swings <span data-live="volratio" title="Computed from the latest BEA release each time this page loads">several times</span> as hard. That combination is why recessions are mostly investment stories even though consumption is far larger: a third of a small thing swamps a rounding error on a big one. Net exports are small and have been negative in every quarter since 1980, which is a fact about American borrowing from the rest of the world rather than a verdict on competitiveness.</p>
       </div>
     </section>
 
@@ -192,7 +192,7 @@
 
       <div class="box note">
         <div class="box-title">Why the real multiplier is smaller</div>
-        <p style="margin:0">The formula above assumes every dollar not consumed simply vanishes from the chain, and that nothing else in the economy reacts. Neither is true. Part of each round leaks into taxes and imports, which shrinks the effective propensity. More importantly, the extra borrowing that funds the spending pushes interest rates up, which crowds out private investment — the Chapter 3 mechanism working in the opposite direction. Empirical estimates of government spending multipliers cluster well below the textbook figure, and they are larger in slumps, when there is idle capacity and interest rates are pinned near zero, than in booms. Any single number is wrong; the range and the conditions are the finding.</p>
+        <p style="margin:0">The formula above assumes every dollar not consumed simply vanishes from the chain, and that nothing else in the economy reacts. Neither is true. Part of each round leaks into taxes and imports, which shrinks the effective propensity. More importantly, the extra borrowing that funds the spending pushes interest rates up, which crowds out private investment. That is the Chapter 3 mechanism working in the opposite direction. Empirical estimates of government spending multipliers cluster well below the textbook figure, and they are larger in slumps, when there is idle capacity and interest rates are pinned near zero, than in booms. Any single number is wrong; the range and the conditions are the finding.</p>
       </div>
 
       <div class="box excel">
@@ -201,7 +201,7 @@
           <li>Put the injection in <code>B1</code> and the marginal propensity to consume in <code>B2</code>.</li>
           <li>Rounds 1 to 30 down column <code>A</code>. In <code>B5</code> put <code>=$B$1</code>, and in <code>B6</code> put <code>=B5*$B$2</code>, filled down. Column <code>C</code> is the running total: <code>=SUM($B$5:B5)</code>, filled down.</li>
           <li>Chart column C. It approaches a ceiling. Compare that ceiling with <code>=B1/(1-B2)</code>.</li>
-          <li>Ask how long convergence takes. <code>=MATCH(TRUE,INDEX(C5:C34&gt;=0.9*$B$1/(1-$B$2),0),0)</code> gives the round at which 90% of the total has arrived. Raise the propensity to consume and watch the answer grow — a bigger multiplier is also a slower one, which is a real limitation of fiscal policy that the formula alone hides.</li>
+          <li>Ask how long convergence takes. <code>=MATCH(TRUE,INDEX(C5:C34&gt;=0.9*$B$1/(1-$B$2),0),0)</code> gives the round at which 90% of the total has arrived. Raise the propensity to consume and watch the answer grow. A bigger multiplier is also a slower one, which is a real limitation of fiscal policy that the formula alone hides.</li>
           <li>Add leakage. Replace <code>$B$2</code> with <code>$B$2*(1-tax rate-import share)</code> and rerun. That is closer to what an applied economist would actually use.</li>
         </ol>
       </div>
@@ -234,11 +234,11 @@
 
       <h3 id="s64a">6-4a &nbsp;Changing the assumptions</h3>
       <p>The 1970s broke the simple version. Inflation and unemployment rose together, which the demand-side story could not produce, and policies designed to exploit a stable inflation-unemployment trade-off stopped working the moment they were relied upon.</p>
-      <p>The diagnosis was that the framework treated people's expectations as fixed. If workers and firms form expectations by looking backwards, a government can surprise them repeatedly. If they form expectations using everything they know — including their knowledge of what the government is likely to do — then only <em>unanticipated</em> policy has real effects, and anticipated policy is absorbed into prices before it can move output.</p>
+      <p>The diagnosis was that the framework treated people's expectations as fixed. If workers and firms form expectations by looking backwards, a government can surprise them repeatedly. If they form expectations using everything they know, including their knowledge of what the government is likely to do, then only <em>unanticipated</em> policy has real effects, and anticipated policy is absorbed into prices before it can move output.</p>
 
       <h3 id="s64b">6-4b &nbsp;Short-run and long-run aggregate supply</h3>
       <p>What survives is a two-curve treatment that is now standard.</p>
-      <p><strong>Long-run aggregate supply</strong> is vertical at potential output. Potential output is determined by the labour force, the capital stock and productivity — real things. Money does not appear in that list, which is why money is neutral in the long run: doubling the money supply doubles prices and changes nothing real.</p>
+      <p><strong>Long-run aggregate supply</strong> is vertical at potential output. Potential output is determined by the labour force, the capital stock and productivity, all of them real things. Money does not appear in that list, which is why money is neutral in the long run: doubling the money supply doubles prices and changes nothing real.</p>
       <p><strong>Short-run aggregate supply</strong> slopes upward, because some prices and wages are fixed by contract in the short term, and because producers can briefly mistake a general rise in prices for a rise in the price of their own product and produce more.</p>
       <p>The distinction between them does the work. Demand shocks move output away from potential in the short run; over time, wages and expectations adjust, the short-run curve shifts, and output returns to potential with only the price level permanently changed. Use the diagram to run that sequence yourself.</p>
 
@@ -282,7 +282,7 @@
 
       <h3 id="s65a">6-5a &nbsp;Putting the three curves together</h3>
       <p>With aggregate demand, short-run supply and long-run supply on one diagram, a business cycle is a sequence rather than a state.</p>
-      <p>A negative demand shock moves the economy left along the short-run supply curve. Output falls below potential and the gap between them — the <strong>output gap</strong> — is negative. Unemployment rises above its sustainable rate. Over time, weak demand pushes wages and expected inflation down, the short-run curve shifts down and right, and output returns to potential at a lower price level. A boom is the same story with the signs reversed.</p>
+      <p>A negative demand shock moves the economy left along the short-run supply curve. Output falls below potential and the gap between them, called the <strong>output gap</strong>, is negative. Unemployment rises above its sustainable rate. Over time, weak demand pushes wages and expected inflation down, the short-run curve shifts down and right, and output returns to potential at a lower price level. A boom is the same story with the signs reversed.</p>
       <p>The output gap is not observed. Actual output is measured; potential is estimated, and every estimate embeds a judgement about what the economy is capable of. The chart below shows the crudest possible version, deliberately: real output against a single constant-growth line fitted to eighty years of its own history. Read the caution underneath before drawing any conclusion from it.</p>
 
       <figure class="chart" id="fig-gap">
@@ -342,9 +342,9 @@
         <p class="source-line">Bureau of Labor Statistics: unemployment rate, seasonally adjusted, and CPI-U all items. FRED equivalents: <a href="https://fred.stlouisfed.org/series/UNRATE" target="_blank" rel="noopener">UNRATE</a>, <a href="https://fred.stlouisfed.org/series/CPIAUCSL" target="_blank" rel="noopener">CPIAUCSL</a>.</p>
       </figure>
 
-      <p>Step through the decades and the honest result is messier than the textbook version, which is why it is worth doing. The 1960s give the picture the theory predicts: a clean downward slope, tight and unmistakable. Then it falls apart. Through the 1970s and 1980s the slope is flat or slightly <em>upward</em> — higher unemployment came with higher inflation, the opposite of the trade-off. The 1990s look upward too. The 2000s slope down again, and so do the 2020s. Put every month since 1948 on one chart and the relationship vanishes entirely into a cloud.</p>
+      <p>Step through the decades and the honest result is messier than the textbook version, which is why it is worth doing. The 1960s give the picture the theory predicts: a clean downward slope, tight and unmistakable. Then it falls apart. Through the 1970s and 1980s the slope is flat or slightly <em>upward</em>, with higher unemployment arriving alongside higher inflation, the opposite of the trade-off. The 1990s look upward too. The 2000s slope down again, and so do the 2020s. Put every month since 1948 on one chart and the relationship vanishes entirely into a cloud.</p>
       <p>That is not a failure of the data; it is the mechanism of section 6-4 showing up exactly where the theory says it should. A short-run trade-off exists <em>for a given state of expected inflation</em>. When expectations move, the whole curve moves with them, and a scatter that pools decades is averaging across a curve that has been sliding around the plane the entire time.</p>
-      <p>The historical episode is worth stating plainly, because it is the most expensive lesson in the subject. Policymakers in the 1960s looked at a scatter like the one this chart draws for that decade and read it as a stable menu: pick a point, accept the inflation, enjoy the employment. Acting on it changed what people expected, the curve shifted up, and the following decade delivered higher inflation <em>and</em> higher unemployment. A relationship estimated while nobody was exploiting it did not survive being exploited — which is a warning that reaches well beyond this one chart.</p>
+      <p>The historical episode is worth stating plainly, because it is the most expensive lesson in the subject. Policymakers in the 1960s looked at a scatter like the one this chart draws for that decade and read it as a stable menu: pick a point, accept the inflation, enjoy the employment. Acting on it changed what people expected, the curve shifted up, and the following decade delivered higher inflation <em>and</em> higher unemployment. A relationship estimated while nobody was exploiting it did not survive being exploited, and that warning reaches well beyond this one chart.</p>
     </section>
 
     <!-- ================= 6-6 ================= -->
